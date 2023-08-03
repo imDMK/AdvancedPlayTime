@@ -1,6 +1,6 @@
 package com.github.imdmk.spenttime.gui;
 
-import com.github.imdmk.spenttime.configuration.PluginConfiguration;
+import com.github.imdmk.spenttime.configuration.GuiConfiguration;
 import com.github.imdmk.spenttime.task.TaskScheduler;
 import com.github.imdmk.spenttime.user.User;
 import com.github.imdmk.spenttime.util.DurationUtil;
@@ -14,43 +14,55 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TopSpentTimeGui {
 
     private final Server server;
-    private final PluginConfiguration pluginConfiguration;
+    private final GuiConfiguration guiConfiguration;
     private final TaskScheduler taskScheduler;
 
-    public TopSpentTimeGui(Server server, PluginConfiguration pluginConfiguration, TaskScheduler taskScheduler) {
+    public TopSpentTimeGui(Server server, GuiConfiguration guiConfiguration, TaskScheduler taskScheduler) {
         this.server = server;
-        this.pluginConfiguration = pluginConfiguration;
+        this.guiConfiguration = guiConfiguration;
         this.taskScheduler = taskScheduler;
     }
 
     public void open(Player player, List<User> topUsers, boolean async) {
-        Gui spentTimeGui = Gui.gui()
-                .title(this.pluginConfiguration.spentTimeGuiTitle)
-                .rows(5)
+        Gui gui = Gui.gui()
+                .title(this.guiConfiguration.title)
+                .rows(6)
                 .disableAllInteractions()
                 .create();
 
-        if (this.pluginConfiguration.spentTimeGuiSideItemEnabled) {
-            GuiItem sideGuiItem = ItemBuilder.from(this.pluginConfiguration.spentTimeGuiSideItem).asGuiItem();
-            spentTimeGui.getFiller().fillBorder(sideGuiItem);
+        if (this.guiConfiguration.borderItemEnabled) {
+            GuiItem sideGuiItem = ItemBuilder.from(this.guiConfiguration.borderItem).asGuiItem();
+
+            gui.getFiller().fillBorder(sideGuiItem);
         }
+
+        GuiItem exitGuiItem = ItemBuilder.from(this.guiConfiguration.exitItem)
+                .asGuiItem(event -> gui.close(player));
+
+        gui.setItem(this.guiConfiguration.exitItemSlot, exitGuiItem);
+
+        AtomicInteger position = new AtomicInteger(1);
 
         for (User user : topUsers) {
             Duration userTimeSpent = user.getSpentTimeDuration();
-
             OfflinePlayer offlinePlayer = this.server.getOfflinePlayer(user.getUuid());
 
-            Component headItemTitle = this.pluginConfiguration.spentTimeGuiHeadItemTitle
+            Component headItemTitle = this.guiConfiguration.headItemTitle
                     .replaceText(builder -> builder
                             .matchLiteral("{PLAYER}")
                             .replacement(player.getName())
+                    )
+                    .replaceText(builder -> builder
+                            .matchLiteral("{POSITION}")
+                            .replacement(String.valueOf(position.getAndIncrement()))
                     );
 
-            List<Component> headItemLore = this.pluginConfiguration.spentTimeGuiHeadItemLore
+            List<Component> headItemLore = this.guiConfiguration.headItemLore
                     .stream()
                     .map(component -> component.replaceText(builder -> builder
                             .matchLiteral("{TIME}")
@@ -58,21 +70,20 @@ public class TopSpentTimeGui {
                     ))
                     .toList();
 
-
             GuiItem guiItem = ItemBuilder.skull()
                     .owner(offlinePlayer)
                     .name(headItemTitle)
                     .lore(headItemLore)
                     .asGuiItem();
 
-            spentTimeGui.addItem(guiItem);
+            gui.addItem(guiItem);
         }
 
         if (async) { //Opening gui cannot be asynchronous
-            this.taskScheduler.runLater(() -> spentTimeGui.open(player));
+            this.taskScheduler.runLater(() -> gui.open(player));
         }
         else {
-            spentTimeGui.open(player);
+            gui.open(player);
         }
     }
 }
