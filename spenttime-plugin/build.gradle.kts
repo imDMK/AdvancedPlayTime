@@ -13,24 +13,24 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.21.10-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.6")
 
     implementation(project(":spenttime-api"))
 
-    implementation("net.kyori:adventure-platform-bukkit:4.4.0")
-    implementation("net.kyori:adventure-text-minimessage:4.19.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.4.2")
+    implementation("net.kyori:adventure-text-minimessage:4.21.0")
 
-    implementation("com.eternalcode:multification-bukkit:1.1.4")
-    implementation("com.eternalcode:multification-okaeri:1.1.4")
+    implementation("com.eternalcode:multification-bukkit:1.2.2")
+    implementation("com.eternalcode:multification-okaeri:1.2.2")
     implementation("com.eternalcode:gitcheck:1.0.0")
 
-    implementation("dev.triumphteam:triumph-gui:3.1.11")
+    implementation("dev.triumphteam:triumph-gui:3.1.13")
 
     implementation("org.bstats:bstats-bukkit:3.1.0")
 
-    implementation("dev.rollczi:litecommands-bukkit:3.10.0")
-    implementation("dev.rollczi:litecommands-annotations:3.10.0")
+    implementation("dev.rollczi:litecommands-bukkit:3.10.6")
+    implementation("dev.rollczi:litecommands-annotations:3.10.6")
 }
 
 bukkit {
