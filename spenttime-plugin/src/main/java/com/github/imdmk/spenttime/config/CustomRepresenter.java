@@ -1,4 +1,4 @@
-package com.github.imdmk.spenttime.configuration;
+package com.github.imdmk.spenttime.config;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.nodes.Node;
