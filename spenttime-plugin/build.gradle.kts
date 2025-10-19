@@ -1,6 +1,9 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
+    id("java-library")
+    id("checkstyle")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
 }
 
@@ -13,67 +16,88 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.21.10-R0.1-SNAPSHOT")
+    // Bukkit API i PlaceholderAPI
+    compileOnly("org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.6")
 
+    // Lokalny moduł API (thin jar)
     implementation(project(":spenttime-api"))
 
+    // DI
+    implementation("org.panda-lang.utilities:di:1.8.0")
+
+    // Adventure
     implementation("net.kyori:adventure-platform-bukkit:4.4.2")
     implementation("net.kyori:adventure-text-minimessage:4.21.0")
 
+    // Multification / utils
     implementation("com.eternalcode:multification-bukkit:1.2.2")
     implementation("com.eternalcode:multification-okaeri:1.2.2")
     implementation("com.eternalcode:gitcheck:1.0.0")
 
+    // Cache / DB layer
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.1")
+    implementation("com.zaxxer:HikariCP:6.2.1")
+    implementation("com.j256.ormlite:ormlite-jdbc:6.1")
+
+    // JDBC drivers
+    implementation("com.mysql:mysql-connector-j:8.4.0")
+    implementation("org.xerial:sqlite-jdbc:3.46.1.3")
+
+    // Okaeri configs
+    implementation("eu.okaeri:okaeri-configs-yaml-snakeyaml:5.0.9")
+    implementation("eu.okaeri:okaeri-configs-serdes-commons:5.0.5")
+
+    // GUI, metrics, commands
     implementation("dev.triumphteam:triumph-gui:3.1.13")
-
     implementation("org.bstats:bstats-bukkit:3.1.0")
-
     implementation("dev.rollczi:litecommands-bukkit:3.10.6")
     implementation("dev.rollczi:litecommands-annotations:3.10.6")
 }
 
 bukkit {
     name = "SpentTime"
-    version = "${project.version}"
-    apiVersion = "1.17"
+    version = project.version.toString()
+    apiVersion = "1.21"
     main = "com.github.imdmk.spenttime.SpentTimePlugin"
-    author = "DMK (dominiks8318@gmail.com)"
+    author = "imDMK (dominiks8318@gmail.com)"
     description = "An efficient plugin for calculating your time spent in the game with many features and configuration possibilities."
     website = "https://github.com/imDMK/SpentTime"
-
 }
 
 tasks.withType<ShadowJar> {
     archiveFileName.set("SpentTime v${project.version}.jar")
 
-    dependsOn("checkstyleMain")
-    dependsOn("checkstyleTest")
-    dependsOn("test")
+    mergeServiceFiles()
 
     exclude(
+        "META-INF/*.SF",
+        "META-INF/*.DSA",
+        "META-INF/*.RSA",
+        "module-info.class",
         "org/intellij/lang/annotations/**",
-        "org/jetbrains/annotations/**",
-        "META-INF/**",
+        "org/jetbrains/annotations/**"
     )
 
     val libPrefix = "com.github.imdmk.spenttime.plugin.lib"
     listOf(
-        "com.eternalcode",
-        "com.j256",
-        "com.github.benmanes",
-        "net.kyori",
-        "dev.rollczi",
-        "dev.triumphteam",
-        "javassist",
-        "org.yaml",
+        "com.zaxxer",            // Hikari
+        "com.j256",              // ORMLite
+        "com.github.benmanes",   // Caffeine
+        "net.kyori",             // Adventure
+        "dev.rollczi",           // litecommands
+        "dev.triumphteam",       // triumph-gui
+        "org.javassist",         // transitively
+        "org.yaml",              // SnakeYAML (okaeri)
         "org.checkerframework",
         "org.bstats",
         "org.json",
         "eu.okaeri",
         "panda.std",
-        "panda.utilities",
-    ).forEach { lib ->
-        relocate(lib, "$libPrefix.$lib")
+        "panda.utilities"
+    ).forEach { pkg ->
+        relocate(pkg, "$libPrefix.$pkg")
     }
+
+    minimize()
 }

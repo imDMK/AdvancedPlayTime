@@ -1,25 +1,32 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+plugins {
+    id("java-library")
+    id("checkstyle")
+}
 
 group = "com.github.imdmk.spenttime.api"
 version = "2.0.4"
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
-
-    implementation("com.github.ben-manes.caffeine:caffeine:3.2.1")
-    implementation("org.jetbrains:annotations:26.0.2")
+    api("org.jetbrains:annotations:26.0.2")
 }
 
-tasks.withType<ShadowJar> {
-    archiveFileName.set("${project.name} v${project.version}.jar")
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    withSourcesJar()
+    withJavadocJar()
+}
 
-    dependsOn("checkstyleMain")
-    dependsOn("checkstyleTest")
-    dependsOn("test")
+checkstyle {
+    toolVersion = "10.21.0"
+    configFile = file("${rootDir}/checkstyle.xml")
+}
 
-    exclude(
-        "org/intellij/lang/annotations/**",
-        "org/jetbrains/annotations/**",
-        "META-INF/**",
-    )
+tasks.test {
+    useJUnitPlatform()
+}
+
+tasks.withType<JavaCompile> {
+    options.compilerArgs = listOf("-Xlint:deprecation", "-parameters")
+    options.encoding = "UTF-8"
+    options.release.set(21)
 }
