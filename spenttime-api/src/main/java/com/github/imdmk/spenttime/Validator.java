@@ -1,5 +1,4 @@
-package com.github.imdmk.spenttime.util;
-
+package com.github.imdmk.spenttime;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

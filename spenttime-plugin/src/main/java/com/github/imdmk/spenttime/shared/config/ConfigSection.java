@@ -1,4 +1,4 @@
-package com.github.imdmk.spenttime.config;
+package com.github.imdmk.spenttime.shared.config;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.exception.OkaeriException;

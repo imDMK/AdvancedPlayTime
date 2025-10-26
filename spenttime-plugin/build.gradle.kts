@@ -1,33 +1,28 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("java-library")
-    id("checkstyle")
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
 }
 
-group = "com.github.imdmk.spenttime.plugin"
-version = "2.0.4"
-
 repositories {
-    maven { url = uri("https://repo.eternalcode.pl/releases") }
-    maven { url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/") }
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // Spigot
+    maven("https://repo.eternalcode.pl/releases") // Eternalcode
+    maven("https://storehouse.okaeri.eu/repository/maven-public/") // Okaeri
+    maven("https://repo.panda-lang.org/releases") // Litecommands
 }
 
 dependencies {
-    // Bukkit API i PlaceholderAPI
     compileOnly("org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT")
-    compileOnly("me.clip:placeholderapi:2.11.6")
+    compileOnly("com.github.placeholderapi:placeholderapi:2.11.6")
 
-    // Lokalny moduł API (thin jar)
-    implementation(project(":spenttime-api"))
+    implementation(project(":spenttime-bukkit-api"))
 
     // DI
     implementation("org.panda-lang.utilities:di:1.8.0")
 
     // Adventure
-    implementation("net.kyori:adventure-platform-bukkit:4.4.2")
+    implementation("net.kyori:adventure-platform-bukkit:4.4.1")
     implementation("net.kyori:adventure-text-minimessage:4.21.0")
 
     // Multification / utils
@@ -79,7 +74,7 @@ tasks.withType<ShadowJar> {
         "org/jetbrains/annotations/**"
     )
 
-    val libPrefix = "com.github.imdmk.spenttime.plugin.lib"
+    val libPrefix = "com.github.imdmk.spenttime.lib"
     listOf(
         "com.zaxxer",            // Hikari
         "com.j256",              // ORMLite

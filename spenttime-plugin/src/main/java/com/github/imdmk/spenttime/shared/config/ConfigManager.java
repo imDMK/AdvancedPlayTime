@@ -1,10 +1,11 @@
-package com.github.imdmk.spenttime.config;
+package com.github.imdmk.spenttime.shared.config;
 
-import com.github.imdmk.spenttime.util.Validator;
+import com.github.imdmk.spenttime.Validator;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.exception.OkaeriException;
 import eu.okaeri.configs.yaml.snakeyaml.YamlSnakeYamlConfigurer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.DumperOptions;
@@ -14,16 +15,18 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
 import org.yaml.snakeyaml.resolver.Resolver;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Manages loading, saving, and reloading of configuration sections.
+ * Central configuration manager for the application.
  * <p>
- * Uses OkaeriConfig framework with customized YAML configuration.
- * Supports asynchronous reload of all configs and tracks created config instances.
+ * Handles creation, loading, saving, and reloading of configuration sections
+ * using the OkaeriConfig framework with a customized SnakeYAML configurer.
+ * Maintains a thread-safe registry of active configuration instances.
  * </p>
  */
 public final class ConfigManager {
@@ -34,23 +37,33 @@ public final class ConfigManager {
     private final Set<ConfigSection> configs = ConcurrentHashMap.newKeySet();
     private final ExecutorService executor;
 
+    /**
+     * Creates a new {@link ConfigManager} using the specified executor service.
+     *
+     * @param executor executor used for async config operations
+     */
     public ConfigManager(@NotNull ExecutorService executor) {
         this.executor = Validator.notNull(executor, "executor cannot be null");
     }
 
+    /**
+     * Creates a {@link ConfigManager} using a default single-thread executor.
+     */
     public ConfigManager() {
         this(DEFAULT_EXECUTOR);
     }
 
     /**
      * Creates and loads a configuration section of the specified class type.
-     * Config will be bound to a file named by the config's {@code getFileName()} method,
-     * will use the config's specified serdes pack, and will remove orphaned entries.
-     * Default values are saved if the file does not exist.
+     * <p>
+     * The config is automatically bound to its target file, initializes
+     * default values if missing, and registers itself for future reload/save.
+     * </p>
      *
-     * @param <T>    the type of config section
+     * @param <T>         the type of config section
      * @param configClass the config class to create, must not be null
-     * @return the created and loaded configuration instance
+     * @return the loaded configuration instance
+     * @throws IllegalArgumentException if config file name is empty
      */
     public <T extends ConfigSection> T create(@NotNull Class<T> configClass) {
         T config = eu.okaeri.configs.ConfigManager.create(configClass);
@@ -75,8 +88,11 @@ public final class ConfigManager {
     }
 
     /**
-     * Creates a custom YAML configurer used by the Okaeri config framework.
-     * Configures YAML options such as indentation and flow style.
+     * Builds and returns a custom YAML configurer for Okaeri.
+     * <p>
+     * Adjusts indentation, line splitting, and flow style to ensure
+     * consistent formatting across all YAML config files.
+     * </p>
      *
      * @return a configured {@link YamlSnakeYamlConfigurer} instance
      */
@@ -97,57 +113,66 @@ public final class ConfigManager {
     }
 
     /**
-     * Loads all currently tracked configuration sections synchronously.
+     * Reloads all registered configuration files synchronously.
+     * Logs errors if any config fails to load.
      */
     private void loadAll() {
         this.configs.forEach(this::load);
     }
 
     /**
-     * Loads the specified configuration section from its bound file.
-     * If loading fails, logs the error and throws a runtime exception.
+     * Loads a specific configuration section from its bound file.
      *
-     * @param config the configuration instance to load, must not be null
-     * @throws ConfigLoadException if an error occurs during loading
+     * @param config the configuration instance to load
+     * @throws ConfigLoadException if loading fails
      */
     public void load(@NotNull OkaeriConfig config) {
         try {
             config.load(true);
-        }
-        catch (OkaeriException exception) {
+        } catch (OkaeriException exception) {
             LOGGER.error("Failed to load config: {}", config.getClass().getSimpleName(), exception);
             throw new ConfigLoadException(exception);
         }
     }
 
-
     /**
-     * Saves all currently tracked configuration sections synchronously.
+     * Saves all registered configuration sections synchronously.
+     * Logs and continues on individual save failures.
      */
     public void saveAll() {
         this.configs.forEach(this::save);
     }
 
     /**
-     * Saves the specified configuration section from its bound file.
-     * If saving fails, logs the error and throws a runtime exception.
+     * Saves a specific configuration section to its bound file.
      *
-     * @param config the configuration instance to save, must not be null
-     * @throws ConfigLoadException if an error occurs during saving
+     * @param config the configuration instance to save
+     * @throws ConfigLoadException if saving fails
      */
     public void save(@NotNull OkaeriConfig config) {
         try {
             config.save();
-        }
-        catch (OkaeriException exception) {
-            LOGGER.error("Failed to load config: {}", config.getClass().getSimpleName(), exception);
+        } catch (OkaeriException exception) {
+            LOGGER.error("Failed to save config: {}", config.getClass().getSimpleName(), exception);
             throw new ConfigLoadException(exception);
         }
     }
 
     /**
-     * Shuts down the internal executor service used for async operations.
-     * Should be called on plugin shutdown to release resources.
+     * Returns an unmodifiable view of all configuration instances
+     * that have been registered by this manager.
+     *
+     * @return an unmodifiable {@link Set} containing all registered {@link OkaeriConfig} instances
+     */
+    @NotNull
+    @Unmodifiable
+    public Set<OkaeriConfig> getConfigs() {
+        return Collections.unmodifiableSet(this.configs);
+    }
+
+    /**
+     * Gracefully shuts down the internal executor service.
+     * Should be invoked on application shutdown to release threads.
      */
     public void shutdown() {
         LOGGER.info("Shutting down ConfigurationManager executor");
