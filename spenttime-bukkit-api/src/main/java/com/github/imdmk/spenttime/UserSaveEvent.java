@@ -5,6 +5,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Called whenever a {@link User} instance is saved by the plugin.
  *
@@ -28,7 +30,7 @@ public class UserSaveEvent extends Event {
      */
     public UserSaveEvent(@NotNull User user) {
         super(ASYNC); // sync
-        Validator.notNull(user, "user cannot be null");
+        Objects.requireNonNull(user, "user cannot be null");
         this.user = user;
     }
 

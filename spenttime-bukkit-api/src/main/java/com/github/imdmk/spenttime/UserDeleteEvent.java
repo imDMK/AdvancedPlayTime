@@ -5,6 +5,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Fired after a user deletion attempt completes.
  * <p>
@@ -27,7 +29,7 @@ public final class UserDeleteEvent extends Event {
      */
     public UserDeleteEvent(@NotNull UserDeleteResult result) {
         super(ASYNC); // sync
-        Validator.notNull(result, "result cannot be null");
+        Objects.requireNonNull(result, "result cannot be null");
         this.result = result;
     }
 
