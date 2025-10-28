@@ -1,6 +1,5 @@
 package com.github.imdmk.spenttime.user;
 
-import com.github.imdmk.spenttime.Validator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -48,7 +47,7 @@ public final class User {
      * @throws IllegalArgumentException if {@code name} is blank or {@code userTime} is negative
      */
     public User(@NotNull UUID uuid, @NotNull String name, @NotNull UserTime userTime) {
-        this.uuid = Validator.notNull(uuid, "uuid cannot be null");
+        this.uuid = Objects.requireNonNull(uuid, "uuid cannot be null");
         this.setName(name);
         this.setSpentTime(userTime);
     }
@@ -71,7 +70,7 @@ public final class User {
      * @throws IllegalArgumentException if {@code name} is blank
      */
     public void setName(@NotNull String name) {
-        Validator.notNull(name, "name cannot be null");
+        Objects.requireNonNull(name, "name cannot be null");
         if (name.isBlank()) {
             throw new IllegalArgumentException("name cannot be blank");
         }
@@ -91,7 +90,7 @@ public final class User {
      * @throws IllegalArgumentException if {@code userTime} is negative
      */
     public void setSpentTime(@NotNull UserTime userTime) {
-        Validator.notNull(userTime, "userTime cannot be null");
+        Objects.requireNonNull(userTime, "userTime cannot be null");
         this.spentMillis.set(userTime.millis());
     }
 

@@ -1,53 +1,56 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import java.util.Properties
 
 plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
 }
 
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // Spigot
-    maven("https://repo.eternalcode.pl/releases") // Eternalcode
-    maven("https://storehouse.okaeri.eu/repository/maven-public/") // Okaeri
-    maven("https://repo.panda-lang.org/releases") // Litecommands
 }
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT")
-    compileOnly("com.github.placeholderapi:placeholderapi:2.11.6")
 
-    implementation(project(":spenttime-bukkit-api"))
+    api("org.jetbrains:annotations:26.0.2")
+    implementation(project(":spenttime-core"))
+}
 
-    // DI
-    implementation("org.panda-lang.utilities:di:1.8.0")
+val dynamicLibraries = listOf(
+    "org.postgresql:postgresql:42.7.4",
+     "com.mysql:mysql-connector-j:8.4.0",
+     "org.mariadb.jdbc:mariadb-java-client:3.4.1"
+)
 
-    // Adventure
-    implementation("net.kyori:adventure-platform-bukkit:4.4.1")
-    implementation("net.kyori:adventure-text-minimessage:4.21.0")
+// 2) Repozytoria (możesz dodać mirror)
+val dynamicRepositories = listOf(
+    "https://repo1.maven.org/maven2"
+)
 
-    // Multification / utils
-    implementation("com.eternalcode:multification-bukkit:1.2.2")
-    implementation("com.eternalcode:multification-okaeri:1.2.2")
-    implementation("com.eternalcode:gitcheck:1.0.0")
+// 3) Jawnie rejestrowane drivery (opcjonalnie)
+val explicitJdbcDrivers = listOf(
+    "org.postgresql.Driver"
+)
 
-    // Cache / DB layer
-    implementation("com.github.ben-manes.caffeine:caffeine:3.2.1")
-    implementation("com.zaxxer:HikariCP:6.2.1")
-    implementation("com.j256.ormlite:ormlite-jdbc:6.1")
+// 4) Mapowanie URL → driver FQCN (jeśli chcesz dobrać po jdbcUrl)
+val jdbcUrlToDriver = mapOf(
+    "jdbc:postgresql:" to "org.postgresql.Driver",
+    "jdbc:mysql:"      to "com.mysql.cj.jdbc.Driver",
+    "jdbc:mariadb:"    to "org.mariadb.jdbc.Driver",
+)
 
-    // JDBC drivers
-    implementation("com.mysql:mysql-connector-j:8.4.0")
-    implementation("org.xerial:sqlite-jdbc:3.46.1.3")
+// 5) Wstrzyknięcie wartości do zasobu JAR-a (bez generowania .java)
+tasks.processResources {
+    val props = mapOf(
+        "dynLibs" to dynamicLibraries.joinToString("|"),
+        "dynRepos" to dynamicRepositories.joinToString("|"),
+        "jdbcDrivers" to explicitJdbcDrivers.joinToString("|"),
+        "jdbcUrl2Drv" to jdbcUrlToDriver.entries.joinToString("|") { "${it.key}>${it.value}" }
+    )
+    inputs.properties(props)
 
-    // Okaeri configs
-    implementation("eu.okaeri:okaeri-configs-yaml-snakeyaml:5.0.9")
-    implementation("eu.okaeri:okaeri-configs-serdes-commons:5.0.5")
-
-    // GUI, metrics, commands
-    implementation("dev.triumphteam:triumph-gui:3.1.13")
-    implementation("org.bstats:bstats-bukkit:3.1.0")
-    implementation("dev.rollczi:litecommands-bukkit:3.10.6")
-    implementation("dev.rollczi:litecommands-annotations:3.10.6")
+    filesMatching("dynamic-libs.properties") {
+        expand(props)
+    }
 }
 
 bukkit {
@@ -58,41 +61,4 @@ bukkit {
     author = "imDMK (dominiks8318@gmail.com)"
     description = "An efficient plugin for calculating your time spent in the game with many features and configuration possibilities."
     website = "https://github.com/imDMK/SpentTime"
-}
-
-tasks.withType<ShadowJar> {
-    archiveFileName.set("SpentTime v${project.version}.jar")
-
-    mergeServiceFiles()
-
-    exclude(
-        "META-INF/*.SF",
-        "META-INF/*.DSA",
-        "META-INF/*.RSA",
-        "module-info.class",
-        "org/intellij/lang/annotations/**",
-        "org/jetbrains/annotations/**"
-    )
-
-    val libPrefix = "com.github.imdmk.spenttime.lib"
-    listOf(
-        "com.zaxxer",            // Hikari
-        "com.j256",              // ORMLite
-        "com.github.benmanes",   // Caffeine
-        "net.kyori",             // Adventure
-        "dev.rollczi",           // litecommands
-        "dev.triumphteam",       // triumph-gui
-        "org.javassist",         // transitively
-        "org.yaml",              // SnakeYAML (okaeri)
-        "org.checkerframework",
-        "org.bstats",
-        "org.json",
-        "eu.okaeri",
-        "panda.std",
-        "panda.utilities"
-    ).forEach { pkg ->
-        relocate(pkg, "$libPrefix.$pkg")
-    }
-
-    minimize()
 }

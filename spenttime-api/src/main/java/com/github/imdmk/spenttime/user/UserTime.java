@@ -1,12 +1,12 @@
 package com.github.imdmk.spenttime.user;
 
-import com.github.imdmk.spenttime.Validator;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Duration;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -80,7 +80,7 @@ public record UserTime(long millis) implements Comparable<UserTime>, Serializabl
      */
     @Contract("_ -> new")
     public static @NotNull UserTime from(@NotNull Duration duration) {
-        Validator.notNull(duration, "duration is null");
+        Objects.requireNonNull(duration, "duration is null");
         return new UserTime(duration.toMillis());
     }
 
@@ -133,7 +133,7 @@ public record UserTime(long millis) implements Comparable<UserTime>, Serializabl
      */
     @Contract(pure = true)
     public @NotNull UserTime plus(@NotNull UserTime other) {
-        Validator.notNull(other, "other UserTime is null");
+        Objects.requireNonNull(other, "other UserTime is null");
         return new UserTime(Math.addExact(this.millis, other.millis));
     }
 
@@ -146,7 +146,7 @@ public record UserTime(long millis) implements Comparable<UserTime>, Serializabl
      */
     @Contract(pure = true)
     public @NotNull UserTime minus(@NotNull UserTime other) {
-        Validator.notNull(other, "other UserTime is null");
+        Objects.requireNonNull(other, "other UserTime is null");
         return new UserTime(Math.subtractExact(this.millis, other.millis));
     }
 
@@ -158,7 +158,7 @@ public record UserTime(long millis) implements Comparable<UserTime>, Serializabl
      */
     @Contract(pure = true)
     public @NotNull UserTime min(@NotNull UserTime other) {
-        Validator.notNull(other, "other UserTime is null");
+        Objects.requireNonNull(other, "other UserTime is null");
         return this.millis <= other.millis ? this : other;
     }
 
@@ -170,7 +170,7 @@ public record UserTime(long millis) implements Comparable<UserTime>, Serializabl
      */
     @Contract(pure = true)
     public @NotNull UserTime max(@NotNull UserTime other) {
-        Validator.notNull(other, "other UserTime is null");
+        Objects.requireNonNull(other, "other UserTime is null");
         return this.millis >= other.millis ? this : other;
     }
 
@@ -183,5 +183,25 @@ public record UserTime(long millis) implements Comparable<UserTime>, Serializabl
     @Override
     public int compareTo(@NotNull UserTime o) {
         return Long.compare(this.millis, o.millis);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        UserTime userTime = (UserTime) o;
+        return compareTo(userTime) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(millis);
+    }
+
+    @Override
+    @NotNull
+    public String toString() {
+        return "UserTime{" +
+                "millis=" + millis +
+                '}';
     }
 }
