@@ -19,5 +19,10 @@ public interface ConfigurableGui {
      * @return GUI type (e.g. {@link GuiType#STANDARD}, {@link GuiType#PAGINATED})
      */
     @NotNull GuiType type();
+
+    /**
+     * @return GUI rows
+     */
+    int rows();
 }
 

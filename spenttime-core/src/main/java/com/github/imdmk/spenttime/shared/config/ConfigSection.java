@@ -4,11 +4,11 @@ import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.exception.OkaeriException;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Abstract base class for configuration sections.
@@ -56,8 +56,7 @@ public abstract class ConfigSection extends OkaeriConfig {
             this.loadNestedConfigSections(this.getClass());
         }
         catch (IllegalAccessException e) {
-            Logger.getLogger(this.getClass().getName())
-                    .severe("Could not load nested config sections: " + e.getMessage());
+            LoggerFactory.getLogger(ConfigSection.class).error("Could not load config section", e);
         }
         return this;
     }

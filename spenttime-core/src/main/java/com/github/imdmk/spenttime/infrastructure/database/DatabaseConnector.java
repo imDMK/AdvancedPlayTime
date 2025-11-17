@@ -1,78 +1,106 @@
 package com.github.imdmk.spenttime.infrastructure.database;
 
+import com.github.imdmk.spenttime.platform.logger.PluginLogger;
 import com.github.imdmk.spenttime.shared.Validator;
 import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.zaxxer.hikari.HikariDataSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Filter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
- * Database connection manager backed by HikariCP and ORMLite's {@link ConnectionSource}.
- * <p>
- * Supports SQLite and MySQL. Provides a small, safe connection pool configuration and a
- * predictable lifecycle (connect → use → close). The service is single-instance and
- * thread-safe around connect/close boundaries.
+ * Provides a unified connection management layer between HikariCP and ORMLite.
+ *
+ * <p>This class encapsulates database connectivity logic for both SQLite and MySQL,
+ * managing {@link HikariDataSource} pooling, {@link ConnectionSource} creation,
+ * and graceful shutdown. It ensures safe, idempotent lifecycle transitions
+ * (connect → use → close) and performs input validation to prevent misuse.</p>
+ *
+ * <p><strong>Supported modes:</strong></p>
+ * <ul>
+ *   <li><b>SQLite</b> — single-file database with automatic folder creation and a minimal 2-thread pool.</li>
+ *   <li><b>MySQL</b> — pooled remote connection with hardened JDBC options and sane defaults.</li>
+ * </ul>
+ *
+ * <p><strong>Thread-safety:</strong> All lifecycle operations ({@link #connect(File)} and {@link #close()})
+ * are synchronized. Concurrent read access via {@link #getConnectionSource()} is safe.</p>
+ *
+ * <p><strong>Lifecycle:</strong></p>
+ * <pre>
+ * DatabaseConnector connector = new DatabaseConnector(config);
+ * connector.connect(dataFolder);
+ * ConnectionSource source = connector.getConnectionSource();
+ * // use repositories
+ * connector.close();
+ * </pre>
+ *
+ * @see ConnectionSource
+ * @see HikariDataSource
+ * @see DatabaseConfig
  */
 public final class DatabaseConnector {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseConnector.class);
-
     private static final String JDBC_DRIVER_SQLITE = "org.sqlite.JDBC";
-    private static final String JDBC_DRIVER_MYSQL  = "com.mysql.cj.jdbc.Driver";
+    private static final String JDBC_DRIVER_MYSQL = "com.mysql.cj.jdbc.Driver";
 
+    private final PluginLogger logger;
     private final DatabaseConfig config;
 
     private volatile HikariDataSource dataSource;
     private volatile ConnectionSource connectionSource;
 
-    public DatabaseConnector(@NotNull DatabaseConfig config) {
+    public DatabaseConnector(@NotNull PluginLogger logger, @NotNull DatabaseConfig config) {
+        this.logger = Validator.notNull(logger, "logger cannot be null");
         this.config = Validator.notNull(config, "config cannot be null");
     }
 
     /**
-     * Establishes a pooled JDBC connection and creates the ORMLite {@link ConnectionSource}.
-     * <p>
-     * For SQLite, the database directory is created if missing.
-     * For MySQL, a hardened URL with sane defaults is used.
+     * Establishes a new database connection and initializes the internal connection pool.
      *
-     * @throws SQLException          if opening the JDBC connection fails
-     * @throws IllegalStateException if already connected
+     * <p>If already connected, this method throws {@link IllegalStateException}.</p>
+     * <p>For SQLite, the parent directory is created automatically if missing.
+     * For MySQL, a preconfigured URL with hardened connection parameters is used.</p>
+     *
+     * @param dataFolder plugin data folder used for SQLite file placement
+     * @throws SQLException          if JDBC initialization fails
+     * @throws IllegalStateException if a connection is already active
      */
     public synchronized void connect(@NotNull File dataFolder) throws SQLException {
         if (this.dataSource != null || this.connectionSource != null) {
             throw new IllegalStateException("DatabaseConnector is already connected.");
         }
 
-        final HikariDataSource ds = createHikariDataSource();
+        final HikariDataSource dataSource = createHikariDataSource();
 
-        final DatabaseMode mode = this.config.databaseMode;
+        final DatabaseMode mode = config.databaseMode;
         switch (mode) {
             case SQLITE -> {
-                // Use absolute path and ensure parent directories exist
-                final Path dbPath = dataFolder.toPath().resolve(this.config.databaseFileName);
+                // Ensure parent directory exists for SQLite database file
+                final Path dbPath = dataFolder.toPath().resolve(config.databaseFileName);
                 try {
                     Files.createDirectories(dbPath.getParent());
                 } catch (Exception e) {
-                    closeQuietly(ds);
+                    closeQuietly(dataSource);
                     throw new IllegalStateException("Cannot create SQLite directory: " + dbPath.getParent(), e);
                 }
 
-                ds.setDriverClassName(JDBC_DRIVER_SQLITE);
-                ds.setJdbcUrl("jdbc:sqlite:" + dbPath);
-                ds.setMaximumPoolSize(2); // tiny pool
-                ds.setMinimumIdle(1);
+                dataSource.setDriverClassName(JDBC_DRIVER_SQLITE);
+                dataSource.setJdbcUrl("jdbc:sqlite:" + dbPath);
+                dataSource.setMaximumPoolSize(2); // minimal concurrency for local file-based DB
+                dataSource.setMinimumIdle(1);
             }
             case MYSQL -> {
-                ds.setDriverClassName(JDBC_DRIVER_MYSQL);
-                final String url = "jdbc:mysql://" + this.config.hostname + ":" + this.config.port + "/" + this.config.database
+                dataSource.setDriverClassName(JDBC_DRIVER_MYSQL);
+                final String url = "jdbc:mysql://" + config.hostname + ":" + config.port + "/" + config.database
                         + "?useSSL=false"
                         + "&allowPublicKeyRetrieval=true"
                         + "&useUnicode=true"
@@ -82,23 +110,22 @@ public final class DatabaseConnector {
                         + "&tcpKeepAlive=true"
                         + "&rewriteBatchedStatements=true"
                         + "&socketTimeout=15000";
-                ds.setJdbcUrl(url);
-                // Pool size configured in createHikariDataSource()
+                dataSource.setJdbcUrl(url);
             }
             default -> {
-                closeQuietly(ds);
+                closeQuietly(dataSource);
                 throw new IllegalStateException("Unknown database mode: " + mode);
             }
         }
 
         try {
-            final ConnectionSource source = new DataSourceConnectionSource(ds, ds.getJdbcUrl());
-            this.dataSource = ds;
+            final ConnectionSource source = new DataSourceConnectionSource(dataSource, dataSource.getJdbcUrl());
+            this.dataSource = dataSource;
             this.connectionSource = source;
-            LOGGER.info("Connected to {} database.", mode);
+            logger.info("Connected to %s database.", mode);
         } catch (SQLException e) {
-            LOGGER.error("Failed to connect to database", e);
-            closeQuietly(ds);
+            logger.error(e, "Failed to connect to database");
+            closeQuietly(dataSource);
             this.dataSource = null;
             this.connectionSource = null;
             throw e;
@@ -106,12 +133,13 @@ public final class DatabaseConnector {
     }
 
     /**
-     * Closes ORMLite {@link ConnectionSource} and the underlying Hikari {@link HikariDataSource}.
-     * Safe to call multiple times.
+     * Closes the active database connection and shuts down the underlying Hikari connection pool.
+     *
+     * <p>Safe to call multiple times. Exceptions during close are logged but ignored.</p>
      */
     public synchronized void close() {
         if (this.connectionSource == null && this.dataSource == null) {
-            LOGGER.warn("DatabaseConnector#close() called, but not connected.");
+            logger.warn("DatabaseConnector#close() called, but not connected.");
             return;
         }
 
@@ -120,7 +148,7 @@ public final class DatabaseConnector {
                 this.connectionSource.close();
             }
         } catch (Exception e) {
-            LOGGER.error("Failed to close ConnectionSource", e);
+            logger.error(e, "Failed to close ConnectionSource");
         }
 
         closeQuietly(this.dataSource);
@@ -128,48 +156,78 @@ public final class DatabaseConnector {
         this.connectionSource = null;
         this.dataSource = null;
 
-        LOGGER.info("Database connection closed successfully.");
+        logger.info("Database connection closed successfully.");
     }
 
-    /** @return {@code true} if the connector is open and the datasource is not closed. */
+    /**
+     * Returns whether the connector is currently connected.
+     *
+     * @return {@code true} if both the {@link ConnectionSource} and {@link HikariDataSource} are active
+     */
     public boolean isConnected() {
         final HikariDataSource ds = this.dataSource;
         return this.connectionSource != null && ds != null && !ds.isClosed();
     }
 
-    /** @return active {@link ConnectionSource}, or {@code null} if not connected. */
+    /**
+     * Returns the current active {@link ConnectionSource}, or {@code null} if not connected.
+     *
+     * @return active ORMLite connection source, or {@code null} if disconnected
+     */
     public @Nullable ConnectionSource getConnectionSource() {
         return this.connectionSource;
     }
 
     /**
-     * Creates a conservative HikariCP datasource with safe timeouts and statement caching.
+     * Creates and configures a new {@link HikariDataSource} with conservative defaults.
+     *
+     * <p>Includes:
+     * <ul>
+     *   <li>Low pool size limits (max 5, min 1).</li>
+     *   <li>Prepared statement caching (useful for MySQL).</li>
+     *   <li>Connection and idle timeouts with safe lifetimes.</li>
+     * </ul></p>
+     *
+     * @return configured Hikari data source
      */
     private @NotNull HikariDataSource createHikariDataSource() {
-        final HikariDataSource ds = new HikariDataSource();
-        ds.setPoolName("spenttime-db-pool");
-        ds.setMaximumPoolSize(5);
-        ds.setMinimumIdle(1);
-        ds.setUsername(this.config.username);
-        ds.setPassword(this.config.password);
+        final HikariDataSource data = new HikariDataSource();
+        data.setPoolName("spenttime-db-pool");
+        data.setMaximumPoolSize(5);
+        data.setMinimumIdle(1);
+        data.setUsername(this.config.username);
+        data.setPassword(this.config.password);
 
-        // Prepared statement cache (effective for MySQL; harmless elsewhere)
-        ds.addDataSourceProperty("cachePrepStmts", true);
-        ds.addDataSourceProperty("prepStmtCacheSize", 250);
-        ds.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
-        ds.addDataSourceProperty("useServerPrepStmts", true);
+        // logger
+        try {
+            data.getParentLogger().setLevel(Level.SEVERE);
+        } catch (SQLFeatureNotSupportedException ignored) {}
 
-        // Timeouts (ms)
-        ds.setConnectionTimeout(10_000);
-        ds.setIdleTimeout(60_000);
-        ds.setMaxLifetime(600_000);
+        // Prepared statement cache (effective for MySQL; harmless for SQLite)
+        data.addDataSourceProperty("cachePrepStmts", true);
+        data.addDataSourceProperty("prepStmtCacheSize", 250);
+        data.addDataSourceProperty("prepStmtCacheSqlLimit", 2048);
+        data.addDataSourceProperty("useServerPrepStmts", true);
 
-        return ds;
+        // Timeout configuration (milliseconds)
+        data.setConnectionTimeout(10_000);
+        data.setIdleTimeout(60_000);
+        data.setMaxLifetime(600_000);
+
+        return data;
     }
 
+    /**
+     * Closes the given {@link HikariDataSource} without propagating exceptions.
+     *
+     * @param ds data source to close (nullable)
+     */
     private static void closeQuietly(@Nullable HikariDataSource ds) {
         try {
-            if (ds != null) ds.close();
-        } catch (Exception ignored) { }
+            if (ds != null) {
+                ds.close();
+            }
+        } catch (Exception ignored) {
+        }
     }
 }

@@ -8,7 +8,7 @@ import eu.okaeri.configs.serdes.SerializationData;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-public class ComponentSerializer implements ObjectSerializer<Component> {
+public final class ComponentSerializer implements ObjectSerializer<Component> {
 
     @Override
     public boolean supports(@NotNull Class<? super Component> type) {

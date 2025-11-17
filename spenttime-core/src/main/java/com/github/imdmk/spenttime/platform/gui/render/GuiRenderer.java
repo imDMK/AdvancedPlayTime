@@ -1,6 +1,7 @@
 package com.github.imdmk.spenttime.platform.gui.render;
 
 import com.github.imdmk.spenttime.platform.gui.item.ItemGui;
+import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.BaseGui;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.Contract;
@@ -9,54 +10,81 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 /**
- * Renders and places {@link ItemGui} into a {@link BaseGui}.
- * <p>
- * Responsibilities:
- * <ul>
- *   <li>Resolve slot (if provided by the item),</li>
- *   <li>Delegate to the concrete implementation to perform permission-aware placement,</li>
- *   <li>Keep API ergonomic via the default method.</li>
- * </ul>
- *
- * <strong>Thread-safety:</strong> GUI mutations must be invoked on the Bukkit main thread.
- * Implementations are expected to be stateless and reusable.
+ * Renders and places {@link ItemGui} into {@link BaseGui} instances.
+ * Invoke only on the Bukkit main thread.
  */
 public interface GuiRenderer {
 
-    /**
-     * Places the given item using its declared slot.
-     *
-     * @throws IllegalArgumentException if {@code item.slot()} is {@code null}
-     */
     @Contract(mutates = "param1")
-    default void put(@NotNull BaseGui gui,
-                     @NotNull ItemGui item,
-                     @NotNull RenderContext context,
-                     @NotNull RenderOptions options,
-                     @NotNull Consumer<InventoryClickEvent> onClick) {
-        if (item.slot() == null) {
-            throw new IllegalArgumentException("Item slot is null");
-        }
-
-        put(gui, item.slot(), item, context, options, onClick);
+    default void setItem(@NotNull BaseGui gui,
+                         int slot,
+                         @NotNull ItemGui item,
+                         @NotNull RenderContext context,
+                         @NotNull RenderOptions options,
+                         @NotNull Consumer<InventoryClickEvent> onClick) {
+        setItem(gui, slot, item, context, options, onClick, b -> {});
     }
 
     /**
-     * Places the given item into the GUI at the specified slot, honoring {@link RenderOptions}
-     * (e.g., permission policy) and wiring the provided click handler.
-     *
-     * @param gui     target GUI
-     * @param slot    0-based inventory slot
-     * @param item    item definition
-     * @param context rendering context (viewer, permission evaluator)
-     * @param options rendering options (policy, onDenied handler)
-     * @param onClick click handler (executed only when allowed by policy)
+     * Sets the item in a specific slot (overwrites existing content).
+     * Supports per-slot customization via {@code builderEditor}.
      */
     @Contract(mutates = "param1")
-    void put(@NotNull BaseGui gui,
-             int slot,
-             @NotNull ItemGui item,
-             @NotNull RenderContext context,
-             @NotNull RenderOptions options,
-             @NotNull Consumer<InventoryClickEvent> onClick);
+    void setItem(@NotNull BaseGui gui,
+                 int slot,
+                 @NotNull ItemGui item,
+                 @NotNull RenderContext context,
+                 @NotNull RenderOptions options,
+                 @NotNull Consumer<InventoryClickEvent> onClick,
+                 @NotNull Consumer<ItemBuilder> builderEditor);
+
+    @Contract(mutates = "param1")
+    default void setItem(@NotNull BaseGui gui,
+                         @NotNull ItemGui item,
+                         @NotNull RenderContext context,
+                         @NotNull RenderOptions options,
+                         @NotNull Consumer<InventoryClickEvent> onClick) {
+        var slot = item.slot();
+        if (slot == null) {
+            throw new IllegalArgumentException("Item slot is null (use add(...) for non-slotted items)");
+        }
+
+        setItem(gui, slot, item, context, options, onClick, b -> {});
+    }
+
+    @Contract(mutates = "param1")
+    default void setItem(@NotNull BaseGui gui,
+                         @NotNull ItemGui item,
+                         @NotNull RenderContext context,
+                         @NotNull RenderOptions options,
+                         @NotNull Consumer<InventoryClickEvent> onClick,
+                         @NotNull Consumer<ItemBuilder> builderEditor) {
+        var slot = item.slot();
+        if (slot == null) {
+            throw new IllegalArgumentException("Item slot is null (use add(...) for non-slotted items)");
+        }
+
+        setItem(gui, slot, item, context, options, onClick, builderEditor);
+    }
+
+    @Contract(mutates = "param1")
+    default void addItem(@NotNull BaseGui gui,
+                         @NotNull ItemGui item,
+                         @NotNull RenderContext context,
+                         @NotNull RenderOptions options,
+                         @NotNull Consumer<InventoryClickEvent> onClick) {
+        addItem(gui, item, context, options, onClick, b -> {});
+    }
+
+    /**
+     * Adds the item to the next free slot.
+     * Supports per-slot customization via {@code builderEditor}.
+     */
+    @Contract(mutates = "param1")
+    void addItem(@NotNull BaseGui gui,
+                 @NotNull ItemGui item,
+                 @NotNull RenderContext context,
+                 @NotNull RenderOptions options,
+                 @NotNull Consumer<InventoryClickEvent> onClick,
+                 @NotNull Consumer<ItemBuilder> builderEditor);
 }

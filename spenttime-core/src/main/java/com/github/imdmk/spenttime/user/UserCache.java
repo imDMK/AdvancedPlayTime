@@ -75,19 +75,19 @@ final class UserCache {
     public void cacheUser(@NotNull User user) {
         Validator.notNull(user, "user cannot be null");
 
-        UUID uuid = user.getUuid();
-        String name = user.getName();
+        final UUID uuid = user.getUuid();
+        final String name = user.getName();
 
-        User previous = this.cacheByUuid.getIfPresent(uuid);
+        final User previous = cacheByUuid.getIfPresent(uuid);
         if (previous != null) {
-            String oldName = previous.getName();
+            final String oldName = previous.getName();
             if (!oldName.equals(name)) {
-                this.cacheByName.invalidate(oldName);
+                cacheByName.invalidate(oldName);
             }
         }
 
-        this.cacheByUuid.put(uuid, user);
-        this.cacheByName.put(name, uuid);
+        cacheByUuid.put(uuid, user);
+        cacheByName.put(name, uuid);
     }
 
     /**
@@ -98,8 +98,8 @@ final class UserCache {
     public void invalidateUser(@NotNull User user) {
         Validator.notNull(user, "user cannot be null");
 
-        this.cacheByUuid.invalidate(user.getUuid());
-        this.cacheByName.invalidate(user.getName());
+        cacheByUuid.invalidate(user.getUuid());
+        cacheByName.invalidate(user.getName());
     }
 
     /**
@@ -110,10 +110,10 @@ final class UserCache {
     public void invalidateByUuid(@NotNull UUID uuid) {
         Validator.notNull(uuid, "uuid cannot be null");
 
-        User cached = this.cacheByUuid.getIfPresent(uuid);
-        this.cacheByUuid.invalidate(uuid);
+        final User cached = cacheByUuid.getIfPresent(uuid);
+        cacheByUuid.invalidate(uuid);
         if (cached != null) {
-            this.cacheByName.invalidate(cached.getName());
+            cacheByName.invalidate(cached.getName());
         }
     }
 
@@ -125,11 +125,11 @@ final class UserCache {
     public void invalidateByName(@NotNull String name) {
         Validator.notNull(name, "name cannot be null");
 
-        UUID uuid = this.cacheByName.getIfPresent(name);
+        final UUID uuid = cacheByName.getIfPresent(name);
         if (uuid != null) {
             invalidateByUuid(uuid);
         } else {
-            this.cacheByName.invalidate(name);
+            cacheByName.invalidate(name);
         }
     }
 
@@ -141,7 +141,7 @@ final class UserCache {
      */
     public @NotNull Optional<User> getUserByUuid(@NotNull UUID uuid) {
         Validator.notNull(uuid, "uuid cannot be null");
-        return Optional.ofNullable(this.cacheByUuid.getIfPresent(uuid));
+        return Optional.ofNullable(cacheByUuid.getIfPresent(uuid));
     }
 
     /**
@@ -152,8 +152,8 @@ final class UserCache {
      */
     public @NotNull Optional<User> getUserByName(@NotNull String name) {
         Validator.notNull(name, "name cannot be null");
-        UUID uuid = this.cacheByName.getIfPresent(name);
-        return uuid == null ? Optional.empty() : Optional.ofNullable(this.cacheByUuid.getIfPresent(uuid));
+        final UUID uuid = cacheByName.getIfPresent(name);
+        return uuid == null ? Optional.empty() : Optional.ofNullable(cacheByUuid.getIfPresent(uuid));
     }
 
     /**
@@ -166,13 +166,13 @@ final class UserCache {
         Validator.notNull(user, "user cannot be null");
         Validator.notNull(oldName, "oldName  cannot be null");
 
-        String newName = user.getName();
+        final String newName = user.getName();
         if (!oldName.equals(newName)) {
-            this.cacheByName.invalidate(oldName);
-            this.cacheByName.put(newName, user.getUuid());
+            cacheByName.invalidate(oldName);
+            cacheByName.put(newName, user.getUuid());
         }
 
-        this.cacheByUuid.put(user.getUuid(), user);
+        cacheByUuid.put(user.getUuid(), user);
     }
 
     /**
@@ -183,8 +183,8 @@ final class UserCache {
     public void forEachUser(@NotNull Consumer<User> action) {
         Validator.notNull(action, "action cannot be null");
 
-        for (User user : this.cacheByUuid.asMap().values()) {
-            String oldName = user.getName();
+        for (final User user : cacheByUuid.asMap().values()) {
+            final String oldName = user.getName();
 
             action.accept(user);
             updateUserNameMapping(user, oldName);
@@ -199,14 +199,14 @@ final class UserCache {
     @NotNull
     @Unmodifiable
     public Collection<User> getCache() {
-        return Collections.unmodifiableCollection(new ArrayList<>(this.cacheByUuid.asMap().values()));
+        return Collections.unmodifiableCollection(new ArrayList<>(cacheByUuid.asMap().values()));
     }
 
     /**
      * Clears both caches completely.
      */
     public void clearCache() {
-        this.cacheByUuid.invalidateAll();
-        this.cacheByName.invalidateAll();
+        cacheByUuid.invalidateAll();
+        cacheByName.invalidateAll();
     }
 }

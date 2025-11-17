@@ -2,6 +2,8 @@ group = "com.github.imdmk.spenttime"
 version = "2.0.4"
 
 subprojects {
+    version = "2.0.4"
+
     repositories {
         mavenCentral()
     }

@@ -88,7 +88,7 @@ public interface UserService {
      * @param user the user to save
      * @return a {@link CompletableFuture} containing the saved user
      */
-    @NotNull CompletableFuture<User> save(@NotNull User user);
+    @NotNull CompletableFuture<User> save(@NotNull User user, @NotNull UserSaveReason reason);
 
     /**
      * Asynchronously deletes a user by their UUID from both the database and cache.

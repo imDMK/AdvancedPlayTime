@@ -14,5 +14,5 @@ public interface IdentifiableGui {
      *
      * @return the non-null unique identifier string
      */
-    @NotNull String getIdentifier();
+    @NotNull String getId();
 }

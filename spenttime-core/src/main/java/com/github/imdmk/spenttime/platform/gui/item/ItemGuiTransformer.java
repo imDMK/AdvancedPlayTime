@@ -8,18 +8,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
 /**
  * Stateless utility that converts {@link ItemGui} definitions into Triumph {@link GuiItem}s.
- * <p>
- * Responsibilities:
- * <ul>
- *   <li>Translate material, name, lore, enchantments and flags to a {@link GuiItem},</li>
- *   <li>Attach a supplied click handler.</li>
- * </ul>
  *
- * <strong>Thread-safety:</strong> This is a pure transformation; it does not touch inventories.
- * However, constructing Bukkit objects off the main thread may vary by server implementation.
- * Prefer invoking on the main thread unless you have profiled and verified safety.
+ * <p><strong>Thread-safety:</strong> Pure transformation; prefer main thread for Bukkit objects.</p>
  */
 public final class ItemGuiTransformer {
 
@@ -30,25 +24,55 @@ public final class ItemGuiTransformer {
     /**
      * Creates a {@link GuiItem} with a no-op click handler.
      *
-     * @param item item definition (must be non-null and internally validated)
+     * @param item item definition (non-null)
      * @return a new {@link GuiItem} instance
-     * @throws IllegalArgumentException if {@code def} is {@code null}
+     * @throws IllegalArgumentException if {@code item} is {@code null}
      */
     public static @NotNull GuiItem toGuiItem(@NotNull ItemGui item) {
-        return toGuiItem(item, event -> {});
+        return toGuiItem(item, (e) -> {}, (b) -> {});
     }
 
     /**
-     * Creates a {@link GuiItem} and wires the provided click handler.
+     * Creates a {@link GuiItem} wiring a {@link GuiAction} click handler.
      *
-     * @param item     item (non-null)
+     * @param item    item (non-null)
      * @param onClick click handler (non-null)
      * @return a new {@link GuiItem} instance
      * @throws IllegalArgumentException if any argument is {@code null}
      */
     public static @NotNull GuiItem toGuiItem(@NotNull ItemGui item, @NotNull GuiAction<InventoryClickEvent> onClick) {
+        return toGuiItem(item, onClick, (b) -> {});
+    }
+
+    /**
+     * Creates a {@link GuiItem} wiring a standard {@link Consumer} click handler.
+     * Convenience overload that adapts to Triumph's {@link GuiAction}.
+     *
+     * @param item    item (non-null)
+     * @param onClick click handler (non-null)
+     * @return a new {@link GuiItem} instance
+     * @throws IllegalArgumentException if any argument is {@code null}
+     */
+    public static @NotNull GuiItem toGuiItem(@NotNull ItemGui item, @NotNull Consumer<InventoryClickEvent> onClick) {
+        return toGuiItem(item, onClick::accept, (b) -> {});
+    }
+
+    /**
+     * Creates a {@link GuiItem} with handler and optional builder editor.
+     *
+     * @param item          item (non-null)
+     * @param onClick       click handler (non-null)
+     * @param builderEditor item builder editor (non-null)
+     * @return a new {@link GuiItem} instance
+     * @throws IllegalArgumentException if any argument is {@code null}
+     */
+    public static @NotNull GuiItem toGuiItem(
+            @NotNull ItemGui item,
+            @NotNull GuiAction<InventoryClickEvent> onClick,
+            @NotNull Consumer<ItemBuilder> builderEditor) {
         Validator.notNull(item, "item cannot be null");
         Validator.notNull(onClick, "onClick cannot be null");
+        Validator.notNull(builderEditor, "builderEditor cannot be null");
 
         final ItemBuilder builder = ItemBuilder.from(item.material())
                 .name(item.name())
@@ -61,9 +85,10 @@ public final class ItemGuiTransformer {
 
         final var flags = item.flags();
         if (flags != null && !flags.isEmpty()) {
-            builder.flags(flags.toArray(new ItemFlag[0]));
+            builder.flags(flags.toArray(ItemFlag[]::new));
         }
 
+        builderEditor.accept(builder);
         return builder.asGuiItem(onClick);
     }
 }

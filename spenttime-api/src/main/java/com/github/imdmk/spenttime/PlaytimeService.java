@@ -29,10 +29,7 @@ public interface PlaytimeService {
      *        a non-null {@link UserTime} representing the player’s total playtime.
      *        If no playtime is recorded or the player has never joined, returns {@link UserTime#ZERO}.
      * @throws NullPointerException
-     *         if {@code uuid} is {@code null}
-     * @apiNote
-     *         Implementations may require this method to be called from the server’s primary thread,
-     *         depending on the underlying API (e.g. Bukkit).
+     *         if {@code uuid} is {@code null}.
      */
     @NotNull UserTime getTime(@NotNull UUID uuid);
 
@@ -46,8 +43,6 @@ public interface PlaytimeService {
      *        the new total playtime value to assign; must not be {@code null}
      * @throws NullPointerException
      *         if {@code uuid} or {@code time} is {@code null}
-     * @apiNote
-     *         This operation may be restricted to the server’s primary thread in some implementations.
      */
     void setTime(@NotNull UUID uuid, @NotNull UserTime time);
 
@@ -59,9 +54,6 @@ public interface PlaytimeService {
      *        must not be {@code null}
      * @throws NullPointerException
      *         if {@code uuid} is {@code null}
-     * @implNote
-     *         The default expectation is to delegate to {@link #setTime(UUID, UserTime)}
-     *         with {@link UserTime#ZERO}.
      */
     void resetTime(@NotNull UUID uuid);
 }

@@ -18,7 +18,7 @@ import java.util.Objects;
 public final class UserDeleteEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
-    private static final boolean ASYNC = false;
+    private static final boolean ASYNC = true;
 
     private final UserDeleteResult result;
 
@@ -28,9 +28,8 @@ public final class UserDeleteEvent extends Event {
      * @param result non-null deletion result
      */
     public UserDeleteEvent(@NotNull UserDeleteResult result) {
-        super(ASYNC); // sync
-        Objects.requireNonNull(result, "result cannot be null");
-        this.result = result;
+        super(ASYNC);
+        this.result = Objects.requireNonNull(result, "result cannot be null");;
     }
 
     /** @return the deletion result including optional user snapshot and status */

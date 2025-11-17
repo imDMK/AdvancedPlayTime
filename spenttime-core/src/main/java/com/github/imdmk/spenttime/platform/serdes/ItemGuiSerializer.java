@@ -11,9 +11,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public class ItemGuiSerializer implements ObjectSerializer<ItemGui> {
+public final class ItemGuiSerializer implements ObjectSerializer<ItemGui> {
 
     @Override
     public boolean supports(@NotNull Class<? super ItemGui> type) {
@@ -50,9 +48,9 @@ public class ItemGuiSerializer implements ObjectSerializer<ItemGui> {
 
     @Override
     public ItemGui deserialize(@NotNull DeserializationData data, @NotNull GenericsDeclaration generics) {
-        Material material = data.get("material", Material.class);
-        Component name = data.get("name", Component.class);
-        List<Component> lore = data.getAsList("lore", Component.class);
+        var material = data.get("material", Material.class);
+        var name = data.get("name", Component.class);
+        var lore = data.getAsList("lore", Component.class);
 
         var slot = data.get("slot", Integer.class);
         var enchantments = data.getAsMap("enchantments", Enchantment.class, Integer.class);

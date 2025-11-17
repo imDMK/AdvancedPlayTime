@@ -3,114 +3,102 @@ package com.github.imdmk.spenttime.shared.message;
 import com.eternalcode.multification.notice.Notice;
 import com.eternalcode.multification.notice.resolver.NoticeResolverDefaults;
 import com.eternalcode.multification.okaeri.MultificationSerdesPack;
+import com.github.imdmk.spenttime.feature.playtime.messages.ENPlaytimeMessages;
+import com.github.imdmk.spenttime.feature.playtime.messages.PlaytimeMessages;
+import com.github.imdmk.spenttime.feature.reload.messages.ENReloadMessages;
+import com.github.imdmk.spenttime.feature.reload.messages.ReloadMessages;
 import com.github.imdmk.spenttime.shared.config.ConfigSection;
 import eu.okaeri.configs.annotation.Comment;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import org.jetbrains.annotations.NotNull;
 
-public class MessageConfig extends ConfigSection {
-
-    @Comment("# Sent when successfully reloaded all plugin configuration files")
-    public Notice reload = Notice.chat("<green>The plugin configuration files has been reloaded. May note that not all functions are reloaded.");
-
-    @Comment("# Sent when there an error occurred while trying to load plugin configuration file")
-    public Notice reloadError = Notice.chat("<red>Failed to reload plugin configuration files. Please see the console.");
-
-    @Comment("# Sent when the player data migration task has started")
-    public Notice migrationStarted = Notice.chat("<green>Started migration of {SIZE} server players... This task runs in the background to avoid lag.");
-
-    @Comment("# Sent periodically during migration to indicate progress")
-    public Notice migrationInProgress = Notice.chat("<green>Migrated {SIZE} server players, {REMAINING} remaining...");
-
-    @Comment("# Sent when migration has completed")
-    public Notice migrationCompleted = Notice.chat("<green>Finished migration of {SIZE} server players...");
-
-    @Comment("# Sent when trying to start migration while it is already running")
-    public Notice migrationAlreadyRunning = Notice.chat("<red>A migration task is already running! You can cancel it using the /migrate cancel command.");
-
-    @Comment("# Sent when trying to cancel migration but no migration is running")
-    public Notice migrationNotRunning = Notice.chat("<red>No migration task is currently scheduled.");
-
-    @Comment("# Sent when the migration task was successfully canceled")
-    public Notice migrationCancelled = Notice.chat("<green>Migration task has been canceled.");
+public final class MessageConfig extends ConfigSection {
 
     @Comment({
-            "# Sent to the player with their own spent time",
-            "# {TIME} - The spent player time"
+            "#",
+            "# Sent when a player attempts to execute a command without having all required permissions.",
+            "#",
+            "# Placeholders:",
+            "#  {PERMISSIONS} - comma-separated list of missing permission nodes required to execute the command.",
+            "#"
     })
-    public Notice ownSpentTime = Notice.chat("<gray>You have spent <red>{TIME} <gray>on the server<dark_gray>.");
+    public Notice commandPermissionMissing = Notice.chat(
+            "<dark_gray>• <red>You are missing required permissions <gray>{PERMISSIONS} <red>to execute this command."
+    );
 
     @Comment({
-            "# Sent to the player with another player's spent time",
-            "# {PLAYER} - Target player name",
-            "# {TIME} - Target spent time"
+            "#",
+            "# Sent when a player uses a command with an invalid or incomplete syntax.",
+            "# ",
+            "# Placeholders:",
+            "#   {USAGE} - correct usage format of the command (e.g. /spenttime <player>).",
+            "#"
     })
-    public Notice otherPlayerSpentTime = Notice.chat("<gray>Player <red>{PLAYER} <gray>has spent <green>{TIME} <gray>on the server<dark_gray>.");
-
-    @Comment("# Sent when there are no top players to display")
-    public Notice topListEmpty = Notice.chat("<red>The top spent time is empty<dark_gray>.");
-
-    @Comment("# Sent when querying top list fails")
-    public Notice topListQueryError = Notice.chat("<red>An error occurred while querying top spent time<dark_gray>.");
+    public Notice commandUsageInvalid = Notice.chat(
+            "<dark_gray>• <red>Invalid command usage! <gray>Correct syntax: <red>{USAGE}<dark_gray>."
+    );
 
     @Comment({
-            "# Sent when a specific player's time has been reset",
-            "# {PLAYER} - The player name"
+            "#",
+            "# Header shown before listing available correct usages for a command.",
+            "# Typically used together with 'commandUsageEntry' when there are multiple valid variants.",
+            "#"
     })
-    public Notice playerTimeReset = Notice.chat("<green>The player {PLAYER} spent time on the server has been reset<dark_gray>.");
-
-    @Comment("# Sent when resetting a specific player's time fails")
-    public Notice playerTimeResetError = Notice.chat("<red>An error occurred while trying to reset player spent time on the server<dark_gray>.");
-
-    @Comment("# Sent when all users' spent time has been reset")
-    public Notice globalTimeReset = Notice.chat("<green>Time spent on the server has been reset for all users<dark_gray>.");
-
-    @Comment("# Sent when global reset fails")
-    public Notice globalTimeResetError = Notice.chat("<red>An error occurred while trying to reset spent time on the server<dark_gray>.");
+    public Notice commandUsageHeader = Notice.chat(
+            "<dark_gray>• <red>Correct usage variants:"
+    );
 
     @Comment({
-            "# Sent when a player's time has been set to a new value",
-            "# {PLAYER} - The player name",
-            "# {TIME} - New spent player time"
+            "#",
+            "# Single entry in the list of valid command usages.",
+            "# Displayed under 'commandUsageHeader' for each available usage.",
+            "# ",
+            "# Placeholders:",
+            "#  {USAGE} - a single valid usage variant of the command.",
+            "#"
     })
-    public Notice playerTimeSet = Notice.chat("<green>The player {PLAYER} spent time has been set to {TIME}<dark_gray>.");
-
-    @Comment("# Sent when setting a player's time fails")
-    public Notice playerTimeSetError = Notice.chat("<red>An error occurred while trying to set player spent time on the server<dark_gray>.");
+    public Notice commandUsageEntry = Notice.chat(
+            "<dark_gray>  ▸ <gray>{USAGE}"
+    );
 
     @Comment({
-            "# Sent when a command is used without required permissions",
-            "# {PERMISSIONS} - Required permission nodes"
+            "#",
+            "# Sent when a command expects a player by name, but no matching player is found.",
+            "# ",
+            "# Placeholders:",
+            "#   {PLAYER_NAME} - nickname provided by the command sender.",
+            "#"
     })
-    public Notice noPermission = Notice.chat("<red>Missing permissions: <dark_red>{PERMISSIONS}<dark_gray>.");
-
-    @Comment("# Sent when player was not found by name or UUID")
-    public Notice playerNotFound = Notice.chat("<red>Player not found<dark_gray>.");
+    public Notice playerNotFound = Notice.chat(
+            "<dark_gray>• <red>Player <gray>{PLAYER_NAME} <red>was not found.<dark_gray>"
+    );
 
     @Comment({
-            "# Sent when player uses command incorrectly",
-            "# {USAGE} - Correct command usage"
+            "#",
+            "# Fallback message for unexpected errors while executing commands or actions.",
+            "# Used when the plugin cannot provide a more detailed error description.",
+            "#"
     })
-    public Notice invalidCommandUsage = Notice.chat("<red>Invalid usage: <dark_red>{USAGE}<dark_gray>.");
+    public Notice actionExecutionError = Notice.chat(
+            "<dark_gray>• <red>An unexpected error occurred while performing this action. "
+                    + "<gray>If the problem persists, contact an administrator.<dark_gray>"
+    );
 
-    @Comment("# Header for multiple command usages")
-    public Notice usageHeader = Notice.chat("<red>Invalid usage:");
+    @Comment({" ", "# Playtime messages", " "})
+    public ENPlaytimeMessages playtimeMessages = new ENPlaytimeMessages();
 
-    @Comment({
-            "# Each entry for valid usages when there are multiple possibilities",
-            "# {USAGE} - Correct command usage"
-    })
-    public Notice usageEntry = Notice.chat("<dark_gray>- <red>{USAGE}");
+    @Comment({" ", "# Reload messages", " "})
+    public ENReloadMessages reloadMessages = new ENReloadMessages();
 
     @Override
     public @NotNull OkaeriSerdesPack getSerdesPack() {
-        return registry -> {
-            registry.register(new MultificationSerdesPack(NoticeResolverDefaults.createRegistry()));
-        };
+        return registry -> registry.register(
+                new MultificationSerdesPack(NoticeResolverDefaults.createRegistry())
+        );
     }
 
     @Override
     public @NotNull String getFileName() {
-        return "messageConfiguration.yml";
+        return "messageConfig.yml";
     }
 }

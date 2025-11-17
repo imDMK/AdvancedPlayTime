@@ -9,7 +9,7 @@ import org.bukkit.Registry;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 
-public class EnchantmentSerializer implements ObjectSerializer<Enchantment> {
+public final class EnchantmentSerializer implements ObjectSerializer<Enchantment> {
 
     @Override
     public boolean supports(@NotNull Class<? super Enchantment> type) {

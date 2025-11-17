@@ -1,7 +1,11 @@
 package com.github.imdmk.spenttime;
 
+import com.github.imdmk.spenttime.feature.migration.MigrationModule;
+import com.github.imdmk.spenttime.feature.playtime.PlaytimeModule;
 import com.github.imdmk.spenttime.infrastructure.module.PluginModule;
 import com.github.imdmk.spenttime.platform.gui.GuiModule;
+import com.github.imdmk.spenttime.shared.config.catalog.ConfigCatalog;
+import com.github.imdmk.spenttime.shared.config.catalog.DefaultConfigCatalog;
 import com.github.imdmk.spenttime.user.UserModule;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
@@ -16,11 +20,11 @@ import java.util.concurrent.TimeUnit;
  * Primary Bukkit plugin entry point for <b>SpentTime</b>.
  *
  * <p>This class serves as the <strong>boundary adapter</strong> between the Bukkit lifecycle
- * ({@link JavaPlugin}) and the internal runtime layer represented by {@link SpentTime}.
+ * ({@link JavaPlugin}) and the internal runtime layer represented by {@link SpentTimePlugin}.
  * It is deliberately minimal, performing only:</p>
  *
  * <ul>
- *   <li>Lifecycle delegation to {@link SpentTime} (enable/disable),</li>
+ *   <li>Lifecycle delegation to {@link SpentTimePlugin} (enable/disable),</li>
  *   <li>Creation of the dedicated worker {@link ExecutorService},</li>
  *   <li>Graceful shutdown and cleanup of async resources.</li>
  * </ul>
@@ -43,23 +47,27 @@ public final class SpentTimePluginLoader extends JavaPlugin {
 
     /**
      * Static registry of all top-level {@link PluginModule} implementations
-     * that will be loaded and initialized by {@link SpentTime}.
+     * that will be loaded and initialized by {@link SpentTimePlugin}.
      */
     private static final List<Class<? extends PluginModule>> MODULES = List.of(
             UserModule.class,
-            GuiModule.class
+            PlaytimeModule.class,
+            GuiModule.class,
+            MigrationModule.class
     );
+
+    private static final ConfigCatalog CONFIG_CATALOG = new DefaultConfigCatalog();
 
     /** Dedicated executor for non-blocking background work (I/O, DB, async utilities). */
     private ExecutorService worker;
 
     /** The core runtime responsible for bootstrapping and managing all subsystems. */
-    private volatile SpentTime core;
+    private volatile SpentTimePlugin core;
 
     /**
      * Called by Bukkit when the plugin is being enabled.
      *
-     * <p>Initializes the {@link SpentTime} runtime and starts all configured modules.
+     * <p>Initializes the {@link SpentTimePlugin} runtime and starts all configured modules.
      * The async worker is created before initialization and remains active until
      * {@link #onDisable()} is called.</p>
      *
@@ -70,15 +78,15 @@ public final class SpentTimePluginLoader extends JavaPlugin {
     public void onEnable() {
         this.worker = newWorkerExecutor();
 
-        this.core = new SpentTime(this, this.worker);
-        this.core.enable(MODULES);
+        this.core = new SpentTimePlugin(this, this.worker);
+        this.core.enable(CONFIG_CATALOG, MODULES);
     }
 
     /**
      * Called by Bukkit when the plugin is being disabled, either on server shutdown
      * or via manual reload.
      *
-     * <p>Ensures a <b>clean shutdown</b> by delegating to {@link SpentTime#disable()},
+     * <p>Ensures a <b>clean shutdown</b> by delegating to {@link SpentTimePlugin#disable()},
      * which tears down all modules, closes database connections, and releases
      * allocated resources. Finally, the executor is terminated and references
      * are nullified to support safe reloads.</p>

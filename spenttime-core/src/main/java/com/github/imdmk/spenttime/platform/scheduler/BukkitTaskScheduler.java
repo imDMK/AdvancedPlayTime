@@ -39,7 +39,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
     @Override
     public @NotNull BukkitTask runSync(@NotNull Runnable runnable) {
         Validator.notNull(runnable, "runnable cannot be null");
-        return this.bukkitScheduler.runTask(this.plugin, runnable);
+        return bukkitScheduler.runTask(plugin, runnable);
     }
 
     /**
@@ -52,7 +52,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
     @Override
     public @NotNull BukkitTask runAsync(@NotNull Runnable runnable) {
         Validator.notNull(runnable, "runnable cannot be null");
-        return this.bukkitScheduler.runTaskAsynchronously(this.plugin, runnable);
+        return bukkitScheduler.runTaskAsynchronously(plugin, runnable);
     }
 
     /**
@@ -66,7 +66,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
     @Override
     public @NotNull BukkitTask runLaterAsync(@NotNull Runnable runnable, long delay) {
         Validator.notNull(runnable, "runnable cannot be null");
-        return this.bukkitScheduler.runTaskLaterAsynchronously(this.plugin, runnable, delay);
+        return bukkitScheduler.runTaskLaterAsynchronously(plugin, runnable, delay);
     }
 
     /**
@@ -80,7 +80,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
     @Override
     public BukkitTask runLaterSync(@NotNull Runnable runnable, long delay) {
         Validator.notNull(runnable, "runnable cannot be null");
-        return this.bukkitScheduler.runTaskLater(this.plugin, runnable, delay);
+        return bukkitScheduler.runTaskLater(plugin, runnable, delay);
     }
 
     /**
@@ -95,7 +95,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
     @Override
     public @NotNull BukkitTask runTimerSync(@NotNull Runnable runnable, long delay, long period) {
         Validator.notNull(runnable, "runnable cannot be null");
-        return this.bukkitScheduler.runTaskTimer(this.plugin, runnable, delay, period);
+        return bukkitScheduler.runTaskTimer(plugin, runnable, delay, period);
     }
 
     /**
@@ -110,7 +110,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
     @Override
     public @NotNull BukkitTask runTimerAsync(@NotNull Runnable runnable, long delay, long period) {
         Validator.notNull(runnable, "runnable cannot be null");
-        return this.bukkitScheduler.runTaskTimerAsynchronously(this.plugin, runnable, delay, period);
+        return bukkitScheduler.runTaskTimerAsynchronously(plugin, runnable, delay, period);
     }
 
     /**
@@ -120,7 +120,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
      */
     @Override
     public void cancelTask(int taskId) {
-        this.bukkitScheduler.cancelTask(taskId);
+        bukkitScheduler.cancelTask(taskId);
     }
 
     /**
@@ -131,6 +131,6 @@ public final class BukkitTaskScheduler implements TaskScheduler {
      */
     @Override
     public void shutdown() {
-        this.bukkitScheduler.cancelTasks(this.plugin);
+        bukkitScheduler.cancelTasks(plugin);
     }
 }

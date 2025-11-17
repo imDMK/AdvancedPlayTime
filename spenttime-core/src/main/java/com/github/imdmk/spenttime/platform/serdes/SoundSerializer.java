@@ -7,7 +7,7 @@ import eu.okaeri.configs.serdes.SerializationData;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
 
-public class SoundSerializer implements ObjectSerializer<Sound> {
+public final class SoundSerializer implements ObjectSerializer<Sound> {
 
     @Override
     public boolean supports(@NotNull Class<? super Sound> type) {

@@ -1,13 +1,14 @@
 package com.github.imdmk.spenttime.platform.gui.view;
 
-import com.github.imdmk.spenttime.shared.Validator;
 import com.github.imdmk.spenttime.platform.gui.config.NavigationBarConfig;
 import com.github.imdmk.spenttime.platform.gui.render.GuiRenderer;
 import com.github.imdmk.spenttime.platform.gui.render.RenderContext;
 import com.github.imdmk.spenttime.platform.gui.render.RenderOptions;
 import com.github.imdmk.spenttime.platform.scheduler.TaskScheduler;
+import com.github.imdmk.spenttime.shared.Validator;
 import dev.triumphteam.gui.guis.BaseGui;
 import dev.triumphteam.gui.guis.PaginatedGui;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,79 +33,87 @@ final class NavigationBar {
 
     private final NavigationBarConfig config;
     private final TaskScheduler scheduler;
-
     private final GuiRenderer renderer;
-    private final RenderContext renderContext;
     private final RenderOptions renderOptions;
 
     /**
      * @param config        navigation bar config (items, etc.)
-     * @param renderer      GUI renderer enforcing permission policy
      * @param scheduler     scheduler for short delayed updates
-     * @param renderContext render context (viewer, permission evaluator)
+     * @param renderer      GUI renderer enforcing permission policy
      * @param renderOptions render options (no-permission policy, onDenied)
      */
     NavigationBar(@NotNull NavigationBarConfig config,
-                  @NotNull GuiRenderer renderer,
                   @NotNull TaskScheduler scheduler,
-                  @NotNull RenderContext renderContext,
+                  @NotNull GuiRenderer renderer,
                   @NotNull RenderOptions renderOptions) {
         this.config = Validator.notNull(config, "config cannot be null");
         this.renderer = Validator.notNull(renderer, "renderer cannot be null");
         this.scheduler = Validator.notNull(scheduler, "scheduler cannot be null");
-        this.renderContext = Validator.notNull(renderContext, "renderContext cannot be null");
         this.renderOptions = Validator.notNull(renderOptions, "renderOptions cannot be null");
     }
 
     /**
      * Places the "Next page" button if {@code gui} is paginated.
      */
-    void setNext(@NotNull BaseGui gui) {
+    void setNext(@NotNull BaseGui gui, @NotNull Player viewer) {
         Validator.notNull(gui, "gui cannot be null");
+        Validator.notNull(viewer, "viewer cannot be null");
+
         if (!(gui instanceof PaginatedGui paginated)) {
             return;
         }
 
-        final int slot = GridSlots.next(gui.getRows());
+        final var renderContext = RenderContext.defaultContext(viewer);
+        final var slot = GridSlots.next(gui.getRows());
+
         final Consumer<InventoryClickEvent> onClick = event -> {
             if (!paginated.next()) {
-                renderer.put(gui, event.getSlot(), config.noNextItem, renderContext, renderOptions, this::noop);
-                restoreLater(() -> setNext(gui));
+                renderer.setItem(gui, event.getSlot(), config.noNextItem, renderContext, renderOptions, this::noop);
+                restoreLater(() -> setNext(gui, viewer));
             }
         };
 
-        renderer.put(gui, slot, config.nextItem, renderContext, renderOptions, onClick);
+        renderer.setItem(gui, slot, config.nextItem, renderContext, renderOptions, onClick);
     }
 
     /**
      * Places the "Previous page" button if {@code gui} is paginated.
      */
-    void setPrevious(@NotNull BaseGui gui) {
+    void setPrevious(@NotNull BaseGui gui, @NotNull Player viewer) {
         Validator.notNull(gui, "gui cannot be null");
+        Validator.notNull(viewer, "viewer cannot be null");
+
         if (!(gui instanceof PaginatedGui paginated)) {
             return;
         }
 
-        final int slot = GridSlots.previous(gui.getRows());
+        final var renderContext = RenderContext.defaultContext(viewer);
+        final var slot = GridSlots.previous(gui.getRows());
+
         final Consumer<InventoryClickEvent> onClick = event -> {
             if (!paginated.previous()) {
-                renderer.put(gui, event.getSlot(), config.noPreviousItem, renderContext, renderOptions, this::noop);
-                restoreLater(() -> setPrevious(gui));
+                renderer.setItem(gui, event.getSlot(), config.noPreviousItem, renderContext, renderOptions, this::noop);
+                restoreLater(() -> setPrevious(gui, viewer));
             }
         };
 
-        renderer.put(gui, slot, config.previousItem, renderContext, renderOptions, onClick);
+        renderer.setItem(gui, slot, config.previousItem, renderContext, renderOptions, onClick);
     }
 
     /**
      * Places the "Exit" button which triggers the provided action.
      */
-    void setExit(@NotNull BaseGui gui, @NotNull Consumer<InventoryClickEvent> exit) {
+    void setExit(
+            @NotNull BaseGui gui,
+            @NotNull Player viewer,
+            @NotNull Consumer<InventoryClickEvent> exit) {
         Validator.notNull(gui, "gui cannot be null");
+        Validator.notNull(viewer, "viewer cannot be null");
         Validator.notNull(exit, "exit cannot be null");
 
-        final int slot = GridSlots.exit(gui.getRows());
-        renderer.put(gui, slot, config.exitItem, renderContext, renderOptions, exit);
+        final var renderContext = RenderContext.defaultContext(viewer);
+        final var slot = GridSlots.exit(gui.getRows());
+        renderer.setItem(gui, slot, config.exitItem, renderContext, renderOptions, exit);
     }
 
     /**

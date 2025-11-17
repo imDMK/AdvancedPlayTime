@@ -1,6 +1,6 @@
 package com.github.imdmk.spenttime.platform.gui.render;
 
-import org.bukkit.entity.Player;
+import org.bukkit.entity.HumanEntity;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,11 +15,11 @@ import org.jetbrains.annotations.NotNull;
 public interface PermissionEvaluator {
 
     /**
-     * Checks whether the given player possesses the specified permission.
+     * Checks whether the given human entity possesses the specified permission.
      *
-     * @param player      the player being checked (non-null)
+     * @param entity      the entity being checked (non-null)
      * @param permission  the permission node (non-null)
      * @return {@code true} if the player has the permission; {@code false} otherwise
      */
-    boolean has(@NotNull Player player, @NotNull String permission);
+    boolean has(@NotNull HumanEntity entity, @NotNull String permission);
 }

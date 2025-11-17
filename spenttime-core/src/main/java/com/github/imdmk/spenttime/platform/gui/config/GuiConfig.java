@@ -1,7 +1,11 @@
 package com.github.imdmk.spenttime.platform.gui.config;
 
+import com.github.imdmk.spenttime.feature.playtime.gui.PlaytimeTopGuiConfig;
 import com.github.imdmk.spenttime.platform.gui.item.ItemGui;
 import com.github.imdmk.spenttime.platform.serdes.ComponentSerializer;
+import com.github.imdmk.spenttime.platform.serdes.EnchantmentSerializer;
+import com.github.imdmk.spenttime.platform.serdes.ItemGuiSerializer;
+import com.github.imdmk.spenttime.platform.serdes.SoundSerializer;
 import com.github.imdmk.spenttime.shared.adventure.AdventureComponents;
 import com.github.imdmk.spenttime.shared.config.ConfigSection;
 import eu.okaeri.configs.annotation.Comment;
@@ -23,10 +27,17 @@ public class GuiConfig extends ConfigSection {
             .lore(Collections.emptyList())
             .build();
 
+    public PlaytimeTopGuiConfig playtimeTopGui = new PlaytimeTopGuiConfig();
+
+    public NavigationBarConfig navigationBar = new NavigationBarConfig();
+
     @Override
     public @NotNull OkaeriSerdesPack getSerdesPack() {
         return registry -> {
             registry.register(new ComponentSerializer());
+            registry.register(new ItemGuiSerializer());
+            registry.register(new EnchantmentSerializer());
+            registry.register(new SoundSerializer());
         };
     }
 

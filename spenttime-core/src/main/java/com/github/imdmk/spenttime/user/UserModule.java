@@ -1,10 +1,14 @@
 package com.github.imdmk.spenttime.user;
 
-import com.github.imdmk.spenttime.infrastructure.database.ormlite.user.UserEntityMapper;
-import com.github.imdmk.spenttime.infrastructure.database.ormlite.user.UserRepositoryOrmLite;
 import com.github.imdmk.spenttime.infrastructure.module.PluginModule;
 import com.github.imdmk.spenttime.infrastructure.module.phase.CommandPhase;
+import com.github.imdmk.spenttime.infrastructure.module.phase.ListenerPhase;
 import com.github.imdmk.spenttime.infrastructure.module.phase.RepositoryPhase;
+import com.github.imdmk.spenttime.user.listener.UserJoinListener;
+import com.github.imdmk.spenttime.user.listener.UserQuitListener;
+import com.github.imdmk.spenttime.user.repository.UserEntityMapper;
+import com.github.imdmk.spenttime.user.repository.UserRepository;
+import com.github.imdmk.spenttime.user.repository.UserRepositoryOrmLite;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
 import org.panda_lang.utilities.inject.Resources;
@@ -12,10 +16,8 @@ import org.panda_lang.utilities.inject.Resources;
 public class UserModule implements PluginModule {
 
     private UserCache userCache;
-
     private UserEntityMapper userEntityMapper;
     private UserRepository userRepository;
-
     private UserService userService;
 
     @Override
@@ -30,8 +32,16 @@ public class UserModule implements PluginModule {
     public void init(@NotNull Injector injector) {
         this.userCache = new UserCache();
         this.userEntityMapper = new UserEntityMapper();
-        this.userRepository = injector.newInstanceWithFields(UserRepositoryOrmLite.class);
-        this.userService = injector.newInstanceWithFields(UserServiceImpl.class);
+        this.userRepository = injector.newInstance(UserRepositoryOrmLite.class);
+        this.userService = injector.newInstance(UserServiceImpl.class);
+    }
+
+    @Override
+    public ListenerPhase listeners(@NotNull Injector injector) {
+        return registrar -> registrar.register(
+                injector.newInstance(UserJoinListener.class),
+                injector.newInstance(UserQuitListener.class)
+        );
     }
 
     @Override
@@ -42,7 +52,7 @@ public class UserModule implements PluginModule {
     @Override
     public CommandPhase commands(@NotNull Injector injector) {
         return configurer -> configurer.configure(builder -> {
-            builder.argument(User.class, injector.newInstanceWithFields(UserArgument.class));
+            builder.argument(User.class, injector.newInstance(UserArgument.class));
         });
     }
 }
