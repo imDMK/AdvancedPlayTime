@@ -115,16 +115,16 @@ public final class AdventureComponents {
     /**
      * Disables italics for all given components.
      *
-     * @param components iterable of component-like objects
+     * @param strings iterable of strings objects
      * @return an unmodifiable list of components with italics disabled
      */
-    public static @NotNull List<Component> withoutItalics(@NotNull Iterable<? extends ComponentLike> components) {
-        Validator.notNull(components, "components cannot be null");
+    public static @NotNull List<Component> withoutItalics(@NotNull String... strings) {
+        Validator.notNull(strings, "components cannot be null");
 
         final List<Component> out = new ArrayList<>();
-        for (final ComponentLike component : components) {
-            Validator.notNull(component, "components contains null element");
-            out.add(withoutItalics(component));
+        for (final String string : strings) {
+            Validator.notNull(string, "components contains null element");
+            out.add(withoutItalics(string));
         }
 
         return List.copyOf(out);

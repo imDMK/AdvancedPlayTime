@@ -40,7 +40,7 @@ public final class BukkitListenerRegistrar {
     public void register(@NotNull Listener... listeners) {
         Validator.notNull(listeners, "listeners cannot be null");
         for (final Listener listener : listeners) {
-            this.plugin.getServer().getPluginManager().registerEvents(listener, this.plugin);
+            plugin.getServer().getPluginManager().registerEvents(listener, plugin);
         }
     }
 
@@ -59,7 +59,7 @@ public final class BukkitListenerRegistrar {
         Validator.notNull(listeners, "listeners cannot be null");
 
         for (final Class<? extends Listener> listenerClass : listeners) {
-            register(injector.newInstanceWithFields(listenerClass));
+            register(injector.newInstance(listenerClass));
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.github.imdmk.spenttime.platform.gui.factory;
 
-import com.github.imdmk.spenttime.shared.Validator;
 import com.github.imdmk.spenttime.platform.gui.config.ConfigurableGui;
+import com.github.imdmk.spenttime.shared.Validator;
 import dev.triumphteam.gui.guis.BaseGui;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +32,7 @@ public final class GuiFactory {
      */
     public static @NotNull BaseGui build(@NotNull ConfigurableGui config) {
         Validator.notNull(config, "config cannot be null");
-        return GuiBuilderFactory.forType(config.type())
+        return GuiBuilderFactory.forType(config.type(), config.rows())
                 .title(config.title())
                 .create();
     }

@@ -119,7 +119,7 @@ public record ItemGui(
             Validator.notNull(enchantment, "enchantment cannot be null");
             Validator.notNull(level, "level cannot be null");
 
-            var newEnchantments = new HashMap<>(this.enchantments);
+            Map<Enchantment, Integer> newEnchantments = new HashMap<>(this.enchantments);
             newEnchantments.put(enchantment, level);
             this.enchantments = Map.copyOf(newEnchantments);
             return this;
@@ -141,7 +141,7 @@ public record ItemGui(
         public Builder appendLore(@NotNull Component... lines) {
             Validator.notNull(lines, "lines cannot be null");
 
-            var newLore = new ArrayList<>(this.lore);
+            List<Component> newLore = new ArrayList<>(this.lore);
             Collections.addAll(newLore, lines);
             this.lore = List.copyOf(newLore);
             return this;

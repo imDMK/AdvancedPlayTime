@@ -1,18 +1,16 @@
 package com.github.imdmk.spenttime.infrastructure.module;
 
-import com.github.imdmk.spenttime.infrastructure.database.ormlite.RepositoryManager;
+import com.github.imdmk.spenttime.infrastructure.database.repository.RepositoryManager;
 import com.github.imdmk.spenttime.platform.events.BukkitListenerRegistrar;
 import com.github.imdmk.spenttime.platform.gui.GuiRegistry;
-import com.github.imdmk.spenttime.platform.litecommands.LiteCommandsConfigurer;
+import com.github.imdmk.spenttime.platform.litecommands.configurer.LiteCommandsConfigurer;
+import com.github.imdmk.spenttime.platform.logger.PluginLogger;
 import com.github.imdmk.spenttime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.spenttime.shared.Validator;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
-import org.panda_lang.utilities.inject.annotations.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -35,20 +33,41 @@ import java.util.List;
  */
 public final class PluginModuleInitializer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PluginModuleInitializer.class);
+    private final Plugin plugin;
+    private final Server server;
+    private final PluginLogger logger;
+    private final TaskScheduler taskScheduler;
+    private final RepositoryManager repositoryManager;
+    private final BukkitListenerRegistrar bukkitListenerRegistrar;
+    private final LiteCommandsConfigurer liteCommandsConfigurer;
+    private final GuiRegistry guiRegistry;
+    private final PluginModuleRegistry moduleRegistry;
+    private final Injector injector;
 
-    @Inject private Plugin plugin;
-    @Inject private Server server;
-    @Inject private TaskScheduler taskScheduler;
-    @Inject private RepositoryManager repositoryManager;
-    @Inject private BukkitListenerRegistrar bukkitListenerRegistrar;
-    @Inject private LiteCommandsConfigurer liteCommandsConfigurer;
-    @Inject private GuiRegistry guiRegistry;
-    @Inject private Injector injector;
-    @Inject private PluginModuleRegistry moduleRegistry;
-
-    /** Tracks the current lifecycle state of the initializer. */
     private State state = State.NEW;
+
+    public PluginModuleInitializer(
+            @NotNull Plugin plugin,
+            @NotNull Server server,
+            @NotNull PluginLogger logger,
+            @NotNull TaskScheduler taskScheduler,
+            @NotNull RepositoryManager repositoryManager,
+            @NotNull BukkitListenerRegistrar bukkitListenerRegistrar,
+            @NotNull LiteCommandsConfigurer liteCommandsConfigurer,
+            @NotNull GuiRegistry guiRegistry,
+            @NotNull PluginModuleRegistry moduleRegistry,
+            @NotNull Injector injector) {
+        this.plugin = Validator.notNull(plugin, "plugin cannot be null");
+        this.server = Validator.notNull(server, "server cannot be null");
+        this.logger = Validator.notNull(logger, "logger cannot be null");
+        this.taskScheduler = Validator.notNull(taskScheduler, "taskScheduler cannot be null");
+        this.repositoryManager = Validator.notNull(repositoryManager, "repositoryManager cannot be null");
+        this.bukkitListenerRegistrar = Validator.notNull(bukkitListenerRegistrar, "bukkitListenerRegistrar cannot be null");
+        this.liteCommandsConfigurer = Validator.notNull(liteCommandsConfigurer, "liteCommandsConfigurer cannot be null");
+        this.guiRegistry = Validator.notNull(guiRegistry, "guiRegistry cannot be null");
+        this.moduleRegistry = Validator.notNull(moduleRegistry, "moduleRegistry cannot be null");
+        this.injector = Validator.notNull(injector, "injector cannot be null");
+    }
 
     /**
      * Loads all provided module types, instantiates them using the {@link Injector},
@@ -70,7 +89,6 @@ public final class PluginModuleInitializer {
         moduleRegistry.instantiateAndSort(injector);
 
         state = State.LOADED;
-        LOGGER.debug("Loaded {} modules", moduleRegistry.modules().size());
     }
 
     /**
@@ -167,7 +185,7 @@ public final class PluginModuleInitializer {
             try {
                 moduleConsumer.accept(m);
             } catch (Throwable t) {
-                LOGGER.error("{} phase failed for module {}", phase, m.getClass().getName(), t);
+                logger.error(t, "%s phase failed for module %s", phase, m.getClass().getName());
             }
         }
     }
@@ -180,8 +198,8 @@ public final class PluginModuleInitializer {
      * @throws IllegalStateException if the current state does not match
      */
     private void ensureState(@NotNull State required, @NotNull String op) {
-        if (this.state != required) {
-            throw new IllegalStateException(op + " requires state " + required + ", but was " + this.state);
+        if (state != required) {
+            throw new IllegalStateException(op + " requires state " + required + ", but was " + state);
         }
     }
 
@@ -191,7 +209,7 @@ public final class PluginModuleInitializer {
      * @throws IllegalStateException if called from an asynchronous thread
      */
     private void ensureMainThread() {
-        if (!this.server.isPrimaryThread()) {
+        if (!server.isPrimaryThread()) {
             throw new IllegalStateException("PluginModuleInitializer must run on Bukkit main thread");
         }
     }

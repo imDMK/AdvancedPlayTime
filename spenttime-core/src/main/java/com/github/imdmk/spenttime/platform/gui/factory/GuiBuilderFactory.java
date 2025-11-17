@@ -26,18 +26,19 @@ public final class GuiBuilderFactory {
      * Returns a TriumphGUI builder matching the given {@link GuiType}.
      *
      * @param type the GUI type
+     * @param rows the GUI rows
      * @return a new {@link BaseGuiBuilder} instance for the given type
      * @throws IllegalArgumentException if {@code type} is {@code null}
      */
     @Contract(pure = true)
-    public static @NotNull BaseGuiBuilder<?, ?> forType(@NotNull GuiType type) {
+    public static @NotNull BaseGuiBuilder<?, ?> forType(@NotNull GuiType type, int rows) {
         Validator.notNull(type, "type cannot be null");
 
         return switch (type) {
-            case STANDARD -> Gui.gui();
-            case PAGINATED -> Gui.paginated();
-            case SCROLLING_VERTICAL -> Gui.scrolling(ScrollType.VERTICAL);
-            case SCROLLING_HORIZONTAL -> Gui.scrolling(ScrollType.HORIZONTAL);
+            case STANDARD -> Gui.gui().rows(rows);
+            case PAGINATED -> Gui.paginated().rows(rows);
+            case SCROLLING_VERTICAL -> Gui.scrolling(ScrollType.VERTICAL).rows(rows);
+            case SCROLLING_HORIZONTAL -> Gui.scrolling(ScrollType.HORIZONTAL).rows(rows);
         };
     }
 
@@ -45,15 +46,16 @@ public final class GuiBuilderFactory {
      * Creates and immediately customizes a TriumphGUI builder.
      *
      * @param type          the GUI type
+     * @param rows          the GUI rows
      * @param editConsumer  consumer for post-creation customization (e.g., size, disableAllInteractions)
      * @return a modified {@link BaseGuiBuilder} instance
      * @throws IllegalArgumentException if {@code type} or {@code editConsumer} is {@code null}
      */
-    public static @NotNull BaseGuiBuilder<?, ?> forType(@NotNull GuiType type, @NotNull Consumer<BaseGuiBuilder<?, ?>> editConsumer) {
+    public static @NotNull BaseGuiBuilder<?, ?> forType(@NotNull GuiType type, int rows, @NotNull Consumer<BaseGuiBuilder<?, ?>> editConsumer) {
         Validator.notNull(type, "type cannot be null");
         Validator.notNull(editConsumer, "editConsumer cannot be null");
 
-        BaseGuiBuilder<?, ?> builder = forType(type);
+        BaseGuiBuilder<?, ?> builder = forType(type, rows);
         editConsumer.accept(builder);
         return builder;
     }

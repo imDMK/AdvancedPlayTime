@@ -24,8 +24,8 @@ public class NavigationBarConfig extends OkaeriConfig {
     })
     public ItemGui nextItem = ItemGui.builder()
             .material(Material.ARROW)
-            .name(AdventureComponents.notItalic("<green>Next page"))
-            .lore(AdventureComponents.notItalic(
+            .name(AdventureComponents.withoutItalics("<green>Next page"))
+            .lore(AdventureComponents.withoutItalics(
                     " ",
                     "<gray>Click <red>RIGHT <gray>to go to the next page",
                     " "
@@ -41,8 +41,8 @@ public class NavigationBarConfig extends OkaeriConfig {
     })
     public ItemGui noNextItem = ItemGui.builder()
             .material(Material.BARRIER)
-            .name(AdventureComponents.notItalic("<red>There's no next page!"))
-            .lore(AdventureComponents.notItalic(
+            .name(AdventureComponents.withoutItalics("<red>There's no next page!"))
+            .lore(AdventureComponents.withoutItalics(
                     " ",
                     "<red>Sorry, there is no next page available.",
                     " "
@@ -59,8 +59,8 @@ public class NavigationBarConfig extends OkaeriConfig {
     })
     public ItemGui previousItem = ItemGui.builder()
             .material(Material.ARROW)
-            .name(AdventureComponents.notItalic("<green>Previous page"))
-            .lore(AdventureComponents.notItalic(
+            .name(AdventureComponents.withoutItalics("<green>Previous page"))
+            .lore(AdventureComponents.withoutItalics(
                     " ",
                     "<gray>Click <red>LEFT <gray>to go to the previous page",
                     " "
@@ -76,8 +76,8 @@ public class NavigationBarConfig extends OkaeriConfig {
     })
     public ItemGui noPreviousItem = ItemGui.builder()
             .material(Material.BARRIER)
-            .name(AdventureComponents.notItalic("<red>There's no previous page!"))
-            .lore(AdventureComponents.notItalic(
+            .name(AdventureComponents.withoutItalics("<red>There's no previous page!"))
+            .lore(AdventureComponents.withoutItalics(
                     " ",
                     "<red>Sorry, there is no previous page available.",
                     " "
@@ -93,8 +93,8 @@ public class NavigationBarConfig extends OkaeriConfig {
     })
     public ItemGui exitItem = ItemGui.builder()
             .material(Material.ACACIA_BUTTON)
-            .name(AdventureComponents.notItalic("<red>Exit GUI"))
-            .lore(AdventureComponents.notItalic(
+            .name(AdventureComponents.withoutItalics("<red>Exit GUI"))
+            .lore(AdventureComponents.withoutItalics(
                     " ",
                     "<gray>Click <red>LEFT <gray>to exit this GUI",
                     " "

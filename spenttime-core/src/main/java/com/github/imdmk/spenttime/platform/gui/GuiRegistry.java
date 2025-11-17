@@ -3,6 +3,8 @@ package com.github.imdmk.spenttime.platform.gui;
 import com.github.imdmk.spenttime.shared.Validator;
 import com.github.imdmk.spenttime.shared.gui.IdentifiableGui;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Locale;
 import java.util.Map;
@@ -10,92 +12,102 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * A thread-safe registry for {@link IdentifiableGui} instances keyed by their identifiers.
- * <p>
- * Identifiers are normalized as {@code trim().toLowerCase(Locale.ROOT)} to avoid duplicates
- * caused by whitespace/casing differences.
- * <p>
- * This class relies on an internal {@link ConcurrentHashMap} and can be used from any thread.
+ * Thread-safe registry of {@link IdentifiableGui}, keyed by normalized id.
+ * Invariant: at most one GUI per concrete class (maintained class index).
  */
 public final class GuiRegistry {
 
-    private final Map<String, IdentifiableGui> registry = new ConcurrentHashMap<>();
+    private final Map<String, IdentifiableGui> byId = new ConcurrentHashMap<>();
+    private final Map<Class<? extends IdentifiableGui>, IdentifiableGui> byClass = new ConcurrentHashMap<>();
 
     /**
-     * Registers (or replaces) the given GUI under its normalized identifier.
+     * Registers (or replaces) GUI by its normalized identifier.
+     * Also updates class index (one instance per class).
      *
-     * @param gui the GUI to register (its identifier must be non-null)
-     * @return the previously registered GUI with the same normalized id, or {@code null} if none existed
-     * @throws NullPointerException if {@code gui} or its identifier is {@code null}
+     * @return previously registered GUI under the same id, or {@code null}.
      */
+    @Nullable
     public IdentifiableGui register(@NotNull IdentifiableGui gui) {
         Validator.notNull(gui, "gui cannot be null");
-        final String id = normalize(Validator.notNull(gui.getIdentifier(), "gui identifier cannot be null"));
-        return registry.put(id, gui);
+        final String id = normalize(Validator.notNull(gui.getId(), "gui identifier cannot be null"));
+
+        final IdentifiableGui previous = byId.put(id, gui);
+
+        // maintain class index (assume single instance per class)
+        final Class<? extends IdentifiableGui> type = gui.getClass();
+        byClass.put(type, gui);
+
+        // if replaced id that pointed to different class instance, clean old class index
+        if (previous != null && previous.getClass() != type) {
+            byClass.compute(previous.getClass(), (k, current) -> current == previous ? null : current);
+        }
+        return previous;
     }
 
     /**
-     * Registers the given GUI only if no GUI is registered under the same normalized id.
+     * Registers GUI only if absent under the same id.
      *
-     * @param gui the GUI to register
-     * @return {@code true} if registration succeeded; {@code false} if an entry already existed
-     * @throws NullPointerException if {@code gui} or its identifier is {@code null}
+     * @return {@code true} if registered, {@code false} if id existed.
      */
     public boolean registerIfAbsent(@NotNull IdentifiableGui gui) {
         Validator.notNull(gui, "gui cannot be null");
-        final String id = normalize(Validator.notNull(gui.getIdentifier(), "gui identifier cannot be null"));
-        return registry.putIfAbsent(id, gui) == null;
+        final String id = normalize(Validator.notNull(gui.getId(), "gui identifier cannot be null"));
+
+        final IdentifiableGui existing = byId.putIfAbsent(id, gui);
+        if (existing == null) {
+            // we won the race; update class index
+            byClass.put(gui.getClass(), gui);
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Unregisters a GUI by its normalized identifier.
-     *
-     * @param id the GUI identifier (any casing/whitespace accepted)
-     * @return the removed GUI instance, or {@code null} if none was registered
-     * @throws NullPointerException if {@code id} is {@code null}
+     * Unregisters GUI by id. Updates class index if pointing to same instance.
      */
+    @Nullable
     public IdentifiableGui unregister(@NotNull String id) {
         final String key = normalize(Validator.notNull(id, "id cannot be null"));
-        return registry.remove(key);
+        final IdentifiableGui removed = byId.remove(key);
+        if (removed != null) {
+            byClass.compute(removed.getClass(), (k, current) -> current == removed ? null : current);
+        }
+        return removed;
     }
 
     /**
-     * Retrieves a GUI by its normalized identifier.
-     *
-     * @param id the GUI identifier (any casing/whitespace accepted)
-     * @return the GUI instance, or {@code null} if not registered
-     * @throws NullPointerException if {@code id} is {@code null}
+     * Case-insensitive lookup by id (whitespace-insensitive).
      */
-    public IdentifiableGui get(@NotNull String id) {
+    @Nullable
+    public IdentifiableGui getById(@NotNull String id) {
         final String key = normalize(Validator.notNull(id, "id cannot be null"));
-        return registry.get(key);
+        return byId.get(key);
     }
 
     /**
-     * Checks whether a GUI with the given normalized identifier is registered.
-     *
-     * @param id the GUI identifier (any casing/whitespace accepted)
-     * @return {@code true} if a GUI with that id exists
-     * @throws NullPointerException if {@code id} is {@code null}
+     * O(1) exact type lookup. Assumes at most one instance per class.
      */
+    @Nullable
+    public <T extends IdentifiableGui> T getByClass(@NotNull Class<T> type) {
+        Validator.notNull(type, "type cannot be null");
+        final IdentifiableGui gui = byClass.get(type);
+        @SuppressWarnings("unchecked")
+        final T cast = (T) gui;
+        return cast;
+    }
+
     public boolean isRegistered(@NotNull String id) {
         final String key = normalize(Validator.notNull(id, "id cannot be null"));
-        return registry.containsKey(key);
+        return byId.containsKey(key);
     }
 
-    /**
-     * Returns an immutable snapshot of all registered (normalized) identifiers.
-     *
-     * @return a set of normalized identifiers
-     */
+    /** Immutable snapshot of normalized ids. */
+    @Unmodifiable
     public Set<String> ids() {
-        return Set.copyOf(registry.keySet());
+        return Set.copyOf(byId.keySet());
     }
 
-    /**
-     * Normalizes GUI identifiers in a locale-stable manner.
-     * Current strategy: {@code trim().toLowerCase(Locale.ROOT)}.
-     */
+    /** Current strategy: trim + lowercased (Locale.ROOT). */
     private static String normalize(@NotNull String id) {
         final String trimmed = id.trim();
         return trimmed.toLowerCase(Locale.ROOT);

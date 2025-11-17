@@ -1,6 +1,6 @@
 package com.github.imdmk.spenttime.infrastructure.module.phase;
 
-import com.github.imdmk.spenttime.platform.litecommands.LiteCommandsConfigurer;
+import com.github.imdmk.spenttime.platform.litecommands.configurer.LiteCommandsConfigurer;
 import org.jetbrains.annotations.NotNull;
 
 /**

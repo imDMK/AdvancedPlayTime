@@ -1,6 +1,7 @@
 package com.github.imdmk.spenttime.platform.gui.render;
 
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,4 +19,15 @@ import org.jetbrains.annotations.NotNull;
 public record RenderContext(
         @NotNull Player viewer,
         @NotNull PermissionEvaluator permissionEvaluator
-) { }
+) {
+
+    /**
+     * Creates a default context that checks if player has permission.
+     *
+     * @return the default {@link RenderContext} instance
+     */
+    public static @NotNull RenderContext defaultContext(@NotNull Player viewer) {
+        return new RenderContext(viewer, Permissible::hasPermission);
+    }
+
+}

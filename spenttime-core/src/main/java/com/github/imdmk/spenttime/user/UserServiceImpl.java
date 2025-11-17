@@ -2,13 +2,13 @@ package com.github.imdmk.spenttime.user;
 
 import com.github.imdmk.spenttime.UserDeleteEvent;
 import com.github.imdmk.spenttime.UserSaveEvent;
-import com.github.imdmk.spenttime.shared.Validator;
 import com.github.imdmk.spenttime.platform.events.BukkitEventCaller;
+import com.github.imdmk.spenttime.platform.logger.PluginLogger;
+import com.github.imdmk.spenttime.shared.Validator;
+import com.github.imdmk.spenttime.user.repository.UserRepository;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.panda_lang.utilities.inject.annotations.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.Collection;
@@ -21,50 +21,61 @@ import java.util.concurrent.TimeUnit;
 
 final class UserServiceImpl implements UserService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final Duration TIMEOUT = Duration.ofSeconds(2L);
 
-    @Inject private UserCache cache;
-    @Inject private UserRepository repository;
-    @Inject private BukkitEventCaller eventCaller;
+    private final PluginLogger logger;
+    private final UserCache cache;
+    private final UserRepository repository;
+    private final BukkitEventCaller eventCaller;
+
+    @Inject
+    UserServiceImpl(
+            @NotNull PluginLogger logger,
+            @NotNull UserCache cache,
+            @NotNull UserRepository repository,
+            @NotNull BukkitEventCaller eventCaller) {
+        this.logger = Validator.notNull(logger, "logger cannot be null");
+        this.cache = Validator.notNull(cache, "cache cannot be null");
+        this.repository = Validator.notNull(repository, "repository cannot be null");
+        this.eventCaller = Validator.notNull(eventCaller, "eventCaller cannot be null");
+    }
 
     @Override
     public @NotNull Optional<User> findCachedByUuid(@NotNull UUID uuid) {
         Validator.notNull(uuid, "uuid cannot be null");
-        return this.cache.getUserByUuid(uuid);
+        return cache.getUserByUuid(uuid);
     }
 
     @Override
     public @NotNull Optional<User> findCachedByName(@NotNull String name) {
         Validator.notNull(name, "name cannot be null");
-        return this.cache.getUserByName(name);
+        return cache.getUserByName(name);
     }
 
     @Override
     @Unmodifiable
     public @NotNull Collection<User> getCachedUsers() {
-        return this.cache.getCache(); // returns unmodifiable
+        return cache.getCache(); // returns unmodifiable
     }
 
     @Override
     public @NotNull CompletableFuture<Optional<User>> findByUuid(@NotNull UUID uuid) {
         Validator.notNull(uuid, "uuid cannot be null");
 
-        Optional<User> cached = this.cache.getUserByUuid(uuid);
+        Optional<User> cached = cache.getUserByUuid(uuid);
         if (cached.isPresent()) {
             return CompletableFuture.completedFuture(cached);
         }
 
-        return this.repository.findByUuid(uuid)
+        return repository.findByUuid(uuid)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .thenApply(opt -> {
-                    opt.ifPresent(this.cache::cacheUser);
+                    opt.ifPresent(cache::cacheUser);
                     return opt;
                 })
-                .whenComplete((u, e) -> {
-                    if (e != null) {
-                        LOGGER.error("An error occurred while trying to find user with id {}", uuid, e);
-                    }
+                .exceptionally(e -> {
+                    logger.error(e, "An error occurred while trying to find user with id %s", uuid);
+                    throw new RuntimeException(e);
                 });
     }
 
@@ -72,21 +83,20 @@ final class UserServiceImpl implements UserService {
     public @NotNull CompletableFuture<Optional<User>> findByName(@NotNull String name) {
         Validator.notNull(name, "name cannot be null");
 
-        Optional<User> cached = this.cache.getUserByName(name);
+        Optional<User> cached = cache.getUserByName(name);
         if (cached.isPresent()) {
             return CompletableFuture.completedFuture(cached);
         }
 
-        return this.repository.findByName(name)
+        return repository.findByName(name)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .thenApply(opt -> {
-                    opt.ifPresent(this.cache::cacheUser);
+                    opt.ifPresent(cache::cacheUser);
                     return opt;
                 })
-                .whenComplete((u, e) -> {
-                    if (e != null) {
-                        LOGGER.error("An error occurred while trying to find user with name {}", name, e);
-                    }
+                .exceptionally(e -> {
+                    logger.error(e, "An error occurred while trying to find user with name %s", name);
+                    throw new RuntimeException(e);
                 });
     }
 
@@ -96,67 +106,65 @@ final class UserServiceImpl implements UserService {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
 
-        return this.repository.findTopBySpentTime(limit)
+        return repository.findTopBySpentTime(limit)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
-                .whenComplete(((users, e) -> {
-                    if (e != null) {
-                        LOGGER.error("An error occurred while trying to find top by spent time with limit {}", limit, e);
-                    }
-                }));
+                .exceptionally(e -> {
+                    logger.error(e, "An error occurred while trying to find top by spent time with limit %s", limit);
+                    throw new RuntimeException(e);
+                });
     }
 
     @Override
-    public @NotNull CompletableFuture<User> save(@NotNull User user) {
+    public @NotNull CompletableFuture<User> save(@NotNull User user, @NotNull UserSaveReason reason) {
         Validator.notNull(user, "user cannot be null");
-        return this.repository.save(user)
+        Validator.notNull(reason, "reason cannot be null");
+
+        return repository.save(user)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
-                .thenApply(savedUser -> {
-                    this.cache.cacheUser(savedUser);
-                    this.eventCaller.callEvent(new UserSaveEvent(savedUser));
-                    return savedUser;
+                .thenApply(saved -> {
+                    cache.cacheUser(saved);
+                    eventCaller.callEvent(new UserSaveEvent(saved, reason));
+                    return saved;
                 })
-                .whenComplete((u, e) -> {
-                    if (e != null) {
-                        LOGGER.error("Failed to save user {}", user.getUuid(), e);
-                    }
+                .exceptionally(e -> {
+                    logger.error(e, "Failed to save user %s", user.getUuid());
+                    throw new RuntimeException(e);
                 });
     }
 
     @Override
     public @NotNull CompletableFuture<UserDeleteResult> deleteByUuid(@NotNull UUID uuid) {
         Validator.notNull(uuid, "uuid cannot be null");
-        return this.repository.deleteByUuid(uuid)
+        return repository.deleteByUuid(uuid)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
-                .thenApply(deleteResult -> {
-                    this.eventCaller.callEvent(new UserDeleteEvent(deleteResult));
-                    if (deleteResult.isSuccess()) {
-                        this.cache.invalidateByUuid(uuid);
+                .thenApply(result -> {
+                    eventCaller.callEvent(new UserDeleteEvent(result));
+                    if (result.isSuccess()) {
+                        cache.invalidateByUuid(uuid);
                     }
-                    return deleteResult;
+                    return result;
                 })
-                .whenComplete((r, e) -> {
-                    if (e != null) {
-                        LOGGER.error("An error occurred while trying to delete user by uuid {}", uuid, e);
-                    }
+                .exceptionally(e -> {
+                    logger.error(e, "An error occurred while trying to delete user by uuid %s", uuid);
+                    throw new RuntimeException(e);
                 });
     }
 
     @Override
     public @NotNull CompletableFuture<UserDeleteResult> deleteByName(@NotNull String name) {
         Validator.notNull(name, "name cannot be null");
-        return this.repository.deleteByName(name)
+        return repository.deleteByName(name)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .thenApply(deleteResult -> {
-                    this.eventCaller.callEvent(new UserDeleteEvent(deleteResult));
+                    eventCaller.callEvent(new UserDeleteEvent(deleteResult));
                     if (deleteResult.isSuccess()) {
-                        this.cache.invalidateByName(name);
+                        cache.invalidateByName(name);
                     }
                     return deleteResult;
                 })
-                .whenComplete((r, e) -> {
-                    if (e != null) {
-                        LOGGER.error("An error occurred while trying to delete user by name {}", name, e);
-                    }
+                .exceptionally(e -> {
+                    logger.error(e, "An error occurred while trying to delete user by name %s", name);
+                    throw new RuntimeException(e);
                 });
     }
 }

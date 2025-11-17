@@ -5,13 +5,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class PluginConfig extends ConfigSection {
 
+    public int topLimit = 50;
+
     @Override
     public @NotNull OkaeriSerdesPack getSerdesPack() {
-        return null;
+        return registry -> {};
     }
 
     @Override
     public @NotNull String getFileName() {
-        return "";
+        return "pluginConfig.yml";
     }
 }

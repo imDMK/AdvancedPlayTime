@@ -9,7 +9,7 @@ record SpentTimeApiAdapter(@NotNull UserService userService,
                            @NotNull PlaytimeService playtimeService) implements SpentTimeApi {
 
     @Inject
-    public SpentTimeApiAdapter(
+    SpentTimeApiAdapter(
             @NotNull UserService userService,
             @NotNull PlaytimeService playtimeService) {
         this.userService = Validator.notNull(userService, "userService cannot be null");
@@ -18,11 +18,11 @@ record SpentTimeApiAdapter(@NotNull UserService userService,
 
     @Override
     public @NotNull UserService userService() {
-        return this.userService;
+        return userService;
     }
 
     @Override
     public @NotNull PlaytimeService playtimeService() {
-        return this.playtimeService;
+        return playtimeService;
     }
 }

@@ -27,13 +27,15 @@ import java.util.UUID;
  */
 public final class BukkitPlaytimeService implements PlaytimeService {
 
-    /** Bukkit statistic key representing total playtime (in ticks). */
     private static final Statistic PLAYTIME_STATISTIC = Statistic.PLAY_ONE_MINUTE;
-
-    /** A shared zero-value constant to avoid repeated allocations. */
     private static final UserTime ZERO_TIME = UserTime.ZERO;
 
-    @Inject private Server server;
+    private final Server server;
+
+    @Inject
+    public BukkitPlaytimeService(@NotNull Server server) {
+        this.server = Validator.notNull(server, "server cannot be null");
+    }
 
     /**
      * Retrieves the total playtime of the specified player.
@@ -48,13 +50,13 @@ public final class BukkitPlaytimeService implements PlaytimeService {
     public @NotNull UserTime getTime(@NotNull UUID uuid) {
         Validator.notNull(uuid, "uuid cannot be null");
 
-        if (!this.isPrimaryThread()) {
+        if (!isPrimaryThread()) {
             throw new UnsupportedOperationException(
                     "BukkitPlaytimeService#getTime must be called from the primary thread."
             );
         }
 
-        int timeTicks = this.getOffline(uuid).getStatistic(PLAYTIME_STATISTIC);
+        int timeTicks = getOffline(uuid).getStatistic(PLAYTIME_STATISTIC);
         if (timeTicks <= 0) {
             return ZERO_TIME;
         }
@@ -75,13 +77,13 @@ public final class BukkitPlaytimeService implements PlaytimeService {
         Validator.notNull(uuid, "uuid cannot be null");
         Validator.notNull(time, "time cannot be null");
 
-        if (!this.isPrimaryThread()) {
+        if (!isPrimaryThread()) {
             throw new UnsupportedOperationException(
                     "BukkitPlaytimeService#setTime must be called from the primary thread."
             );
         }
 
-        this.getOffline(uuid).setStatistic(PLAYTIME_STATISTIC, time.toTicks());
+        getOffline(uuid).setStatistic(PLAYTIME_STATISTIC, time.toTicks());
     }
 
     /**
@@ -92,7 +94,7 @@ public final class BukkitPlaytimeService implements PlaytimeService {
      */
     @Override
     public void resetTime(@NotNull UUID uuid) {
-        this.setTime(uuid, ZERO_TIME);
+        setTime(uuid, ZERO_TIME);
     }
 
     /**
@@ -102,7 +104,7 @@ public final class BukkitPlaytimeService implements PlaytimeService {
      * @return the corresponding {@link OfflinePlayer} handle
      */
     private @NotNull OfflinePlayer getOffline(@NotNull UUID uuid) {
-        return this.server.getOfflinePlayer(uuid);
+        return server.getOfflinePlayer(uuid);
     }
 
     /**
@@ -111,6 +113,6 @@ public final class BukkitPlaytimeService implements PlaytimeService {
      * @return {@code true} if running on the main thread, otherwise {@code false}
      */
     private boolean isPrimaryThread() {
-        return this.server.isPrimaryThread();
+        return server.isPrimaryThread();
     }
 }

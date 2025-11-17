@@ -47,9 +47,9 @@ public final class PluginModuleRegistry {
     public <T extends PluginModule> void setModuleTypes(@NotNull List<Class<? extends T>> types) {
         Validator.notNull(types, "types cannot be null");
         // defensive copy
-        this.moduleTypes = List.copyOf(types);
+        moduleTypes = List.copyOf(types);
         // reset instances
-        this.modules = List.of();
+        modules = List.of();
     }
 
     /**
@@ -64,13 +64,13 @@ public final class PluginModuleRegistry {
     public void instantiateAndSort(@NotNull Injector injector) {
         Validator.notNull(injector, "injector cannot be null");
 
-        final List<PluginModule> created = new ArrayList<>(this.moduleTypes.size());
-        for (Class<? extends PluginModule> type : this.moduleTypes) {
-            created.add(injector.newInstanceWithFields(type));
+        final List<PluginModule> created = new ArrayList<>(moduleTypes.size());
+        for (Class<? extends PluginModule> type : moduleTypes) {
+            created.add(injector.newInstance(type));
         }
 
         created.sort(MODULE_ORDER);
-        this.modules = List.copyOf(created);
+        modules = List.copyOf(created);
     }
 
     /**
@@ -82,7 +82,7 @@ public final class PluginModuleRegistry {
      * @return an unmodifiable list of module instances (never null, may be empty)
      */
     public List<PluginModule> modules() {
-        return Collections.unmodifiableList(this.modules);
+        return Collections.unmodifiableList(modules);
     }
 
     /**
@@ -91,7 +91,7 @@ public final class PluginModuleRegistry {
      * After calling this method, the registry returns to its initial empty state.
      */
     public void clear() {
-        this.moduleTypes = List.of();
-        this.modules = List.of();
+        moduleTypes = List.of();
+        modules = List.of();
     }
 }

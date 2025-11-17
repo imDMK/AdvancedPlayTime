@@ -22,12 +22,19 @@ public record RenderOptions(
 
     /**
      * Creates a default option that disables unauthorized items silently.
-     * <p>
-     * Equivalent to {@code new RenderOptions(NoPermissionPolicy.DISABLE, e -> {})}.
      *
      * @return the default {@link RenderOptions} instance
      */
     public static @NotNull RenderOptions defaultDenySilently() {
         return new RenderOptions(NoPermissionPolicy.DISABLE, e -> {});
+    }
+
+    /**
+     * Creates a default option that hides unauthorized items completely.
+     *
+     * @return the default {@link RenderOptions} instance
+     */
+    public static @NotNull RenderOptions defaultHide() {
+        return new RenderOptions(NoPermissionPolicy.HIDE, e -> {});
     }
 }

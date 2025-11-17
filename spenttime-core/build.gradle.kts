@@ -1,9 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
-plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-}
-
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // Spigot
     maven("https://repo.eternalcode.pl/releases") // Eternalcode
@@ -13,7 +7,7 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT")
-    compileOnly("com.github.placeholderapi:placeholderapi:2.11.6")
+    //compileOnly("com.github.placeholderapi:placeholderapi:2.11.6")
 
     implementation(project(":spenttime-bukkit-api"))
 
@@ -47,41 +41,4 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("dev.rollczi:litecommands-bukkit:3.10.6")
     implementation("dev.rollczi:litecommands-annotations:3.10.6")
-}
-
-tasks.withType<ShadowJar> {
-    archiveFileName.set("SpentTime v${project.version}.jar")
-
-    mergeServiceFiles()
-
-    exclude(
-        "META-INF/*.SF",
-        "META-INF/*.DSA",
-        "META-INF/*.RSA",
-        "module-info.class",
-        "org/intellij/lang/annotations/**",
-        "org/jetbrains/annotations/**"
-    )
-
-    val libPrefix = "com.github.imdmk.spenttime.lib"
-    listOf(
-        "com.zaxxer",            // Hikari
-        "com.j256",              // ORMLite
-        "com.github.benmanes",   // Caffeine
-        "net.kyori",             // Adventure
-        "dev.rollczi",           // litecommands
-        "dev.triumphteam",       // triumph-gui
-        "org.javassist",         // transitively
-        "org.yaml",              // SnakeYAML (okaeri)
-        "org.checkerframework",
-        "org.bstats",
-        "org.json",
-        "eu.okaeri",
-        "panda.std",
-        "panda.utilities"
-    ).forEach { pkg ->
-        relocate(pkg, "$libPrefix.$pkg")
-    }
-
-    minimize()
 }

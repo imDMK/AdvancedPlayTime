@@ -1,6 +1,6 @@
 package com.github.imdmk.spenttime.infrastructure.module.phase;
 
-import com.github.imdmk.spenttime.infrastructure.database.ormlite.RepositoryManager;
+import com.github.imdmk.spenttime.infrastructure.database.repository.RepositoryManager;
 import org.jetbrains.annotations.NotNull;
 
 /**
