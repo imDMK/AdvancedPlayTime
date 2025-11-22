@@ -13,19 +13,18 @@ public final class LoggerMigrationListener implements MigrationListener {
     private static final String PREFIX = "[MIGRATION]";
 
     private final PluginLogger logger;
-    private final AtomicInteger completed;
 
+    private volatile int completed;
     private volatile int total;
 
     public LoggerMigrationListener(@NotNull PluginLogger logger) {
         this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.completed = new AtomicInteger(0);
     }
 
     @Override
     public void onStart(int total) {
         this.total = total;
-        completed.set(0);
+        this.completed = 0;
         logger.info("%s Starting first-time migration of %d players...", PREFIX, total);
     }
 
@@ -46,7 +45,7 @@ public final class LoggerMigrationListener implements MigrationListener {
     }
 
     private void incrementAndLogProgress() {
-        int done = completed.incrementAndGet();
+        int done = completed + 1;
         int total = Math.max(1, this.total);
         int percent = (int) ((done * 100L) / total);
 
