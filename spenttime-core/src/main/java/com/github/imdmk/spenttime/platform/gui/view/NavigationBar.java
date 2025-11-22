@@ -63,17 +63,17 @@ final class NavigationBar {
             return;
         }
 
-        final var renderContext = RenderContext.defaultContext(viewer);
+        final var context = RenderContext.defaultContext(viewer);
         final var slot = GridSlots.next(gui.getRows());
 
         final Consumer<InventoryClickEvent> onClick = event -> {
             if (!paginated.next()) {
-                renderer.setItem(gui, event.getSlot(), config.noNextItem, renderContext, renderOptions, this::noop);
+                renderer.setItem(gui, event.getSlot(), config.noNextItem, context, renderOptions, this::noop);
                 restoreLater(() -> setNext(gui, viewer));
             }
         };
 
-        renderer.setItem(gui, slot, config.nextItem, renderContext, renderOptions, onClick);
+        renderer.setItem(gui, slot, config.nextItem, context, renderOptions, onClick);
     }
 
     /**
@@ -87,17 +87,17 @@ final class NavigationBar {
             return;
         }
 
-        final var renderContext = RenderContext.defaultContext(viewer);
+        final var context = RenderContext.defaultContext(viewer);
         final var slot = GridSlots.previous(gui.getRows());
 
         final Consumer<InventoryClickEvent> onClick = event -> {
             if (!paginated.previous()) {
-                renderer.setItem(gui, event.getSlot(), config.noPreviousItem, renderContext, renderOptions, this::noop);
+                renderer.setItem(gui, event.getSlot(), config.noPreviousItem, context, renderOptions, this::noop);
                 restoreLater(() -> setPrevious(gui, viewer));
             }
         };
 
-        renderer.setItem(gui, slot, config.previousItem, renderContext, renderOptions, onClick);
+        renderer.setItem(gui, slot, config.previousItem, context, renderOptions, onClick);
     }
 
     /**
@@ -111,9 +111,9 @@ final class NavigationBar {
         Validator.notNull(viewer, "viewer cannot be null");
         Validator.notNull(exit, "exit cannot be null");
 
-        final var renderContext = RenderContext.defaultContext(viewer);
+        final var context = RenderContext.defaultContext(viewer);
         final var slot = GridSlots.exit(gui.getRows());
-        renderer.setItem(gui, slot, config.exitItem, renderContext, renderOptions, exit);
+        renderer.setItem(gui, slot, config.exitItem, context, renderOptions, exit);
     }
 
     /**

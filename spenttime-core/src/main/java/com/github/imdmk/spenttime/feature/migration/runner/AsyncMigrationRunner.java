@@ -50,7 +50,7 @@ public final class AsyncMigrationRunner
 
     @PostConstruct
     void postConstruct() {
-        this.executor = createNewExecutor(config.maxConcurrency, config.keepAlive);
+        this.executor = createNewExecutor(config.migrationMaxConcurrency, config.migrationKeepAliveInterval);
     }
 
     @Override

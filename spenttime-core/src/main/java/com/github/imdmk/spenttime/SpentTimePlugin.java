@@ -3,6 +3,7 @@ package com.github.imdmk.spenttime;
 import com.eternalcode.multification.notice.Notice;
 import com.github.imdmk.spenttime.infrastructure.database.DatabaseConfig;
 import com.github.imdmk.spenttime.infrastructure.database.DatabaseConnector;
+import com.github.imdmk.spenttime.infrastructure.database.repository.Repository;
 import com.github.imdmk.spenttime.infrastructure.database.repository.RepositoryContext;
 import com.github.imdmk.spenttime.infrastructure.database.repository.RepositoryManager;
 import com.github.imdmk.spenttime.infrastructure.module.PluginModule;
@@ -23,15 +24,14 @@ import com.github.imdmk.spenttime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.spenttime.shared.Validator;
 import com.github.imdmk.spenttime.shared.config.ConfigBinder;
 import com.github.imdmk.spenttime.shared.config.ConfigManager;
+import com.github.imdmk.spenttime.shared.config.PluginConfig;
 import com.github.imdmk.spenttime.shared.config.catalog.ConfigCatalog;
 import com.github.imdmk.spenttime.shared.message.MessageConfig;
 import com.github.imdmk.spenttime.shared.message.MessageService;
+import com.github.imdmk.spenttime.shared.time.Durations;
 import com.google.common.base.Stopwatch;
 import com.j256.ormlite.support.ConnectionSource;
 import dev.rollczi.litecommands.LiteCommands;
-import dev.rollczi.litecommands.handler.result.ResultHandler;
-import dev.rollczi.litecommands.handler.result.ResultHandlerChain;
-import dev.rollczi.litecommands.invocation.Invocation;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -108,8 +108,13 @@ final class SpentTimePlugin {
         configManager = new ConfigManager(logger, executorService, plugin.getDataFolder());
         configManager.createAll(configCatalog.rootSections());
 
+        // Duration format style
+        final PluginConfig pluginConfig = configManager.require(PluginConfig.class);
+        Durations.setDefaultFormatStyle(pluginConfig.durationFormatStyle);
+
         // Database connection
-        databaseConnector = new DatabaseConnector(logger, configManager.require(DatabaseConfig.class));
+        final DatabaseConfig databaseConfig = configManager.require(DatabaseConfig.class);
+        databaseConnector = new DatabaseConnector(logger, databaseConfig);
         try {
             databaseConnector.connect(plugin.getDataFolder());
         } catch (SQLException e) {
@@ -121,7 +126,8 @@ final class SpentTimePlugin {
         repositoryContext = new RepositoryContext(executorService);
         repositoryManager = new RepositoryManager(logger);
 
-        messageService = new MessageService(configManager.require(MessageConfig.class), BukkitAudiences.create(plugin));
+        final MessageConfig messageConfig = configManager.require(MessageConfig.class);
+        messageService = new MessageService(messageConfig, BukkitAudiences.create(plugin));
 
         taskScheduler = new BukkitTaskScheduler(plugin, server.getScheduler());
         eventCaller = new BukkitEventCaller(server, taskScheduler);
@@ -129,10 +135,10 @@ final class SpentTimePlugin {
         guiRegistry = new GuiRegistry();
 
         liteCommandsConfigurer = new BukkitLiteCommandsConfigurer();
-        liteCommandsConfigurer.configure(b -> {
-            b.invalidUsage(new InvalidUsageHandlerImpl(messageService));
-            b.missingPermission(new MissingPermissionsHandlerImpl(messageService));
-            b.result(Notice.class, new NoticeResultHandlerImpl(messageService));
+        liteCommandsConfigurer.configure(builder -> {
+            builder.invalidUsage(new InvalidUsageHandlerImpl(messageService));
+            builder.missingPermission(new MissingPermissionsHandlerImpl(messageService));
+            builder.result(Notice.class, new NoticeResultHandlerImpl(messageService));
         });
 
         // Dependency Injection
@@ -178,15 +184,15 @@ final class SpentTimePlugin {
     void disable() {
         SpentTimeApiProvider.unregister();
 
-        taskScheduler.shutdown();
-        liteCommands.unregister();
-
-        repositoryManager.close();
-        databaseConnector.close();
-        messageService.shutdown();
-
-        configManager.saveAllSync();
-        configManager.shutdown();
+        Validator.ifNotNull(taskScheduler, TaskScheduler::shutdown);
+        Validator.ifNotNull(liteCommands, LiteCommands::unregister);
+        Validator.ifNotNull(repositoryManager, RepositoryManager::close);
+        Validator.ifNotNull(databaseConnector, DatabaseConnector::close);
+        Validator.ifNotNull(messageService, MessageService::shutdown);
+        Validator.ifNotNull(configManager, (manager) -> {
+            manager.saveAllSync();
+            manager.shutdown();
+        });
 
         logger.info("SpentTime plugin disabled successfully.");
     }

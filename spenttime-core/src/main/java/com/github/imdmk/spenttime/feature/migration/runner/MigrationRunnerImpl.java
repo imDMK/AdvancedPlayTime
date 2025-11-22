@@ -38,7 +38,7 @@ final class MigrationRunnerImpl {
     }
 
     MigrationResult execute() {
-        if (!config.firstSetupMigrationEnabled) {
+        if (!config.initialServerMigrationEnabled) {
             return MigrationResult.empty();
         }
 
@@ -58,14 +58,14 @@ final class MigrationRunnerImpl {
         final AtomicInteger failed  = new AtomicInteger();
         final AtomicInteger inflight = new AtomicInteger(total);
 
-        final Semaphore limiter = new Semaphore(config.maxConcurrency);
+        final Semaphore limiter = new Semaphore(config.migrationMaxConcurrency);
         final CompletableFuture<Void> allDone = new CompletableFuture<>();
 
         for (final OfflinePlayer player : players) {
             limiter.acquireUninterruptibly();
 
             migrator.migrate(player)
-                    .orTimeout(config.taskTimeout.toMillis(), TimeUnit.MILLISECONDS)
+                    .orTimeout(config.migrationTaskTimeout.toMillis(), TimeUnit.MILLISECONDS)
                     .whenComplete((u, e) -> {
                         try {
                             if (e == null) {
@@ -84,7 +84,7 @@ final class MigrationRunnerImpl {
                     });
         }
 
-        allDone.orTimeout(config.globalTimeout.toMillis(), TimeUnit.MILLISECONDS).join();
+        allDone.orTimeout(config.migrationGlobalTimeout.toMillis(), TimeUnit.MILLISECONDS).join();
 
         final Duration took = stopwatch.stop().elapsed();
         final MigrationResult result = new MigrationResult(total, success.get(), failed.get(), took);

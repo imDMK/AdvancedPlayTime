@@ -1,6 +1,7 @@
 package com.github.imdmk.spenttime.user;
 
 import com.github.imdmk.spenttime.UserDeleteEvent;
+import com.github.imdmk.spenttime.UserPreSaveEvent;
 import com.github.imdmk.spenttime.UserSaveEvent;
 import com.github.imdmk.spenttime.platform.events.BukkitEventCaller;
 import com.github.imdmk.spenttime.platform.logger.PluginLogger;
@@ -119,11 +120,13 @@ final class UserServiceImpl implements UserService {
         Validator.notNull(user, "user cannot be null");
         Validator.notNull(reason, "reason cannot be null");
 
+        eventCaller.callEvent(new UserPreSaveEvent(user, reason));
+
         return repository.save(user)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .thenApply(saved -> {
+                    eventCaller.callEvent(new UserSaveEvent(user, reason));
                     cache.cacheUser(saved);
-                    eventCaller.callEvent(new UserSaveEvent(saved, reason));
                     return saved;
                 })
                 .exceptionally(e -> {

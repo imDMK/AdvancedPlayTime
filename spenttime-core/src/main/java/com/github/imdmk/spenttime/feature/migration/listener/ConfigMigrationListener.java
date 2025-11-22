@@ -4,7 +4,6 @@ import com.github.imdmk.spenttime.feature.migration.MigrationConfig;
 import com.github.imdmk.spenttime.feature.migration.MigrationResult;
 import com.github.imdmk.spenttime.shared.Validator;
 import org.jetbrains.annotations.NotNull;
-import org.panda_lang.utilities.inject.annotations.Inject;
 
 public final class ConfigMigrationListener implements MigrationListener {
 
@@ -16,7 +15,7 @@ public final class ConfigMigrationListener implements MigrationListener {
 
     @Override
     public void onEnd(@NotNull MigrationResult result) {
-        config.firstSetupMigrationEnabled = false;
+        config.initialServerMigrationEnabled = false;
         config.save();
     }
 }

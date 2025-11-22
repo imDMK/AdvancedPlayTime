@@ -19,6 +19,8 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 @Permission("command.spenttime.top")
 public final class TimeTopCommand {
 
+    private static final int TOP_QUERY_LIMIT = 100;
+
     private final PluginLogger logger;
     private final PluginConfig config;
     private final MessageService messageService;
@@ -41,11 +43,10 @@ public final class TimeTopCommand {
 
     @Execute
     void playtimeTop(@Context Player viewer) {
-        final int limit = Math.max(1, config.topLimit);
-        userService.findTopBySpentTime(limit)
+        userService.findTopBySpentTime(TOP_QUERY_LIMIT)
                 .thenAccept(topUsers -> guiOpener.open(PlaytimeTopGui.class, viewer, topUsers))
                 .exceptionally(e -> {
-                    logger.error(e, "Failed to open PlaytimeTopGui (limit=%s) for viewer=%s", limit, viewer.getName());
+                    logger.error(e, "Failed to open PlaytimeTopGui for viewer=%s", viewer.getName());
                     this.messageService.send(viewer, n -> n.actionExecutionError);
                     return null;
                 });
