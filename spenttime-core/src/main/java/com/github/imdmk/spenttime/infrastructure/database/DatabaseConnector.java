@@ -13,9 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.logging.Filter;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
 /**
  * Provides a unified connection management layer between HikariCP and ORMLite.

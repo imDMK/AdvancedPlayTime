@@ -1,76 +1,84 @@
 package com.github.imdmk.spenttime.shared.time;
 
 import com.github.imdmk.spenttime.shared.Validator;
-import dev.rollczi.litecommands.time.DurationParser;
-import dev.rollczi.litecommands.time.TemporalAmountParser;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 /**
- * Utility class for working with {@link Duration}: parsing, formatting,
- * and safe normalization (clamping) of time values.
+ * Utility class providing human-readable formatting helpers for {@link Duration}.
  * <p>
- * This class is platform-agnostic and relies on LiteCommands'
- * {@link DurationParser} under the hood.
+ * Supports multiple predefined {@link DurationFormatStyle} strategies.
+ * Zero or negative durations are normalized to {@code "<1s"}.
+ * <p>
+ * This class is stateless apart from the configurable default style.
  */
 public final class Durations {
 
-    /**
-     * Shared parser for duration strings using LiteCommands' {@link DurationParser}.
-     * <p>
-     * Supported suffixes:
-     * <ul>
-     *   <li>s – seconds</li>
-     *   <li>m – minutes</li>
-     *   <li>h – hours</li>
-     *   <li>d – days</li>
-     *   <li>w – weeks</li>
-     *   <li>mo – months</li>
-     *   <li>y – years</li>
-     * </ul>
-     */
-    public static final TemporalAmountParser<Duration> PARSER = new DurationParser()
-            .withUnit("s", ChronoUnit.SECONDS)
-            .withUnit("m", ChronoUnit.MINUTES)
-            .withUnit("h", ChronoUnit.HOURS)
-            .withUnit("d", ChronoUnit.DAYS)
-            .withUnit("w", ChronoUnit.WEEKS)
-            .withUnit("mo", ChronoUnit.MONTHS)
-            .withUnit("y", ChronoUnit.YEARS);
-
     /** Upper bound for any clamped duration (10 years). */
-    private static final Duration MAX = Duration.ofDays(3650);
+    private static final Duration MAX_NORMALIZED_DURATION = Duration.ofDays(3650);
 
-    /** Default placeholder for durations below one second. */
-    private static final String LESS_THAN_SECOND_FORMAT = "<1s";
+    /** Returned when the duration is zero or negative. */
+    private static final String LESS_THAN_SECOND = "<1s";
+
+    /** Default style used when no explicit format style is provided. */
+    private static DurationFormatStyle DEFAULT_FORMAT_STYLE = DurationFormatStyle.NATURAL;
 
     private Durations() {
-        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated.");
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**
-     * Formats a given duration to a human-readable string.
+     * Formats the given duration using {@link #DEFAULT_FORMAT_STYLE}.
      * <p>
-     * Returns {@code "<1s>"} if the duration is zero or negative.
+     * Zero or negative durations return {@code "<1s"}.
      *
-     * @param duration the duration to format (must not be null)
-     * @return formatted string representation
+     * @param duration the duration to format (non-null)
+     * @return formatted duration string (never {@code null})
      */
     public static @NotNull String format(@NotNull Duration duration) {
+        return format(duration, DEFAULT_FORMAT_STYLE);
+    }
+
+    /**
+     * Formats the given duration using the specified {@link DurationFormatStyle}.
+     * <p>
+     * Zero or negative durations return {@code "<1s"}.
+     *
+     * @param duration the duration to format (non-null)
+     * @param style    formatting strategy (non-null)
+     * @return human-readable duration string (never {@code null})
+     * @throws IllegalArgumentException if duration or style are {@code null}
+     */
+    public static @NotNull String format(@NotNull Duration duration, @NotNull DurationFormatStyle style) {
         Validator.notNull(duration, "duration cannot be null");
+        Validator.notNull(style, "style cannot be null");
 
         if (duration.isZero() || duration.isNegative()) {
-            return LESS_THAN_SECOND_FORMAT;
+            return LESS_THAN_SECOND;
         }
 
-        return PARSER.format(duration);
+        return style.format(duration);
+    }
+
+    /**
+     * Sets the global default {@link DurationFormatStyle} used by
+     * {@link #format(Duration)}.
+     * <p>
+     * This modifies process-wide behavior and should be configured during
+     * plugin initialization.
+     *
+     * @param style the new default style (non-null)
+     * @throws IllegalArgumentException if the provided style is {@code null}
+     */
+    public static void setDefaultFormatStyle(@NotNull DurationFormatStyle style) {
+        Validator.notNull(style, "durationFormatStyle cannot be null");
+        DEFAULT_FORMAT_STYLE = style;
     }
 
     /**
      * Normalizes (clamps) the given duration so it’s always non-negative
-     * and does not exceed {@link #MAX}.
+     * and does not exceed {@link #MAX_NORMALIZED_DURATION}.
      *
      * @param input duration to normalize (must not be null)
      * @return clamped, non-negative duration
@@ -82,11 +90,6 @@ public final class Durations {
             return Duration.ZERO;
         }
 
-        return input.compareTo(MAX) > 0 ? MAX : input;
-    }
-
-    /** Alias for {@link #PARSER} getter, for DI or testing purposes. */
-    public static @NotNull TemporalAmountParser<Duration> parser() {
-        return PARSER;
+        return input.compareTo(MAX_NORMALIZED_DURATION) > 0 ? MAX_NORMALIZED_DURATION : input;
     }
 }

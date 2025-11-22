@@ -1,7 +1,6 @@
 package com.github.imdmk.spenttime.feature.playtime.command;
 
 import com.github.imdmk.spenttime.PlaytimeService;
-import com.github.imdmk.spenttime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.spenttime.shared.Validator;
 import com.github.imdmk.spenttime.shared.message.MessageService;
 import com.github.imdmk.spenttime.shared.time.Durations;
@@ -22,16 +21,11 @@ public final class TimeCommand {
 
     private final MessageService messageService;
     private final PlaytimeService playtimeService;
-    private final TaskScheduler taskScheduler;
 
     @Inject
-    public TimeCommand(
-            @NotNull MessageService messageService,
-            @NotNull PlaytimeService playtimeService,
-            @NotNull TaskScheduler taskScheduler) {
+    public TimeCommand(@NotNull MessageService messageService, @NotNull PlaytimeService playtimeService) {
         this.messageService = Validator.notNull(messageService, "messageService cannot be null");
         this.playtimeService = Validator.notNull(playtimeService, "playtimeService cannot be null");
-        this.taskScheduler = Validator.notNull(taskScheduler, "taskScheduler cannot be null");
     }
 
     @Execute

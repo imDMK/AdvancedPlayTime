@@ -3,6 +3,8 @@ package com.github.imdmk.spenttime.shared;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 /**
  * Utility class for common validation checks.
  * <p>
@@ -16,11 +18,16 @@ public final class Validator {
 
     /**
      * Ensures the given object is not {@code null}.
+     * <p>
+     * This method is typically used to validate constructor arguments and
+     * configuration values. If the supplied object is non-null, it is returned
+     * unchanged; otherwise a {@link NullPointerException} is thrown with the
+     * provided message.
      *
-     * @param obj     object to validate
-     * @param message exception message if object is null
+     * @param obj     the value to validate; may be null
+     * @param message exception message used when {@code obj} is null
      * @param <T>     type of the validated object
-     * @return the same object if not null
+     * @return the non-null value of {@code obj}
      * @throws NullPointerException if {@code obj} is null
      */
     public static <T> T notNull(@Nullable T obj, @NotNull String message) {
@@ -29,4 +36,30 @@ public final class Validator {
         }
         return obj;
     }
+
+    /**
+     * Executes the given {@link Consumer} only if the supplied object is not {@code null}.
+     * <p>
+     * This helper is especially useful during shutdown or cleanup phases where
+     * optional components may or may not be initialized. The consumer itself
+     * must be non-null; however, it will only be invoked when {@code obj} is non-null.
+     *
+     * <p>Example usage:
+     * <pre>
+     * Validator.ifNotNull(taskScheduler, TaskScheduler::shutdown);
+     * Validator.ifNotNull(messageService, MessageService::shutdown);
+     * </pre>
+     *
+     * @param obj      the object to check before executing the consumer; may be null
+     * @param consumer operation to execute when {@code obj} is non-null (never null)
+     * @param <T>      type of the object passed to the consumer
+     * @throws NullPointerException if {@code consumer} is null
+     */
+    public static <T> void ifNotNull(@Nullable T obj, @NotNull Consumer<T> consumer) {
+        Validator.notNull(consumer, "consumer is null");
+        if (obj != null) {
+            consumer.accept(obj);
+        }
+    }
+
 }

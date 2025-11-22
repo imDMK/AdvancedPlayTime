@@ -2,6 +2,8 @@ package com.github.imdmk.spenttime.feature.playtime;
 
 import com.github.imdmk.spenttime.PlaytimeService;
 import com.github.imdmk.spenttime.feature.playtime.command.TimeCommand;
+import com.github.imdmk.spenttime.feature.playtime.command.TimeResetAllCommand;
+import com.github.imdmk.spenttime.feature.playtime.command.TimeResetCommand;
 import com.github.imdmk.spenttime.feature.playtime.command.TimeSetCommand;
 import com.github.imdmk.spenttime.feature.playtime.command.TimeTopCommand;
 import com.github.imdmk.spenttime.feature.playtime.gui.PlaytimeTopGui;
@@ -37,7 +39,9 @@ public class PlaytimeModule implements PluginModule {
         return configurer -> configurer.registerCommands(
                 injector.newInstance(TimeCommand.class),
                 injector.newInstance(TimeSetCommand.class),
-                injector.newInstance(TimeTopCommand.class)
+                injector.newInstance(TimeTopCommand.class),
+                injector.newInstance(TimeResetCommand.class),
+                injector.newInstance(TimeResetAllCommand.class)
         );
     }
 

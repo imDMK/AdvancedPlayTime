@@ -7,6 +7,7 @@ import com.github.imdmk.spenttime.platform.gui.item.ItemGui;
 import com.github.imdmk.spenttime.platform.gui.item.ItemGuiTransformer;
 import com.github.imdmk.spenttime.platform.gui.item.ItemVariantPermissionResolver;
 import com.github.imdmk.spenttime.platform.gui.item.ItemVariantResolver;
+import com.github.imdmk.spenttime.platform.gui.render.GuiRenderer;
 import com.github.imdmk.spenttime.platform.gui.render.RenderContext;
 import com.github.imdmk.spenttime.platform.gui.render.RenderOptions;
 import com.github.imdmk.spenttime.platform.gui.render.TriumphGuiRenderer;
@@ -16,20 +17,18 @@ import com.github.imdmk.spenttime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.spenttime.shared.Validator;
 import com.github.imdmk.spenttime.shared.adventure.AdventureFormatter;
 import com.github.imdmk.spenttime.shared.adventure.AdventurePlaceholders;
+import com.github.imdmk.spenttime.shared.gui.GuiType;
 import com.github.imdmk.spenttime.shared.time.Durations;
 import com.github.imdmk.spenttime.user.User;
 import com.github.imdmk.spenttime.user.UserSaveReason;
 import com.github.imdmk.spenttime.user.UserService;
 import com.github.imdmk.spenttime.user.UserTime;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
-import dev.triumphteam.gui.builder.item.SkullBuilder;
 import dev.triumphteam.gui.guis.BaseGui;
 import dev.triumphteam.gui.guis.GuiItem;
-import dev.triumphteam.gui.guis.PaginatedGui;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
@@ -39,7 +38,10 @@ import java.util.function.Consumer;
 public final class PlaytimeTopGui extends AbstractGui implements ParameterizedGui<List<User>> {
 
     private static final String GUI_IDENTIFIER = "playtime-top";
-    private static final ItemVariantResolver ITEM_RESOLVER = new ItemVariantPermissionResolver();
+
+    private static final GuiRenderer GUI_RENDERER = TriumphGuiRenderer.newRenderer();
+    private static final RenderOptions RENDER_OPTIONS = RenderOptions.defaultHide();
+    private static final ItemVariantResolver ITEM_VARIANT_RESOLVER = new ItemVariantPermissionResolver();
 
     private final Server server;
     private final GuiConfig guiConfig;
@@ -53,7 +55,7 @@ public final class PlaytimeTopGui extends AbstractGui implements ParameterizedGu
                           @NotNull PlaytimeTopGuiConfig playtimeTopGuiConfig,
                           @NotNull TaskScheduler taskScheduler,
                           @NotNull UserService userService) {
-        super(navigationBarConfig, taskScheduler, TriumphGuiRenderer.newRenderer(), RenderOptions.defaultHide());
+        super(navigationBarConfig, taskScheduler, GUI_RENDERER, RENDER_OPTIONS);
         this.server = Validator.notNull(server, "server cannot be null");
         this.guiConfig = Validator.notNull(guiConfig, "guiConfig cannot be null");
         this.playtimeTopGuiConfig = Validator.notNull(playtimeTopGuiConfig, "playtimeTopGuiConfig cannot be null");
@@ -81,7 +83,7 @@ public final class PlaytimeTopGui extends AbstractGui implements ParameterizedGu
 
         placeExit(gui, viewer, e -> gui.close(viewer));
 
-        if (gui instanceof PaginatedGui) {
+        if (playtimeTopGuiConfig.type == GuiType.PAGINATED) {
             placeNext(gui, viewer);
             placePrevious(gui, viewer);
         }
@@ -96,7 +98,7 @@ public final class PlaytimeTopGui extends AbstractGui implements ParameterizedGu
             final var placeholders = createPlaceholders(user, position);
 
             final Consumer<InventoryClickEvent> onClick = (click) -> {
-                if (click.getClick() != playtimeTopGuiConfig.resetClick) {
+                if (click.getClick() != playtimeTopGuiConfig.resetClickType) {
                     return;
                 }
 
@@ -116,10 +118,10 @@ public final class PlaytimeTopGui extends AbstractGui implements ParameterizedGu
     }
 
     private ItemGui resolveItemFor(Player viewer, RenderContext context) {
-        final ItemGui adminItem = playtimeTopGuiConfig.headItemAdmin;
-        final ItemGui item = playtimeTopGuiConfig.headItem;
+        final ItemGui adminItem = playtimeTopGuiConfig.playerEntryAdminItem;
+        final ItemGui item = playtimeTopGuiConfig.playerEntryItem;
 
-        return ITEM_RESOLVER.resolve(viewer, context, List.of(adminItem), item);
+        return ITEM_VARIANT_RESOLVER.resolve(viewer, context, List.of(adminItem), item);
     }
 
     private AdventurePlaceholders createPlaceholders(User topUser, int position) {
@@ -127,7 +129,7 @@ public final class PlaytimeTopGui extends AbstractGui implements ParameterizedGu
                 .with("{PLAYER_NAME}", topUser.getName())
                 .with("{PLAYER_POSITION}", position)
                 .with("{PLAYER_PLAYTIME}", Durations.format(topUser.getSpentTime().toDuration()))
-                .with("{RESET_CLICK}", playtimeTopGuiConfig.resetClick.name())
+                .with("{CLICK_RESET}", playtimeTopGuiConfig.resetClickType.name())
                 .build();
     }
 

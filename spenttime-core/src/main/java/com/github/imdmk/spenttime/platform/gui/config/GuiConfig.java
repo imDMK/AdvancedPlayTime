@@ -17,18 +17,20 @@ import java.util.Collections;
 
 public class GuiConfig extends ConfigSection {
 
-    @Comment("# Enable border around all GUIs")
+    @Comment({" ", "# Enable border around all GUIs", " "})
     public boolean fillBorder = true;
 
-    @Comment("# Item used as the border around GUIs")
+    @Comment({" ", "# Item used as the border around GUIs", " "})
     public ItemGui borderItem = ItemGui.builder()
             .material(Material.GRAY_STAINED_GLASS_PANE)
             .name(AdventureComponents.text(" "))
             .lore(Collections.emptyList())
             .build();
 
+    @Comment({" ", "# Playtime top GUI", " "})
     public PlaytimeTopGuiConfig playtimeTopGui = new PlaytimeTopGuiConfig();
 
+    @Comment({" ", "# Navigation Bar", " "})
     public NavigationBarConfig navigationBar = new NavigationBarConfig();
 
     @Override
