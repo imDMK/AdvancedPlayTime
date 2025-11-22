@@ -2,6 +2,7 @@ package com.github.imdmk.spenttime;
 
 import com.github.imdmk.spenttime.feature.migration.MigrationModule;
 import com.github.imdmk.spenttime.feature.playtime.PlaytimeModule;
+import com.github.imdmk.spenttime.feature.reload.ReloadModule;
 import com.github.imdmk.spenttime.infrastructure.module.PluginModule;
 import com.github.imdmk.spenttime.platform.gui.GuiModule;
 import com.github.imdmk.spenttime.shared.config.catalog.ConfigCatalog;
@@ -53,7 +54,8 @@ public final class SpentTimePluginLoader extends JavaPlugin {
             UserModule.class,
             PlaytimeModule.class,
             GuiModule.class,
-            MigrationModule.class
+            MigrationModule.class,
+            ReloadModule.class
     );
 
     private static final ConfigCatalog CONFIG_CATALOG = new DefaultConfigCatalog();
