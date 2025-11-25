@@ -65,6 +65,8 @@ public final class UserPreSaveEvent extends Event {
 
     /**
      * Returns the static handler list for this event type.
+     *
+     * @return the handler list of this event.
      */
     @Override
     public @NotNull HandlerList getHandlers() {
@@ -73,6 +75,8 @@ public final class UserPreSaveEvent extends Event {
 
     /**
      * Returns the static handler list for this event type.
+     *
+     * @return the list of handlers for this event.
      */
     public static @NotNull HandlerList getHandlerList() {
         return HANDLERS;

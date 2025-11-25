@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * <p><strong>API note:</strong> Time is exposed exclusively via {@link UserTime}. Raw millisecond values
  * or {@link java.time.Duration} are intentionally not part of the public API.</p>
  *
- * @implNote
  * <ul>
  *   <li><strong>Thread-safety:</strong> The time counter uses an {@link AtomicLong}. The {@code name} field
  *   is {@code volatile}. Each field provides atomic visibility on its own; compound/combined operations

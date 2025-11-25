@@ -5,7 +5,7 @@ import eu.okaeri.configs.annotation.Comment;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import org.jetbrains.annotations.NotNull;
 
-public class PluginConfig extends ConfigSection {
+public final class PluginConfig extends ConfigSection {
 
     @Comment({
             "#",

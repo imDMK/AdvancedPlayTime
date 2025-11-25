@@ -12,7 +12,7 @@ import org.bukkit.Material;
  * Defines visual representation and behavior for navigation controls:
  * next, previous, and exit buttons displayed in inventory-based interfaces.
  */
-public class NavigationBarConfig extends OkaeriConfig {
+public final class NavigationBarConfig extends OkaeriConfig {
 
     @Comment({
             "# ",

@@ -6,13 +6,10 @@ import com.github.imdmk.spenttime.UserSaveEvent;
 import com.github.imdmk.spenttime.shared.Validator;
 import com.github.imdmk.spenttime.user.User;
 import com.github.imdmk.spenttime.user.UserSaveReason;
-import com.github.imdmk.spenttime.user.UserService;
 import com.github.imdmk.spenttime.user.UserTime;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 

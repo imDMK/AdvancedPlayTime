@@ -1,97 +1,37 @@
 package com.github.imdmk.spenttime;
 
-import com.github.imdmk.spenttime.feature.migration.MigrationModule;
-import com.github.imdmk.spenttime.feature.playtime.PlaytimeModule;
-import com.github.imdmk.spenttime.feature.reload.ReloadModule;
-import com.github.imdmk.spenttime.infrastructure.module.PluginModule;
-import com.github.imdmk.spenttime.platform.gui.GuiModule;
-import com.github.imdmk.spenttime.shared.config.catalog.ConfigCatalog;
-import com.github.imdmk.spenttime.shared.config.catalog.DefaultConfigCatalog;
-import com.github.imdmk.spenttime.user.UserModule;
+import com.github.imdmk.spenttime.shared.Validator;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
-/**
- * Primary Bukkit plugin entry point for <b>SpentTime</b>.
- *
- * <p>This class serves as the <strong>boundary adapter</strong> between the Bukkit lifecycle
- * ({@link JavaPlugin}) and the internal runtime layer represented by {@link SpentTimePlugin}.
- * It is deliberately minimal, performing only:</p>
- *
- * <ul>
- *   <li>Lifecycle delegation to {@link SpentTimePlugin} (enable/disable),</li>
- *   <li>Creation of the dedicated worker {@link ExecutorService},</li>
- *   <li>Graceful shutdown and cleanup of async resources.</li>
- * </ul>
- *
- * <h3>Design Principles</h3>
- * <ul>
- *   <li><b>Single Responsibility:</b> Coordinates lifecycle and resource management only.</li>
- *   <li><b>Fail-fast:</b> Crashes early if initialization fails, ensuring deterministic state.</li>
- *   <li><b>Reload-safe:</b> Nullifies references and shuts down threads on disable to prevent
- *   classloader retention after /reload.</li>
- * </ul>
- *
- * <h3>Threading Model</h3>
- * <p>Uses a <b>single-threaded daemon executor</b> for all asynchronous operations, typically
- * I/O, database queries, or background tasks. The thread is named {@code SpentTime-Worker} for
- * clarity in thread dumps and diagnostic tools.</p>
- *
- */
+
 public final class SpentTimePluginLoader extends JavaPlugin {
 
-    /**
-     * Static registry of all top-level {@link PluginModule} implementations
-     * that will be loaded and initialized by {@link SpentTimePlugin}.
-     */
-    private static final List<Class<? extends PluginModule>> MODULES = List.of(
-            UserModule.class,
-            PlaytimeModule.class,
-            GuiModule.class,
-            MigrationModule.class,
-            ReloadModule.class
-    );
+    private final ExecutorService executor;
+    private final PluginLoaderSettings settings;
 
-    private static final ConfigCatalog CONFIG_CATALOG = new DefaultConfigCatalog();
-
-    /** Dedicated executor for non-blocking background work (I/O, DB, async utilities). */
-    private ExecutorService worker;
-
-    /** The core runtime responsible for bootstrapping and managing all subsystems. */
     private volatile SpentTimePlugin core;
 
-    /**
-     * Called by Bukkit when the plugin is being enabled.
-     *
-     * <p>Initializes the {@link SpentTimePlugin} runtime and starts all configured modules.
-     * The async worker is created before initialization and remains active until
-     * {@link #onDisable()} is called.</p>
-     *
-     * <p>In case of an initialization failure, a stack trace will be logged, and
-     * Bukkit will automatically disable this plugin to prevent half-initialized state.</p>
-     */
+    public SpentTimePluginLoader(@NotNull ExecutorService executor, @NotNull PluginLoaderSettings settings) {
+        this.executor = Validator.notNull(executor, "executor cannot be null");
+        this.settings = Validator.notNull(settings, "settings cannot be null");
+    }
+
+    public SpentTimePluginLoader() {
+        this(SpentTimeExecutorFactory.newWorkerExecutor(), new DefaultPluginLoaderSettings());
+    }
+
     @Override
     public void onEnable() {
-        this.worker = newWorkerExecutor();
-
-        this.core = new SpentTimePlugin(this, this.worker);
-        this.core.enable(CONFIG_CATALOG, MODULES);
+        this.core = new SpentTimePlugin(this, executor);
+        this.core.enable(settings.configSections(), settings.pluginModules());
     }
 
     /**
      * Called by Bukkit when the plugin is being disabled, either on server shutdown
      * or via manual reload.
-     *
-     * <p>Ensures a <b>clean shutdown</b> by delegating to {@link SpentTimePlugin#disable()},
-     * which tears down all modules, closes database connections, and releases
-     * allocated resources. Finally, the executor is terminated and references
-     * are nullified to support safe reloads.</p>
      */
     @Override
     public void onDisable() {
@@ -100,45 +40,6 @@ public final class SpentTimePluginLoader extends JavaPlugin {
             this.core = null;
         }
 
-        shutdownQuietly(this.worker);
-        this.worker = null;
-    }
-
-    /**
-     * Creates a dedicated single-threaded worker executor for asynchronous plugin operations.
-     * <p>The executor uses a named daemon thread ({@code SpentTime-Worker})
-     *
-     * @return configured single-threaded executor service
-     */
-    private static ExecutorService newWorkerExecutor() {
-        ThreadFactory factory = runnable -> {
-            Thread thread = new Thread(runnable, "SpentTime-Worker");
-            thread.setDaemon(true);
-            return thread;
-        };
-
-        return Executors.newSingleThreadExecutor(factory);
-    }
-
-    /**
-     * Shuts down the given executor quietly, awaiting termination for a short period.
-     * If it fails to terminate gracefully, all running tasks are forcibly cancelled.
-     *
-     * @param executor the executor to shut down, may be {@code null}
-     */
-    private static void shutdownQuietly(@Nullable ExecutorService executor) {
-        if (executor == null) {
-            return;
-        }
-
-        executor.shutdown();
-        try {
-            if (!executor.awaitTermination(3, TimeUnit.SECONDS)) {
-                executor.shutdownNow();
-            }
-        } catch (InterruptedException ie) {
-            executor.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
+        SpentTimeExecutorFactory.shutdownQuietly(executor);
     }
 }

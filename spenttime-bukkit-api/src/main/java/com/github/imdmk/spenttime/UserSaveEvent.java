@@ -29,6 +29,7 @@ public final class UserSaveEvent extends Event {
      * Constructs a new {@code UserSaveEvent}.
      *
      * @param user the user that was saved (non-null)
+     * @param reason the reason of user save
      */
     public UserSaveEvent(@NotNull User user, @NotNull UserSaveReason reason) {
         super(ASYNC);
@@ -36,23 +37,42 @@ public final class UserSaveEvent extends Event {
         this.reason = Objects.requireNonNull(reason, "reason cannot be null");
     }
 
-    /** @return the {@link User} involved in this event */
+    /**
+     * Returns the {@link User} associated with this event.
+     *
+     * @return non-null user involved in this event
+     */
     public @NotNull User getUser() {
         return this.user;
     }
 
-    /** @return the {@link UserSaveReason} involved in this event */
-    public UserSaveReason getReason() {
+    /**
+     * Returns the reason why this save operation was triggered.
+     *
+     * @return non-null {@link UserSaveReason} describing the save cause
+     */
+    public @NotNull UserSaveReason getReason() {
         return this.reason;
     }
 
-    /** @return the static {@link HandlerList} for this event type */
+    /**
+     * Returns the handler list used internally by Bukkit to manage event listeners.
+     *
+     * @return non-null static {@link HandlerList} for this event type
+     */
     @Override
     public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 
-    /** @return the static {@link HandlerList} for this event type */
+    /**
+     * Returns the static handler list for this event type.
+     * <p>
+     * This method is required by the Bukkit event system and is used
+     * to register and manage listeners for this event.
+     *
+     * @return non-null static {@link HandlerList}
+     */
     public static @NotNull HandlerList getHandlerList() {
         return HANDLERS;
     }

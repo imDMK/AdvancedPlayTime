@@ -1,21 +1,16 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
+group = "com.github.imdmk.spenttime.plugin"
+
 plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
     id("com.gradleup.shadow") version "9.2.1"
 }
 
-repositories {
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // Spigot
-    maven("https://repo.eternalcode.pl/releases") // Eternalcode
-    maven("https://storehouse.okaeri.eu/repository/maven-public/") // Okaeri
-    maven("https://repo.panda-lang.org/releases") // Litecommands
-}
-
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly("org.jetbrains:annotations:26.0.2")
+    compileOnly("org.spigotmc:spigot-api:1.21.10-R0.1-SNAPSHOT")
 
-    api("org.jetbrains:annotations:26.0.2")
     implementation(project(":spenttime-core"))
 }
 
@@ -26,38 +21,45 @@ tasks.build {
 tasks.withType<ShadowJar> {
     archiveFileName.set("SpentTime v${project.version} (MC 1.17.x-1.21.x).jar")
 
-//    mergeServiceFiles()
-//
-//    exclude(
-//        "META-INF/*.SF",
-//        "META-INF/*.DSA",
-//        "META-INF/*.RSA",
-//        "module-info.class",
-//        "org/intellij/lang/annotations/**",
-//        "org/jetbrains/annotations/**"
-//    )
-//
-//    val libPrefix = "com.github.imdmk.spenttime.lib"
-//    listOf(
-//        "com.zaxxer",            // Hikari
-//        "com.j256",              // ORMLite
-//        "com.github.benmanes",   // Caffeine
-//        "net.kyori",             // Adventure
-//        "dev.rollczi",           // litecommands
-//        "dev.triumphteam",       // triumph-gui
-//        "org.javassist",         // transitively
-//        "org.yaml",              // SnakeYAML (okaeri)
-//        "org.checkerframework",
-//        "org.bstats",
-//        "org.json",
-//        "eu.okaeri",
-//        "panda.std",
-//        "panda.utilities"
-//    ).forEach { pkg ->
-//        relocate(pkg, "$libPrefix.$pkg")
-//    }
-//
-//    minimize()
+    mergeServiceFiles()
+
+    exclude(
+        "META-INF/*.SF",
+        "META-INF/*.DSA",
+        "META-INF/*.RSA",
+        "module-info.class",
+        "org/intellij/lang/annotations/**",
+        "org/jetbrains/annotations/**"
+    )
+
+    val relocationPrefix = "com.github.imdmk.spenttime.lib"
+    listOf(
+        "com.alessiodp.libby",
+        "com.eternalcode.multification",
+        "com.github.benmanes.caffeine",
+        "com.google.errorprone",
+        "com.google.gson",
+        "com.j256.ormlite",
+        "com.zaxxer.hikari",
+        "dev.rollczi.litecommands",
+        "dev.triumphteam.gui",
+        "eu.okaeri.configs",
+        "javassist",
+        "net.kyori",
+        "org.bstats",
+        "org.jspecify.annotations",
+        "org.panda_lang.utilities",
+        //"org.slf4j",
+        "org.yaml.snakeyaml",
+        "panda.std",
+        "panda.utilities"
+    ).forEach { pkg ->
+        relocate(pkg, "$relocationPrefix.$pkg")
+    }
+
+    minimize {
+        exclude(dependency("com.github.ben-manes.caffeine:caffeine"))
+    }
 }
 
 bukkit {

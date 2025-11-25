@@ -9,7 +9,7 @@ import dev.rollczi.litecommands.invocation.Invocation;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class NoticeResultHandlerImpl implements ResultHandler<CommandSender, Notice> {
+public final class NoticeResultHandlerImpl implements ResultHandler<CommandSender, Notice> {
 
     private final MessageService messageService;
 
