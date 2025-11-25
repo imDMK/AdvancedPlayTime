@@ -9,7 +9,7 @@ import dev.rollczi.litecommands.permission.MissingPermissionsHandler;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class MissingPermissionsHandlerImpl implements MissingPermissionsHandler<CommandSender> {
+public final class MissingPermissionsHandlerImpl implements MissingPermissionsHandler<CommandSender> {
 
     private final MessageService messageService;
 

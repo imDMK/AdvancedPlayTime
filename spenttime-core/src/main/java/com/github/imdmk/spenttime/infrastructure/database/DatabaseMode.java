@@ -7,17 +7,16 @@ package com.github.imdmk.spenttime.infrastructure.database;
  */
 public enum DatabaseMode {
 
-    /**
-     * Local file-based database using SQLite.
-     * <p>
-     * Recommended for development or lightweight deployments.
-     */
+    MYSQL,
+
+    MARIADB,
+
     SQLITE,
 
-    /**
-     * Remote relational database using MySQL.
-     * <p>
-     * Recommended for production environments requiring scalability.
-     */
-    MYSQL
+    POSTGRESQL,
+
+    H2,
+
+    SQL
+
 }

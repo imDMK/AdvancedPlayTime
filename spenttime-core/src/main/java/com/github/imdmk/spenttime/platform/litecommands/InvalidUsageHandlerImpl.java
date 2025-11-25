@@ -10,7 +10,7 @@ import dev.rollczi.litecommands.schematic.Schematic;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSender> {
+public final class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSender> {
 
     private final MessageService messageService;
 

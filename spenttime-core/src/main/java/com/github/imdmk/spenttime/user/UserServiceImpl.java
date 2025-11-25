@@ -6,14 +6,15 @@ import com.github.imdmk.spenttime.UserSaveEvent;
 import com.github.imdmk.spenttime.platform.events.BukkitEventCaller;
 import com.github.imdmk.spenttime.platform.logger.PluginLogger;
 import com.github.imdmk.spenttime.shared.Validator;
+import com.github.imdmk.spenttime.user.cache.UserCache;
 import com.github.imdmk.spenttime.user.repository.UserRepository;
+import com.github.imdmk.spenttime.user.top.TopUsersCache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
 import java.time.Duration;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +27,7 @@ final class UserServiceImpl implements UserService {
 
     private final PluginLogger logger;
     private final UserCache cache;
+    private final TopUsersCache topUsersCache;
     private final UserRepository repository;
     private final BukkitEventCaller eventCaller;
 
@@ -33,10 +35,12 @@ final class UserServiceImpl implements UserService {
     UserServiceImpl(
             @NotNull PluginLogger logger,
             @NotNull UserCache cache,
+            @NotNull TopUsersCache topUsersCache,
             @NotNull UserRepository repository,
             @NotNull BukkitEventCaller eventCaller) {
         this.logger = Validator.notNull(logger, "logger cannot be null");
         this.cache = Validator.notNull(cache, "cache cannot be null");
+        this.topUsersCache = Validator.notNull(topUsersCache, "topUsersCache cannot be null");
         this.repository = Validator.notNull(repository, "repository cannot be null");
         this.eventCaller = Validator.notNull(eventCaller, "eventCaller cannot be null");
     }
@@ -103,16 +107,7 @@ final class UserServiceImpl implements UserService {
 
     @Override
     public @NotNull CompletableFuture<List<User>> findTopBySpentTime(int limit) {
-        if (limit <= 0) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-
-        return repository.findTopBySpentTime(limit)
-                .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
-                .exceptionally(e -> {
-                    logger.error(e, "An error occurred while trying to find top by spent time with limit %s", limit);
-                    throw new RuntimeException(e);
-                });
+        return topUsersCache.getTopBySpentTime(limit);
     }
 
     @Override

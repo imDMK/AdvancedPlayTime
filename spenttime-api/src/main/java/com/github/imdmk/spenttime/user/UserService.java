@@ -72,11 +72,16 @@ public interface UserService {
     @NotNull CompletableFuture<Optional<User>> findByName(@NotNull String name);
 
     /**
-     * Asynchronously retrieves the top users sorted by total spent time, in descending order.
+     * Retrieves a list of the top users sorted by spent playtime in descending order.
+     * <p>
+     * The result may come from the in-memory
+     * cached leaderboard or trigger an asynchronous refresh when the cache has expired
+     * or does not satisfy the requested limit.
+     * </p>
      *
-     * @param limit the maximum number of users to return
-     * @return a {@link CompletableFuture} containing a list of top users
-     *         sorted by spent time descending
+     * @param limit the maximum number of users to return; values ≤ 0 yield an empty list
+     * @return a {@link CompletableFuture} that completes with a list of users ordered
+     *         by spent time descending, either from cache or freshly queried from the repository
      */
     @NotNull CompletableFuture<List<User>> findTopBySpentTime(int limit);
 
@@ -86,6 +91,7 @@ public interface UserService {
      * If the user already exists, their data is updated.
      *
      * @param user the user to save
+     * @param reason the reason of save
      * @return a {@link CompletableFuture} containing the saved user
      */
     @NotNull CompletableFuture<User> save(@NotNull User user, @NotNull UserSaveReason reason);

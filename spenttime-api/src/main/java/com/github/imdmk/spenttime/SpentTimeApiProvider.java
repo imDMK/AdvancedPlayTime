@@ -30,6 +30,8 @@ public final class SpentTimeApiProvider {
     }
 
     /**
+     * Checks if the API is registered
+     *
      * @return {@code true} if the API is registered.
      */
     public static boolean isRegistered() {

@@ -3,7 +3,7 @@ package com.github.imdmk.spenttime;
 import com.eternalcode.multification.notice.Notice;
 import com.github.imdmk.spenttime.infrastructure.database.DatabaseConfig;
 import com.github.imdmk.spenttime.infrastructure.database.DatabaseConnector;
-import com.github.imdmk.spenttime.infrastructure.database.repository.Repository;
+import com.github.imdmk.spenttime.infrastructure.database.dependency.DatabaseDependencyLoader;
 import com.github.imdmk.spenttime.infrastructure.database.repository.RepositoryContext;
 import com.github.imdmk.spenttime.infrastructure.database.repository.RepositoryManager;
 import com.github.imdmk.spenttime.infrastructure.module.PluginModule;
@@ -24,8 +24,8 @@ import com.github.imdmk.spenttime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.spenttime.shared.Validator;
 import com.github.imdmk.spenttime.shared.config.ConfigBinder;
 import com.github.imdmk.spenttime.shared.config.ConfigManager;
+import com.github.imdmk.spenttime.shared.config.ConfigSection;
 import com.github.imdmk.spenttime.shared.config.PluginConfig;
-import com.github.imdmk.spenttime.shared.config.catalog.ConfigCatalog;
 import com.github.imdmk.spenttime.shared.message.MessageConfig;
 import com.github.imdmk.spenttime.shared.message.MessageService;
 import com.github.imdmk.spenttime.shared.time.Durations;
@@ -95,18 +95,20 @@ final class SpentTimePlugin {
     /**
      * Enable plugin with a given set of modules.
      *
-     * @param configCatalog config catalog to create/load
+     * @param enabledConfigs config catalog to create/load
      * @param enabledModules list of module classes to load (order resolved by manager)
      */
-    void enable(@NotNull ConfigCatalog configCatalog, @NotNull final List<Class<? extends PluginModule>> enabledModules) {
-        Validator.notNull(configCatalog, "configCatalog cannot be null");
+    void enable(
+            @NotNull final List<Class<? extends ConfigSection>> enabledConfigs,
+            @NotNull final List<Class<? extends PluginModule>> enabledModules) {
+        Validator.notNull(enabledConfigs, "enabledConfigs cannot be null");
         Validator.notNull(enabledModules, "enabled modules cannot be null");
 
         final Stopwatch stopwatch = Stopwatch.createStarted();
 
         // Configuration
         configManager = new ConfigManager(logger, executorService, plugin.getDataFolder());
-        configManager.createAll(configCatalog.rootSections());
+        configManager.createAll(enabledConfigs);
 
         // Duration format style
         final PluginConfig pluginConfig = configManager.require(PluginConfig.class);
@@ -114,6 +116,13 @@ final class SpentTimePlugin {
 
         // Database connection
         final DatabaseConfig databaseConfig = configManager.require(DatabaseConfig.class);
+
+        final DatabaseDependencyLoader databaseDependencyLoader = new DatabaseDependencyLoader(plugin);
+
+        logger.info("Resolving database driver for database mode: " + databaseConfig.databaseMode);
+        databaseDependencyLoader.loadDriverFor(databaseConfig.databaseMode);
+
+        logger.info("Connecting to database...");
         databaseConnector = new DatabaseConnector(logger, databaseConfig);
         try {
             databaseConnector.connect(plugin.getDataFolder());

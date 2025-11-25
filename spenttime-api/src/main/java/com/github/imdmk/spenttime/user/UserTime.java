@@ -25,7 +25,9 @@ import java.util.concurrent.TimeUnit;
  *       to prevent silent wrap-around.</li>
  * </ul>
  *
- * @apiNote Serves as the canonical representation of player time in the SpentTime module.
+ * Serves as the canonical representation of player time in the SpentTime module.
+ *
+ * @param millis the milliseconds of time
  *
  * @see Duration
  * @see User
@@ -51,7 +53,7 @@ public record UserTime(long millis) implements Comparable<UserTime>, Serializabl
      */
     public UserTime {
         if (millis < 0L) {
-            throw new IllegalArgumentException("millis cannot be negative");
+            throw new IllegalArgumentException("UserTime millis cannot be negative");
         }
     }
 

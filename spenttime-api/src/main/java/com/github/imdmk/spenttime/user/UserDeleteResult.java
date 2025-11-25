@@ -23,9 +23,10 @@ public record UserDeleteResult(@Nullable User user, @NotNull UserDeleteStatus st
 
     /**
      * Indicates whether the deletion succeeded and the user actually existed.
+     * <p>
+     * This method is equivalent to checking:
+     * <pre>{@code user != null && status == UserDeleteStatus.DELETED}</pre>
      *
-     * <p>This method is equivalent to checking:
-     * <pre>{@code user != null && status == UserDeleteStatus.DELETED}</pre></p>
      *
      * @return {@code true} if the user was successfully deleted; {@code false} otherwise
      */

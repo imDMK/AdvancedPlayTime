@@ -6,6 +6,11 @@ subprojects {
 
     repositories {
         mavenCentral()
+        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // Spigot
+        maven("https://repo.eternalcode.pl/releases") // Eternalcode
+        maven("https://storehouse.okaeri.eu/repository/maven-public/") // Okaeri
+        maven("https://repo.panda-lang.org/releases") // Litecommands
+        maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") // Libby-bukkit
     }
 
     apply(plugin = "java-library")

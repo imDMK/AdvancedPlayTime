@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
-public class GuiConfig extends ConfigSection {
+public final class GuiConfig extends ConfigSection {
 
     @Comment({" ", "# Enable border around all GUIs", " "})
     public boolean fillBorder = true;

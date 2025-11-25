@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
 import org.panda_lang.utilities.inject.Resources;
 
-public class GuiModule implements PluginModule {
+public final class GuiModule implements PluginModule {
 
     private GuiOpener guiOpener;
     private GuiRenderer guiRenderer;

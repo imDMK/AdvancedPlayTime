@@ -40,7 +40,7 @@ import java.util.function.Consumer;
  * @see LiteCommandsBuilder
  * @see LiteBukkitFactory
  */
-public class BukkitLiteCommandsConfigurer implements LiteCommandsConfigurer {
+public final class BukkitLiteCommandsConfigurer implements LiteCommandsConfigurer {
 
     private final List<Consumer<LiteCommandsBuilder<CommandSender, LiteBukkitSettings, ?>>> customizers = new ArrayList<>();
     private final List<Object> commands = new ArrayList<>();

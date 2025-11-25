@@ -32,19 +32,37 @@ public final class UserDeleteEvent extends Event {
         this.result = Objects.requireNonNull(result, "result cannot be null");;
     }
 
-    /** @return the deletion result including optional user snapshot and status */
+    /**
+     * Returns the result of the deletion operation, including the status and an
+     * optional snapshot of the deleted user (if available).
+     *
+     * @return non-null {@link UserDeleteResult} representing the outcome of the deletion
+     */
     public @NotNull UserDeleteResult getResult() {
         return this.result;
     }
 
-    /** @return the static {@link HandlerList} for this event type */
+    /**
+     * Returns the handler list used internally by Bukkit to register and manage
+     * listeners for this event.
+     *
+     * @return non-null static {@link HandlerList} for this event type
+     */
     @Override
     public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 
-    /** @return the static {@link HandlerList} for this event type */
+    /**
+     * Returns the static handler list for this event type.
+     * <p>
+     * This method is required by the Bukkit event framework and allows Bukkit
+     * to correctly map event handlers to this event class.
+     *
+     * @return non-null static {@link HandlerList}
+     */
     public static @NotNull HandlerList getHandlerList() {
         return HANDLERS;
     }
+
 }

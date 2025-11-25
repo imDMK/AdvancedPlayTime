@@ -18,7 +18,7 @@ public final class EnchantmentSerializer implements ObjectSerializer<Enchantment
 
     @Override
     public void serialize(@NotNull Enchantment enchantment, @NotNull SerializationData data, @NotNull GenericsDeclaration generics) {
-        data.setValue(enchantment.getKey().getKey(), String.class);
+        data.setValue(enchantment.getKeyOrThrow().getKey(), String.class);
     }
 
     @Override
