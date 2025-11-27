@@ -3,6 +3,7 @@ package com.github.imdmk.playtime.infrastructure.module;
 import com.github.imdmk.playtime.infrastructure.module.phase.CommandPhase;
 import com.github.imdmk.playtime.infrastructure.module.phase.GuiPhase;
 import com.github.imdmk.playtime.infrastructure.module.phase.ListenerPhase;
+import com.github.imdmk.playtime.infrastructure.module.phase.PlaceholderPhase;
 import com.github.imdmk.playtime.infrastructure.module.phase.RepositoryPhase;
 import com.github.imdmk.playtime.infrastructure.module.phase.TaskPhase;
 import org.bukkit.Server;
@@ -64,6 +65,11 @@ public interface PluginModule extends ModuleOrdered {
      * Gui's registration phase (optional).
      */
     default GuiPhase guis(@NotNull Injector injector) { return guiRegistry -> {}; }
+
+    /**
+     * Placeholder's registration phase (optional).
+     */
+    default PlaceholderPhase placeholders(@NotNull Injector injector) { return placeholderRegistry -> {}; }
 
     /**
      * Final hook invoked after all registrations of this feature are complete.

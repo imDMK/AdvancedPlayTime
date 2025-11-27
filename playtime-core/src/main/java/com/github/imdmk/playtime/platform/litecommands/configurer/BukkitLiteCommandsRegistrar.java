@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Bukkit-specific implementation of {@link LiteCommandsConfigurer} responsible for
+ * Bukkit-specific implementation of {@link LiteCommandsRegistrar} responsible for
  * configuring and constructing {@link LiteCommands} instances via the LiteCommands framework.
  *
  * <p>This class provides a simple builder-style API for registering commands
@@ -40,7 +40,7 @@ import java.util.function.Consumer;
  * @see LiteCommandsBuilder
  * @see LiteBukkitFactory
  */
-public final class BukkitLiteCommandsConfigurer implements LiteCommandsConfigurer {
+public final class BukkitLiteCommandsRegistrar implements LiteCommandsRegistrar {
 
     private final List<Consumer<LiteCommandsBuilder<CommandSender, LiteBukkitSettings, ?>>> customizers = new ArrayList<>();
     private final List<Object> commands = new ArrayList<>();
@@ -56,7 +56,7 @@ public final class BukkitLiteCommandsConfigurer implements LiteCommandsConfigure
      */
     @Contract("_ -> this")
     @Override
-    public LiteCommandsConfigurer configure(@NotNull Consumer<LiteCommandsBuilder<CommandSender, LiteBukkitSettings, ?>> customizer) {
+    public LiteCommandsRegistrar configure(@NotNull Consumer<LiteCommandsBuilder<CommandSender, LiteBukkitSettings, ?>> customizer) {
         this.customizers.add(customizer);
         return this;
     }
@@ -70,7 +70,7 @@ public final class BukkitLiteCommandsConfigurer implements LiteCommandsConfigure
      */
     @Contract("_ -> this")
     @Override
-    public LiteCommandsConfigurer registerCommands(@NotNull Object... commands) {
+    public LiteCommandsRegistrar registerCommands(@NotNull Object... commands) {
         this.commands.addAll(Arrays.asList(commands));
         return this;
     }

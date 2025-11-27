@@ -8,6 +8,7 @@ import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryCo
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryManager;
 import com.github.imdmk.playtime.infrastructure.di.BindCore;
 import com.github.imdmk.playtime.infrastructure.module.PluginModule;
+import com.github.imdmk.playtime.infrastructure.module.PluginModuleContext;
 import com.github.imdmk.playtime.infrastructure.module.PluginModuleInitializer;
 import com.github.imdmk.playtime.infrastructure.module.PluginModuleRegistry;
 import com.github.imdmk.playtime.platform.events.BukkitEventCaller;
@@ -16,10 +17,12 @@ import com.github.imdmk.playtime.platform.gui.GuiRegistry;
 import com.github.imdmk.playtime.platform.litecommands.InvalidUsageHandlerImpl;
 import com.github.imdmk.playtime.platform.litecommands.MissingPermissionsHandlerImpl;
 import com.github.imdmk.playtime.platform.litecommands.NoticeResultHandlerImpl;
-import com.github.imdmk.playtime.platform.litecommands.configurer.BukkitLiteCommandsConfigurer;
-import com.github.imdmk.playtime.platform.litecommands.configurer.LiteCommandsConfigurer;
+import com.github.imdmk.playtime.platform.litecommands.configurer.BukkitLiteCommandsRegistrar;
+import com.github.imdmk.playtime.platform.litecommands.configurer.LiteCommandsRegistrar;
 import com.github.imdmk.playtime.platform.logger.BukkitPluginLogger;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
+import com.github.imdmk.playtime.platform.placeholder.adapter.PlaceholderAdapter;
+import com.github.imdmk.playtime.platform.placeholder.adapter.PlaceholderAdapterFactory;
 import com.github.imdmk.playtime.platform.scheduler.BukkitTaskScheduler;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.playtime.shared.Validator;
@@ -72,10 +75,10 @@ final class PlayTimePlugin {
     @BindCore private TaskScheduler taskScheduler;
     @BindCore private BukkitEventCaller eventCaller;
     @BindCore private BukkitListenerRegistrar listenerRegistrar;
-
     @BindCore private GuiRegistry guiRegistry;
+    @BindCore private PlaceholderAdapter placeholderAdapter;
 
-    @BindCore private LiteCommandsConfigurer liteCommandsConfigurer;
+    @BindCore private LiteCommandsRegistrar LiteCommandsRegistrar;
     private LiteCommands<CommandSender> liteCommands;
 
     private Metrics metrics;
@@ -139,9 +142,10 @@ final class PlayTimePlugin {
         eventCaller = new BukkitEventCaller(server, taskScheduler);
         listenerRegistrar = new BukkitListenerRegistrar(plugin);
         guiRegistry = new GuiRegistry();
+        placeholderAdapter = PlaceholderAdapterFactory.createFor(plugin, server, logger);
 
-        liteCommandsConfigurer = new BukkitLiteCommandsConfigurer();
-        liteCommandsConfigurer.configure(builder -> {
+        LiteCommandsRegistrar = new BukkitLiteCommandsRegistrar();
+        LiteCommandsRegistrar.configure(builder -> {
             builder.invalidUsage(new InvalidUsageHandlerImpl(messageService));
             builder.missingPermission(new MissingPermissionsHandlerImpl(messageService));
             builder.result(Notice.class, new NoticeResultHandlerImpl(messageService));
@@ -154,7 +158,8 @@ final class PlayTimePlugin {
         });
 
         // Module initialization
-        final PluginModuleInitializer initializer = this.injector.newInstance(PluginModuleInitializer.class);
+        final PluginModuleContext context = injector.newInstance(PluginModuleContext.class);
+        final PluginModuleInitializer initializer = new PluginModuleInitializer(context, pluginModuleRegistry, injector);
 
         initializer.loadAndSort(enabledModules);
         initializer.bindAll();
@@ -175,7 +180,7 @@ final class PlayTimePlugin {
         initializer.activateFeatures();
 
         // Build and register commands
-        liteCommands = liteCommandsConfigurer.create(PREFIX, plugin, server);
+        liteCommands = LiteCommandsRegistrar.create(PREFIX, plugin, server);
 
         // Metrics
         metrics = new Metrics(plugin, PLUGIN_METRICS_ID);

@@ -25,7 +25,7 @@ import java.util.function.Consumer;
  * Implementations are expected to be non-blocking and side-effect free
  * until {@link #create(String, Plugin, Server)} is invoked.</p>
  */
-public interface LiteCommandsConfigurer {
+public interface LiteCommandsRegistrar {
 
     /**
      * Applies a low-level customizer to the underlying {@link LiteCommandsBuilder}.
@@ -33,7 +33,7 @@ public interface LiteCommandsConfigurer {
      * @param customizer a callback that configures the builder
      * @return this configurer for fluent chaining
      */
-    LiteCommandsConfigurer configure(
+    LiteCommandsRegistrar configure(
             @NotNull Consumer<LiteCommandsBuilder<CommandSender, LiteBukkitSettings, ?>> customizer
     );
 
@@ -43,7 +43,7 @@ public interface LiteCommandsConfigurer {
      * @param commands command handler objects
      * @return this configurer for fluent chaining
      */
-    LiteCommandsConfigurer registerCommands(@NotNull Object... commands);
+    LiteCommandsRegistrar registerCommands(@NotNull Object... commands);
 
     /**
      * Builds a {@link LiteCommands} instance for Bukkit.

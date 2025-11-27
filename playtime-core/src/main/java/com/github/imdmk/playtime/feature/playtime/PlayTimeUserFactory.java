@@ -27,14 +27,14 @@ import java.util.UUID;
  * @see PlaytimeService
  * @see UserFactory
  */
-public final class PlaytimeUserFactory implements UserFactory {
+public final class PlayTimeUserFactory implements UserFactory {
 
     private static final String UNKNOWN_PLAYER_NAME_FORMAT = "Unknown:%s";
 
     private final PlaytimeService playtimeService;
 
     @Inject
-    public PlaytimeUserFactory(@NotNull PlaytimeService playtimeService) {
+    public PlayTimeUserFactory(@NotNull PlaytimeService playtimeService) {
         this.playtimeService = Validator.notNull(playtimeService, "playtimeService cannot be null");
     }
 

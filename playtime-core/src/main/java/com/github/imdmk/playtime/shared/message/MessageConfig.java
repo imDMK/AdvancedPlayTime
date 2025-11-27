@@ -3,7 +3,7 @@ package com.github.imdmk.playtime.shared.message;
 import com.eternalcode.multification.notice.Notice;
 import com.eternalcode.multification.notice.resolver.NoticeResolverDefaults;
 import com.eternalcode.multification.okaeri.MultificationSerdesPack;
-import com.github.imdmk.playtime.feature.playtime.messages.ENPlaytimeMessages;
+import com.github.imdmk.playtime.feature.playtime.messages.ENPlayTimeMessages;
 import com.github.imdmk.playtime.feature.reload.messages.ENReloadMessages;
 import com.github.imdmk.playtime.shared.config.ConfigSection;
 import eu.okaeri.configs.annotation.Comment;
@@ -83,7 +83,7 @@ public final class MessageConfig extends ConfigSection {
     );
 
     @Comment({" ", "# Playtime messages", " "})
-    public ENPlaytimeMessages playtimeMessages = new ENPlaytimeMessages();
+    public ENPlayTimeMessages playtimeMessages = new ENPlayTimeMessages();
 
     @Comment({" ", "# Reload messages", " "})
     public ENReloadMessages reloadMessages = new ENReloadMessages();

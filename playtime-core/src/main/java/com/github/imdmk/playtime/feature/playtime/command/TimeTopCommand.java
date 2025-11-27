@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.feature.playtime.command;
 
-import com.github.imdmk.playtime.feature.playtime.gui.PlaytimeTopGui;
+import com.github.imdmk.playtime.feature.playtime.gui.PlayTimeTopGui;
 import com.github.imdmk.playtime.platform.gui.view.GuiOpener;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.shared.Validator;
@@ -40,7 +40,7 @@ public final class TimeTopCommand {
     @Execute
     void playtimeTop(@Context Player viewer) {
         userService.findTopByPlayTime(TOP_QUERY_LIMIT)
-                .thenAccept(topUsers -> guiOpener.open(PlaytimeTopGui.class, viewer, topUsers))
+                .thenAccept(topUsers -> guiOpener.open(PlayTimeTopGui.class, viewer, topUsers))
                 .exceptionally(e -> {
                     logger.error(e, "Failed to open PlaytimeTopGui for viewer=%s", viewer.getName());
                     this.messageService.send(viewer, n -> n.actionExecutionError);

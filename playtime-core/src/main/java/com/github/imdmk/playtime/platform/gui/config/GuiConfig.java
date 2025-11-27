@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.platform.gui.config;
 
-import com.github.imdmk.playtime.feature.playtime.gui.PlaytimeTopGuiConfig;
+import com.github.imdmk.playtime.feature.playtime.gui.PlayTimeTopGuiConfig;
 import com.github.imdmk.playtime.platform.gui.item.ItemGui;
 import com.github.imdmk.playtime.platform.serdes.ComponentSerializer;
 import com.github.imdmk.playtime.platform.serdes.EnchantmentSerializer;
@@ -28,7 +28,7 @@ public final class GuiConfig extends ConfigSection {
             .build();
 
     @Comment({"#", "# Playtime top GUI", "#"})
-    public PlaytimeTopGuiConfig playtimeTopGui = new PlaytimeTopGuiConfig();
+    public PlayTimeTopGuiConfig playtimeTopGui = new PlayTimeTopGuiConfig();
 
     @Comment({"#", "# Navigation Bar", "#"})
     public NavigationBarConfig navigationBar = new NavigationBarConfig();

@@ -2,7 +2,7 @@ package com.github.imdmk.playtime;
 
 import com.github.imdmk.playtime.feature.migration.MigrationConfig;
 import com.github.imdmk.playtime.feature.migration.MigrationModule;
-import com.github.imdmk.playtime.feature.playtime.PlaytimeModule;
+import com.github.imdmk.playtime.feature.playtime.PlayTimeModule;
 import com.github.imdmk.playtime.feature.reload.ReloadModule;
 import com.github.imdmk.playtime.infrastructure.database.DatabaseConfig;
 import com.github.imdmk.playtime.infrastructure.module.PluginModule;
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Default bootstrap settings for PlayTime: config sections and plugin modules.
  */
-class PluginLoaderDefaultSettings implements PluginLoaderSettings {
+class LoaderDefaultSettings implements LoaderSettings {
 
     @Override
     public @NotNull List<Class<? extends ConfigSection>> configSections() {
@@ -38,7 +38,7 @@ class PluginLoaderDefaultSettings implements PluginLoaderSettings {
     public @NotNull List<Class<? extends PluginModule>> pluginModules() {
         return List.of(
                 UserModule.class,
-                PlaytimeModule.class,
+                PlayTimeModule.class,
                 GuiModule.class,
                 MigrationModule.class,
                 ReloadModule.class

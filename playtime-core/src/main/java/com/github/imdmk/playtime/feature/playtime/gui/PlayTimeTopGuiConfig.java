@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 
-public final class PlaytimeTopGuiConfig extends OkaeriConfig implements ConfigurableGui {
+public final class PlayTimeTopGuiConfig extends OkaeriConfig implements ConfigurableGui {
 
     @Comment({
             "#",
