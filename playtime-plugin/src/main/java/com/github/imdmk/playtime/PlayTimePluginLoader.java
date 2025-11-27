@@ -11,17 +11,17 @@ import java.util.concurrent.ExecutorService;
 public final class PlayTimePluginLoader extends JavaPlugin {
 
     private final ExecutorService executor;
-    private final PluginLoaderSettings settings;
+    private final LoaderSettings settings;
 
     private volatile PlayTimePlugin pluginCore;
 
-    public PlayTimePluginLoader(@NotNull ExecutorService executor, @NotNull PluginLoaderSettings settings) {
+    public PlayTimePluginLoader(@NotNull ExecutorService executor, @NotNull LoaderSettings settings) {
         this.executor = Validator.notNull(executor, "executor cannot be null");
         this.settings = Validator.notNull(settings, "settings cannot be null");
     }
 
     public PlayTimePluginLoader() {
-        this(PlayTimeExecutorFactory.newWorkerExecutor(), new PluginLoaderDefaultSettings());
+        this(PlayTimeExecutorFactory.newWorkerExecutor(), new LoaderDefaultSettings());
     }
 
     /**

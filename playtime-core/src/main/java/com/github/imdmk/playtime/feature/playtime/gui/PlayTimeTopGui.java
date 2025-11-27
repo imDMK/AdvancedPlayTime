@@ -35,7 +35,7 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class PlaytimeTopGui extends AbstractGui implements ParameterizedGui<List<User>> {
+public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGui<List<User>> {
 
     private static final String GUI_IDENTIFIER = "playtime-top";
 
@@ -45,14 +45,14 @@ public final class PlaytimeTopGui extends AbstractGui implements ParameterizedGu
 
     private final Server server;
     private final GuiConfig guiConfig;
-    private final PlaytimeTopGuiConfig playtimeTopGuiConfig;
+    private final PlayTimeTopGuiConfig playtimeTopGuiConfig;
     private final UserService userService;
 
     @Inject
-    public PlaytimeTopGui(@NotNull Server server,
+    public PlayTimeTopGui(@NotNull Server server,
                           @NotNull GuiConfig guiConfig,
                           @NotNull NavigationBarConfig navigationBarConfig,
-                          @NotNull PlaytimeTopGuiConfig playtimeTopGuiConfig,
+                          @NotNull PlayTimeTopGuiConfig playtimeTopGuiConfig,
                           @NotNull TaskScheduler taskScheduler,
                           @NotNull UserService userService) {
         super(navigationBarConfig, taskScheduler, GUI_RENDERER, RENDER_OPTIONS);

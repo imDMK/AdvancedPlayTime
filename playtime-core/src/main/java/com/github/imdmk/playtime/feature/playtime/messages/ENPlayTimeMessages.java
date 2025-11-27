@@ -4,7 +4,7 @@ import com.eternalcode.multification.notice.Notice;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 
-public final class ENPlaytimeMessages extends OkaeriConfig implements PlaytimeMessages {
+public final class ENPlayTimeMessages extends OkaeriConfig implements PlayTimeMessages {
 
     @Comment({
             "#",

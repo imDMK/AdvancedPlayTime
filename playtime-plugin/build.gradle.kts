@@ -17,7 +17,7 @@ tasks.build {
 }
 
 tasks.withType<ShadowJar> {
-    archiveFileName.set("Advanced Playtime v${project.version} (MC 1.17.x-1.21.x).jar")
+    archiveFileName.set("AdvancedPlaytime v${project.version} (MC 1.17.x-1.21.x).jar")
 
     mergeServiceFiles()
 
@@ -63,8 +63,9 @@ bukkit {
     name = "AdvancedPlayTime"
     version = project.version.toString()
     apiVersion = "1.21"
-    main = "com.github.imdmk.playtime.PlaytimePluginLoader"
+    softDepend = listOf("PlaceholderAPI")
+    main = "com.github.imdmk.playtime.PlayTimePluginLoader"
     author = "imDMK (dominiks8318@gmail.com)"
     description = "An efficient plugin for calculating your time spent in the game with many features and configuration possibilities."
-    website = "https://github.com/imDMK/Playtime"
+    website = "https://github.com/imDMK/AdvancedPlayTime"
 }

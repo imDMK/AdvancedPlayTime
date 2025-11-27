@@ -12,7 +12,7 @@ import java.util.List;
  * <p>This interface decouples the loader from concrete configuration sources,
  * enabling custom setups (testing, profiling, modular distributions, etc.).</p>
  */
-public interface PluginLoaderSettings {
+public interface LoaderSettings {
 
     /**
      * Returns a list of all {@link ConfigSection} types that should be registered

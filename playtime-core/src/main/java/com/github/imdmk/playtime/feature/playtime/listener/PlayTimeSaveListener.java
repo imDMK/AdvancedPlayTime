@@ -15,12 +15,12 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 
 import java.util.UUID;
 
-public final class PlaytimeSaveListener implements Listener {
+public final class PlayTimeSaveListener implements Listener {
 
     private final PlaytimeService playtimeService;
 
     @Inject
-    public PlaytimeSaveListener(@NotNull PlaytimeService playtimeService) {
+    public PlayTimeSaveListener(@NotNull PlaytimeService playtimeService) {
         this.playtimeService = Validator.notNull(playtimeService, "playtimeService cannot be null");
     }
 

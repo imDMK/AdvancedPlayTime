@@ -11,6 +11,7 @@ subprojects {
         maven("https://storehouse.okaeri.eu/repository/maven-public/") // Okaeri
         maven("https://repo.panda-lang.org/releases") // Litecommands
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") // Libby-bukkit
+        maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") // PlaceholderAPI
     }
 
     apply(plugin = "java-library")

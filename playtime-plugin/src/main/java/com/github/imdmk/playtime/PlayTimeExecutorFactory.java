@@ -50,7 +50,7 @@ final class PlayTimeExecutorFactory {
 
         executor.shutdown();
         try {
-            if (!executor.awaitTermination(SHUTDOWN_TIMEOUT.toSeconds(), TimeUnit.SECONDS)) {
+            if (!executor.awaitTermination(SHUTDOWN_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)) {
                 executor.shutdownNow();
             }
         } catch (InterruptedException ie) {

@@ -7,18 +7,20 @@ import com.github.imdmk.playtime.feature.playtime.command.TimeResetCommand;
 import com.github.imdmk.playtime.feature.playtime.command.TimeSetCommand;
 import com.github.imdmk.playtime.feature.playtime.command.TimeTopCommand;
 import com.github.imdmk.playtime.feature.playtime.command.TimeTopInvalidateCommand;
-import com.github.imdmk.playtime.feature.playtime.gui.PlaytimeTopGui;
-import com.github.imdmk.playtime.feature.playtime.listener.PlaytimeSaveListener;
+import com.github.imdmk.playtime.feature.playtime.gui.PlayTimeTopGui;
+import com.github.imdmk.playtime.feature.playtime.listener.PlayTimeSaveListener;
+import com.github.imdmk.playtime.feature.playtime.placeholder.PlayTimePlaceholder;
 import com.github.imdmk.playtime.infrastructure.module.PluginModule;
 import com.github.imdmk.playtime.infrastructure.module.phase.CommandPhase;
 import com.github.imdmk.playtime.infrastructure.module.phase.GuiPhase;
 import com.github.imdmk.playtime.infrastructure.module.phase.ListenerPhase;
+import com.github.imdmk.playtime.infrastructure.module.phase.PlaceholderPhase;
 import com.github.imdmk.playtime.user.UserFactory;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
 import org.panda_lang.utilities.inject.Resources;
 
-public final class PlaytimeModule implements PluginModule {
+public final class PlayTimeModule implements PluginModule {
 
     private PlaytimeService playtimeService;
     private UserFactory userFactory;
@@ -31,8 +33,8 @@ public final class PlaytimeModule implements PluginModule {
 
     @Override
     public void init(@NotNull Injector injector) {
-        this.playtimeService = injector.newInstance(BukkitPlaytimeService.class);
-        this.userFactory = injector.newInstance(PlaytimeUserFactory.class);
+        this.playtimeService = injector.newInstance(BukkitPlayTimeService.class);
+        this.userFactory = injector.newInstance(PlayTimeUserFactory.class);
     }
 
     @Override
@@ -50,13 +52,20 @@ public final class PlaytimeModule implements PluginModule {
     @Override
     public ListenerPhase listeners(@NotNull Injector injector) {
         return configurer -> configurer.register(
-                injector.newInstance(PlaytimeSaveListener.class)
+                injector.newInstance(PlayTimeSaveListener.class)
         );
     }
 
     @Override
     public GuiPhase guis(@NotNull Injector injector) {
-        return guiRegistry -> guiRegistry.register(injector.newInstance(PlaytimeTopGui.class));
+        return guiRegistry -> guiRegistry.register(injector.newInstance(PlayTimeTopGui.class));
+    }
+
+    @Override
+    public PlaceholderPhase placeholders(@NotNull Injector injector) {
+        return adapter -> adapter.register(
+                injector.newInstance(PlayTimePlaceholder.class)
+        );
     }
 
     @Override

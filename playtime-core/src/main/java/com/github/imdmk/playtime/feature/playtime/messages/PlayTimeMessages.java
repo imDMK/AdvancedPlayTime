@@ -2,7 +2,7 @@ package com.github.imdmk.playtime.feature.playtime.messages;
 
 import com.eternalcode.multification.notice.Notice;
 
-public interface PlaytimeMessages {
+public interface PlayTimeMessages {
 
     Notice playerPlaytimeSelf();
     Notice playerPlaytimeTarget();

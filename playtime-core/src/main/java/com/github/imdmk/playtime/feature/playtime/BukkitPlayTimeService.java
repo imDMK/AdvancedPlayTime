@@ -25,7 +25,7 @@ import java.util.UUID;
  * <strong>Thread-safety note:</strong> Bukkit statistic access is not thread-safe.
  * Always ensure that invocations are done synchronously on the main thread.
  */
-public final class BukkitPlaytimeService implements PlaytimeService {
+final class BukkitPlayTimeService implements PlaytimeService {
 
     private static final Statistic PLAYTIME_STATISTIC = Statistic.PLAY_ONE_MINUTE;
     private static final UserTime ZERO_TIME = UserTime.ZERO;
@@ -33,7 +33,7 @@ public final class BukkitPlaytimeService implements PlaytimeService {
     private final Server server;
 
     @Inject
-    public BukkitPlaytimeService(@NotNull Server server) {
+    BukkitPlayTimeService(@NotNull Server server) {
         this.server = Validator.notNull(server, "server cannot be null");
     }
 
