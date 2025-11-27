@@ -1,8 +1,8 @@
-group = "com.github.imdmk.spenttime"
-version = "2.0.4"
+group = "com.github.imdmk.playtime"
+version = "3.0.0"
 
 subprojects {
-    version = "2.0.4"
+    version = "3.0.0"
 
     repositories {
         mavenCentral()
@@ -14,7 +14,6 @@ subprojects {
     }
 
     apply(plugin = "java-library")
-    apply(plugin = "checkstyle")
 
     extensions.configure<JavaPluginExtension> {
         toolchain.languageVersion.set(JavaLanguageVersion.of(21))
@@ -22,9 +21,11 @@ subprojects {
         withSourcesJar()
     }
 
-    extensions.configure<CheckstyleExtension> {
-        toolVersion = "10.21.0"
-        configFile = file("${rootDir}/checkstyle.xml")
+    tasks.withType<Javadoc>().configureEach {
+        isFailOnError = false
+
+        val opts = options as StandardJavadocDocletOptions
+        opts.addStringOption("Xdoclint:none", "-quiet")
     }
 
     tasks.withType<Test>().configureEach {

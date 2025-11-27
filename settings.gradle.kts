@@ -1,6 +1,6 @@
-rootProject.name = "SpentTime"
+rootProject.name = "PlayTime"
 
-include("spenttime-api")
-include("spenttime-bukkit-api")
-include("spenttime-core")
-include("spenttime-plugin")
+include("playtime-api")
+include("playtime-bukkit-api")
+include("playtime-core")
+include("playtime-plugin")
