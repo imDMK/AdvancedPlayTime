@@ -8,7 +8,7 @@ package com.github.imdmk.playtime.infrastructure.module;
  * initialization sequence. When two modules return the same value, the
  * manager should apply a stable tie-breaker (e.g., class name).</p>
  */
-interface ModuleOrdered {
+interface Ordered {
 
     /**
      * Returns the order value of this component.

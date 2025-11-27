@@ -25,7 +25,7 @@ import org.panda_lang.utilities.inject.Resources;
  * <p>Threading: modules are initialized on the server main thread unless documented otherwise.
  * Implementations should avoid long blocking operations in {@code bind()} and {@code init()}.</p>
  */
-public interface PluginModule extends ModuleOrdered {
+public interface Module extends Ordered {
 
     /**
      * Binds resources into the DI container. This phase happens before {@link #init(Injector)}.

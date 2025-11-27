@@ -5,14 +5,14 @@ import com.github.imdmk.playtime.feature.migration.migrator.RepositoryPlayerMigr
 import com.github.imdmk.playtime.feature.migration.provider.BukkitPlayerProvider;
 import com.github.imdmk.playtime.feature.migration.provider.PlayerProvider;
 import com.github.imdmk.playtime.feature.migration.runner.BlockingMigrationRunner;
-import com.github.imdmk.playtime.infrastructure.module.PluginModule;
+import com.github.imdmk.playtime.infrastructure.module.Module;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
 import org.panda_lang.utilities.inject.Resources;
 
-public final class MigrationModule implements PluginModule {
+public final class MigrationModule implements Module {
 
     private PlayerMigrator migrator;
     private PlayerProvider provider;

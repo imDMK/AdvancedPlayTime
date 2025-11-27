@@ -10,13 +10,13 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Maintains the registry of all {@link PluginModule} classes and their instantiated, sorted instances.
+ * Maintains the registry of all {@link Module} classes and their instantiated, sorted instances.
  * <p>
  * This registry is responsible for:
  * <ul>
  *     <li>holding the declared module types,</li>
  *     <li>instantiating them via dependency injection,</li>
- *     <li>sorting them deterministically according to {@link PluginModule#order()}.</li>
+ *     <li>sorting them deterministically according to {@link Module#order()}.</li>
  * </ul>
  * <p>
  * The registry itself is stateless between runs: every call to
@@ -24,15 +24,15 @@ import java.util.List;
  * <p>
  * <b>Thread-safety:</b> This class is not thread-safe and must be accessed from the main server thread.
  */
-public final class PluginModuleRegistry {
+public final class ModuleRegistry {
 
-    /** Comparator defining deterministic module ordering: lower {@link PluginModule#order()} first, then by class name. */
-    private static final Comparator<PluginModule> MODULE_ORDER = Comparator
-            .comparingInt(PluginModule::order)
+    /** Comparator defining deterministic module ordering: lower {@link Module#order()} first, then by class name. */
+    private static final Comparator<Module> MODULE_ORDER = Comparator
+            .comparingInt(Module::order)
             .thenComparing(m -> m.getClass().getName());
 
-    private List<Class<? extends PluginModule>> moduleTypes = List.of();
-    private List<PluginModule> modules = List.of();
+    private List<Class<? extends Module>> moduleTypes = List.of();
+    private List<Module> modules = List.of();
 
     /**
      * Replaces the current set of module types with a new, uninitialized list.
@@ -41,10 +41,10 @@ public final class PluginModuleRegistry {
      * to build and sort the instances.
      *
      * @param types the new list of module classes (must not be null)
-     * @param <T>   the module type extending {@link PluginModule}
+     * @param <T>   the module type extending {@link Module}
      * @throws NullPointerException if {@code types} is null
      */
-    public <T extends PluginModule> void setModuleTypes(@NotNull List<Class<? extends T>> types) {
+    public <T extends Module> void setModuleTypes(@NotNull List<Class<? extends T>> types) {
         Validator.notNull(types, "types cannot be null");
         // defensive copy
         moduleTypes = List.copyOf(types);
@@ -54,7 +54,7 @@ public final class PluginModuleRegistry {
 
     /**
      * Instantiates all declared module classes using the provided {@link Injector}
-     * and sorts them deterministically by {@link PluginModule#order()} and class name.
+     * and sorts them deterministically by {@link Module#order()} and class name.
      * <p>
      * This operation is idempotent for the current module types; previous instances are discarded.
      *
@@ -64,8 +64,8 @@ public final class PluginModuleRegistry {
     public void instantiateAndSort(@NotNull Injector injector) {
         Validator.notNull(injector, "injector cannot be null");
 
-        final List<PluginModule> created = new ArrayList<>(moduleTypes.size());
-        for (Class<? extends PluginModule> type : moduleTypes) {
+        final List<Module> created = new ArrayList<>(moduleTypes.size());
+        for (Class<? extends Module> type : moduleTypes) {
             created.add(injector.newInstance(type));
         }
 
@@ -76,12 +76,12 @@ public final class PluginModuleRegistry {
     /**
      * Returns an immutable, deterministically sorted view of all instantiated modules.
      * <p>
-     * The returned list is guaranteed to be ordered by {@link PluginModule#order()} ascending,
+     * The returned list is guaranteed to be ordered by {@link Module#order()} ascending,
      * with a lexicographic tiebreaker on the class name for consistency across JVM runs.
      *
      * @return an unmodifiable list of module instances (never null, may be empty)
      */
-    public List<PluginModule> modules() {
+    public List<Module> modules() {
         return Collections.unmodifiableList(modules);
     }
 

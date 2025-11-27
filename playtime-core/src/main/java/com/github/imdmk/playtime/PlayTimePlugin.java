@@ -7,10 +7,10 @@ import com.github.imdmk.playtime.infrastructure.database.driver.dependency.Drive
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryContext;
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryManager;
 import com.github.imdmk.playtime.infrastructure.di.BindCore;
-import com.github.imdmk.playtime.infrastructure.module.PluginModule;
-import com.github.imdmk.playtime.infrastructure.module.PluginModuleContext;
-import com.github.imdmk.playtime.infrastructure.module.PluginModuleInitializer;
-import com.github.imdmk.playtime.infrastructure.module.PluginModuleRegistry;
+import com.github.imdmk.playtime.infrastructure.module.Module;
+import com.github.imdmk.playtime.infrastructure.module.ModuleContext;
+import com.github.imdmk.playtime.infrastructure.module.ModuleInitializer;
+import com.github.imdmk.playtime.infrastructure.module.ModuleRegistry;
 import com.github.imdmk.playtime.platform.events.BukkitEventCaller;
 import com.github.imdmk.playtime.platform.events.BukkitListenerRegistrar;
 import com.github.imdmk.playtime.platform.gui.GuiRegistry;
@@ -58,7 +58,7 @@ final class PlayTimePlugin {
     private static final String PREFIX = "PlayTime";
     private static final int PLUGIN_METRICS_ID = 19362;
 
-    @BindCore private final PluginModuleRegistry pluginModuleRegistry = new PluginModuleRegistry();
+    @BindCore private final ModuleRegistry moduleRegistry = new ModuleRegistry();
 
     @BindCore private final Plugin plugin;
     @BindCore private final PluginLogger logger;
@@ -102,7 +102,7 @@ final class PlayTimePlugin {
 
     void enable(
             @NotNull List<Class<? extends ConfigSection>> enabledConfigs,
-            @NotNull List<Class<? extends PluginModule>> enabledModules) {
+            @NotNull List<Class<? extends Module>> enabledModules) {
         Validator.notNull(enabledConfigs, "enabledConfigs cannot be null");
         Validator.notNull(enabledModules, "enabled modules cannot be null");
 
@@ -158,8 +158,8 @@ final class PlayTimePlugin {
         });
 
         // Module initialization
-        final PluginModuleContext context = injector.newInstance(PluginModuleContext.class);
-        final PluginModuleInitializer initializer = new PluginModuleInitializer(context, pluginModuleRegistry, injector);
+        final ModuleContext context = injector.newInstance(ModuleContext.class);
+        final ModuleInitializer initializer = new ModuleInitializer(context, moduleRegistry, injector);
 
         initializer.loadAndSort(enabledModules);
         initializer.bindAll();

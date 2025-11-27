@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Coordinates the entire lifecycle of all {@link PluginModule} instances.
+ * Coordinates the entire lifecycle of all {@link Module} instances.
  *
  * <p>The initializer executes modules through a strict, ordered pipeline:
  * <ol>
@@ -25,10 +25,10 @@ import java.util.function.Consumer;
  * <p>Errors thrown by individual modules never abort the lifecycle — they are logged and the
  * pipeline continues for remaining modules.</p>
  */
-public final class PluginModuleInitializer {
+public final class ModuleInitializer {
 
-    private final PluginModuleContext context;
-    private final PluginModuleRegistry registry;
+    private final ModuleContext context;
+    private final ModuleRegistry registry;
     private final Injector injector;
 
     private State state = State.NEW;
@@ -40,9 +40,9 @@ public final class PluginModuleInitializer {
      * @param registry module registry used for instantiation and lookup
      * @param injector dependency injection container used during load/init
      */
-    public PluginModuleInitializer(
-            @NotNull PluginModuleContext context,
-            @NotNull PluginModuleRegistry registry,
+    public ModuleInitializer(
+            @NotNull ModuleContext context,
+            @NotNull ModuleRegistry registry,
             @NotNull Injector injector) {
         this.context = Validator.notNull(context, "context cannot be null");
         this.registry = Validator.notNull(registry, "moduleRegistry cannot be null");
@@ -53,7 +53,7 @@ public final class PluginModuleInitializer {
      * Instantiates and sorts all module types.
      * Must be executed first in the module lifecycle.
      */
-    public <T extends PluginModule> void loadAndSort(@NotNull List<Class<? extends T>> types) {
+    public <T extends Module> void loadAndSort(@NotNull List<Class<? extends T>> types) {
         Validator.notNull(types, "types cannot be null");
 
         ensureMainThread();
@@ -125,8 +125,8 @@ public final class PluginModuleInitializer {
      * Internal helper executing a phase for each module,
      * catching and logging exceptions from individual modules.
      */
-    private void forEachModule(@NotNull String phase, @NotNull Consumer<PluginModule> moduleConsumer) {
-        for (final PluginModule m : registry.modules()) {
+    private void forEachModule(@NotNull String phase, @NotNull Consumer<Module> moduleConsumer) {
+        for (final Module m : registry.modules()) {
             try {
                 moduleConsumer.accept(m);
             } catch (Throwable t) {
