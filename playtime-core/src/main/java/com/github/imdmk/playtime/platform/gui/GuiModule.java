@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.platform.gui;
 
-import com.github.imdmk.playtime.infrastructure.module.PluginModule;
+import com.github.imdmk.playtime.infrastructure.module.Module;
 import com.github.imdmk.playtime.platform.gui.render.GuiRenderer;
 import com.github.imdmk.playtime.platform.gui.render.TriumphGuiRenderer;
 import com.github.imdmk.playtime.platform.gui.view.GuiOpener;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
 import org.panda_lang.utilities.inject.Resources;
 
-public final class GuiModule implements PluginModule {
+public final class GuiModule implements Module {
 
     private GuiOpener guiOpener;
     private GuiRenderer guiRenderer;

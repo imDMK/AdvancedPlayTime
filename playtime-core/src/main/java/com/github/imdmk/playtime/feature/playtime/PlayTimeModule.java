@@ -10,7 +10,7 @@ import com.github.imdmk.playtime.feature.playtime.command.TimeTopInvalidateComma
 import com.github.imdmk.playtime.feature.playtime.gui.PlayTimeTopGui;
 import com.github.imdmk.playtime.feature.playtime.listener.PlayTimeSaveListener;
 import com.github.imdmk.playtime.feature.playtime.placeholder.PlayTimePlaceholder;
-import com.github.imdmk.playtime.infrastructure.module.PluginModule;
+import com.github.imdmk.playtime.infrastructure.module.Module;
 import com.github.imdmk.playtime.infrastructure.module.phase.CommandPhase;
 import com.github.imdmk.playtime.infrastructure.module.phase.GuiPhase;
 import com.github.imdmk.playtime.infrastructure.module.phase.ListenerPhase;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
 import org.panda_lang.utilities.inject.Resources;
 
-public final class PlayTimeModule implements PluginModule {
+public final class PlayTimeModule implements Module {
 
     private PlaytimeService playtimeService;
     private UserFactory userFactory;

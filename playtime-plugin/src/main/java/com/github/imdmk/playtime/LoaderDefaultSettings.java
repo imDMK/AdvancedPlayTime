@@ -5,7 +5,7 @@ import com.github.imdmk.playtime.feature.migration.MigrationModule;
 import com.github.imdmk.playtime.feature.playtime.PlayTimeModule;
 import com.github.imdmk.playtime.feature.reload.ReloadModule;
 import com.github.imdmk.playtime.infrastructure.database.DatabaseConfig;
-import com.github.imdmk.playtime.infrastructure.module.PluginModule;
+import com.github.imdmk.playtime.infrastructure.module.Module;
 import com.github.imdmk.playtime.platform.gui.GuiModule;
 import com.github.imdmk.playtime.platform.gui.config.GuiConfig;
 import com.github.imdmk.playtime.shared.config.ConfigSection;
@@ -35,7 +35,7 @@ class LoaderDefaultSettings implements LoaderSettings {
     }
 
     @Override
-    public @NotNull List<Class<? extends PluginModule>> pluginModules() {
+    public @NotNull List<Class<? extends Module>> pluginModules() {
         return List.of(
                 UserModule.class,
                 PlayTimeModule.class,

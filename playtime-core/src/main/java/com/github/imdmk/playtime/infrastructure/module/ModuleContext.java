@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
 /**
- * Immutable container holding all shared services exposed to {@link PluginModule} implementations.
+ * Immutable container holding all shared services exposed to {@link Module} implementations.
  *
  * <p>Acts as a central context object passed to all module lifecycle phases, providing access to:
  * <ul>
@@ -27,7 +27,7 @@ import org.panda_lang.utilities.inject.annotations.Inject;
  * module initialization pipeline.</p>
  */
 @Inject
-public record PluginModuleContext(
+public record ModuleContext(
         @NotNull Plugin plugin,
         @NotNull Server server,
         @NotNull PluginLogger logger,

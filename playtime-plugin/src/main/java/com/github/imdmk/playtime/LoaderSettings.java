@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime;
 
-import com.github.imdmk.playtime.infrastructure.module.PluginModule;
+import com.github.imdmk.playtime.infrastructure.module.Module;
 import com.github.imdmk.playtime.shared.config.ConfigSection;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,10 +23,10 @@ public interface LoaderSettings {
     @NotNull List<Class<? extends ConfigSection>> configSections();
 
     /**
-     * Returns the ordered list of {@link PluginModule} classes that define
+     * Returns the ordered list of {@link Module} classes that define
      * the plugin's functional modules (features, services, listeners, commands).
      *
      * @return non-null list of plugin module classes
      */
-    @NotNull List<Class<? extends PluginModule>> pluginModules();
+    @NotNull List<Class<? extends Module>> pluginModules();
 }
