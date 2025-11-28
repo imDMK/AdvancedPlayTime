@@ -27,7 +27,6 @@ public final class TimeTopInvalidateCommand {
     @Execute
     void invalidateCache(@Context CommandSender sender) {
         topUsersCache.invalidateAll();
-
         messageService.send(sender, n -> n.playtimeMessages.topUsersCacheInvalidated());
     }
 }

@@ -25,16 +25,16 @@ public final class UserEntity {
     private String name;
 
     /** Total spent time in milliseconds. */
-    @DatabaseField(canBeNull = false, columnName = UserEntityMeta.Col.SPENT_MILLIS)
-    private long playtime;
+    @DatabaseField(canBeNull = false, columnName = UserEntityMeta.Col.PLAYTIME_MILLIS)
+    private long playtimeMillis;
 
     /** No-arg constructor required by ORMLite. */
     public UserEntity() {}
 
-    public UserEntity(@NotNull UUID uuid, @NotNull String name, long playtime) {
+    public UserEntity(@NotNull UUID uuid, @NotNull String name, long playtimeMillis) {
         this.uuid = uuid;
         this.name = name;
-        this.playtime = playtime;
+        this.playtimeMillis = playtimeMillis;
     }
 
     public @NotNull UUID getUuid() {
@@ -53,12 +53,12 @@ public final class UserEntity {
         this.name = name;
     }
 
-    public long getPlaytime() {
-        return playtime;
+    public long getPlaytimeMillis() {
+        return playtimeMillis;
     }
 
-    public void setPlaytime(long playtime) {
-        this.playtime = playtime;
+    public void setPlaytimeMillis(long playtimeMillis) {
+        this.playtimeMillis = playtimeMillis;
     }
 
     @Override
@@ -78,7 +78,7 @@ public final class UserEntity {
         return "UserEntity{" +
                 "uuid=" + this.uuid +
                 ", name='" + this.name + '\'' +
-                ", spentMillis=" + this.playtime +
+                ", spentMillis=" + this.playtimeMillis +
                 '}';
     }
 }

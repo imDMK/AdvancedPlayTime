@@ -22,7 +22,7 @@ public final class PlayTimePlaceholder implements PluginPlaceholder {
 
     @Override
     public @NotNull String identifier() {
-        return "playtime";
+        return "advancedplaytime";
     }
 
     @Override

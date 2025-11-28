@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.platform.gui.render;
 
 import com.github.imdmk.playtime.platform.gui.item.ItemGui;
-import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.builder.item.BaseItemBuilder;
 import dev.triumphteam.gui.guis.BaseGui;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.Contract;
@@ -36,7 +36,7 @@ public interface GuiRenderer {
                  @NotNull RenderContext context,
                  @NotNull RenderOptions options,
                  @NotNull Consumer<InventoryClickEvent> onClick,
-                 @NotNull Consumer<ItemBuilder> builderEditor);
+                 @NotNull Consumer<BaseItemBuilder<?>> builderEditor);
 
     @Contract(mutates = "param1")
     default void setItem(@NotNull BaseGui gui,
@@ -58,7 +58,7 @@ public interface GuiRenderer {
                          @NotNull RenderContext context,
                          @NotNull RenderOptions options,
                          @NotNull Consumer<InventoryClickEvent> onClick,
-                         @NotNull Consumer<ItemBuilder> builderEditor) {
+                         @NotNull Consumer<BaseItemBuilder<?>> builderEditor) {
         var slot = item.slot();
         if (slot == null) {
             throw new IllegalArgumentException("Item slot is null (use add(...) for non-slotted items)");
@@ -86,5 +86,5 @@ public interface GuiRenderer {
                  @NotNull RenderContext context,
                  @NotNull RenderOptions options,
                  @NotNull Consumer<InventoryClickEvent> onClick,
-                 @NotNull Consumer<ItemBuilder> builderEditor);
+                 @NotNull Consumer<BaseItemBuilder<?>> builderEditor);
 }

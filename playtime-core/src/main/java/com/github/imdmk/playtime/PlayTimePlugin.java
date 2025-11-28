@@ -190,7 +190,7 @@ final class PlayTimePlugin {
         PlayTimeApiProvider.register(api);
 
         final Duration elapsed = stopwatch.stop().elapsed();
-        logger.info("PlayTime enabled in %s ms", elapsed.toMillis());
+        logger.info("AdvancedPlaytime plugin enabled in %s ms", elapsed.toMillis());
     }
 
     void disable() {

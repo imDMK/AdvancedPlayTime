@@ -57,7 +57,6 @@ public final class PlaceholderAdapterFactory {
 
         logger.info("PlaceholderAPI not found — using NoopPlaceholderAdapter.");
         return new NoopPlaceholderAdapter();
-
     }
 
     private PlaceholderAdapterFactory() {
