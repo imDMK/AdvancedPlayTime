@@ -13,25 +13,25 @@ public enum DurationUnit {
 
     DAY("day", "days", "d") {
         @Override
-        int extract(@NotNull Duration duration) {
+        public int extract(@NotNull Duration duration) {
             return (int) duration.toDaysPart();
         }
     },
     HOUR("hour", "hours", "h") {
         @Override
-        int extract(@NotNull Duration duration) {
+        public int extract(@NotNull Duration duration) {
             return duration.toHoursPart();
         }
     },
     MINUTE("minute", "minutes", "m") {
         @Override
-        int extract(@NotNull Duration duration) {
+        public int extract(@NotNull Duration duration) {
             return duration.toMinutesPart();
         }
     },
     SECOND("second", "seconds", "s") {
         @Override
-        int extract(@NotNull Duration duration) {
+        public int extract(@NotNull Duration duration) {
             return duration.toSecondsPart();
         }
     };
@@ -53,7 +53,7 @@ public enum DurationUnit {
         this.abbreviation = abbreviation;
     }
 
-    abstract int extract(@NotNull Duration duration);
+    public abstract int extract(@NotNull Duration duration);
 
     public @NotNull String getAbbreviation() {
         return abbreviation;

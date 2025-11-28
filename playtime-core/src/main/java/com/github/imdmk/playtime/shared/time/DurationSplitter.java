@@ -14,7 +14,7 @@ import java.util.Map;
  * This keeps the extraction logic in a single place, shared across
  * different formatters.
  */
-final class DurationSplitter {
+public final class DurationSplitter {
 
     private DurationSplitter() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated.");
@@ -26,7 +26,7 @@ final class DurationSplitter {
      * @param duration the duration to split (non-null)
      * @return map of {@link DurationUnit} to its value in the given duration
      */
-    static @NotNull Map<DurationUnit, Integer> split(@NotNull Duration duration) {
+    public static @NotNull Map<DurationUnit, Integer> split(@NotNull Duration duration) {
         Validator.notNull(duration, "duration cannot be null");
 
         EnumMap<DurationUnit, Integer> parts = new EnumMap<>(DurationUnit.class);

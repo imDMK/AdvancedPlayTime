@@ -32,4 +32,11 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("dev.rollczi:litecommands-bukkit:3.10.6")
     implementation("dev.rollczi:litecommands-annotations:3.10.6")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.assertj:assertj-core:3.25.2")
+    testImplementation("org.mockito:mockito-core:5.8.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.8.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
