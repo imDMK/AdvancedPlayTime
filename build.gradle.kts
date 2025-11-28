@@ -3,6 +3,7 @@ version = "3.0.0"
 
 subprojects {
     version = "3.0.0"
+    apply(plugin = "java-library")
 
     repositories {
         mavenCentral()
@@ -13,8 +14,6 @@ subprojects {
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") // Libby-bukkit
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") // PlaceholderAPI
     }
-
-    apply(plugin = "java-library")
 
     extensions.configure<JavaPluginExtension> {
         toolchain.languageVersion.set(JavaLanguageVersion.of(21))
