@@ -41,9 +41,6 @@ public final class User {
      * @param uuid            unique player identifier (never null)
      * @param name            last known player name (never null or blank)
      * @param playtime        initial playtime value (never null)
-     *
-     * @throws NullPointerException     if UUID, name or playtime is null
-     * @throws IllegalArgumentException if joinCount < 0 or timestamps < 0
      */
     public User(@NotNull UUID uuid, @NotNull String name, @NotNull UserTime playtime) {
         Objects.requireNonNull(playtime, "playtime cannot be null");

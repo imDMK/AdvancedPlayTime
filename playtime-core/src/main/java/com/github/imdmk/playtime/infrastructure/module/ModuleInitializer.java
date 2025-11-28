@@ -12,7 +12,7 @@ import java.util.function.Consumer;
  *
  * <p>The initializer executes modules through a strict, ordered pipeline:
  * <ol>
- *     <li>{@link #loadAndSort(List)} – instantiation & deterministic ordering,</li>
+ *     <li>{@link #loadAndSort(List)} – instantiation and deterministic ordering,</li>
  *     <li>{@link #bindAll()} – DI resource binding phase,</li>
  *     <li>{@link #initAll()} – internal module initialization,</li>
  *     <li>{@link #registerRepositories()} – repository descriptor registration,</li>
