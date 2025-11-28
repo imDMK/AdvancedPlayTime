@@ -13,19 +13,21 @@ import com.github.imdmk.playtime.platform.gui.render.RenderOptions;
 import com.github.imdmk.playtime.platform.gui.render.TriumphGuiRenderer;
 import com.github.imdmk.playtime.platform.gui.view.AbstractGui;
 import com.github.imdmk.playtime.platform.gui.view.ParameterizedGui;
+import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.playtime.shared.Validator;
 import com.github.imdmk.playtime.shared.adventure.AdventureFormatter;
 import com.github.imdmk.playtime.shared.adventure.AdventurePlaceholders;
 import com.github.imdmk.playtime.shared.gui.GuiType;
+import com.github.imdmk.playtime.shared.message.MessageService;
 import com.github.imdmk.playtime.shared.time.Durations;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
 import com.github.imdmk.playtime.user.UserTime;
-import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.builder.item.BaseItemBuilder;
+import dev.triumphteam.gui.builder.item.SkullBuilder;
 import dev.triumphteam.gui.guis.BaseGui;
-import dev.triumphteam.gui.guis.GuiItem;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -44,21 +46,28 @@ public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGu
     private static final ItemVariantResolver ITEM_VARIANT_RESOLVER = new ItemVariantPermissionResolver();
 
     private final Server server;
+    private final PluginLogger logger;
     private final GuiConfig guiConfig;
-    private final PlayTimeTopGuiConfig playtimeTopGuiConfig;
+    private final PlayTimeTopGuiConfig topGuiConfig;
+    private final MessageService messageService;
     private final UserService userService;
 
     @Inject
-    public PlayTimeTopGui(@NotNull Server server,
-                          @NotNull GuiConfig guiConfig,
-                          @NotNull NavigationBarConfig navigationBarConfig,
-                          @NotNull PlayTimeTopGuiConfig playtimeTopGuiConfig,
-                          @NotNull TaskScheduler taskScheduler,
-                          @NotNull UserService userService) {
+    public PlayTimeTopGui(
+            @NotNull Server server,
+            @NotNull PluginLogger logger,
+            @NotNull GuiConfig guiConfig,
+            @NotNull NavigationBarConfig navigationBarConfig,
+            @NotNull PlayTimeTopGuiConfig topGuiConfig,
+            @NotNull TaskScheduler taskScheduler,
+            @NotNull MessageService messageService,
+            @NotNull UserService userService) {
         super(navigationBarConfig, taskScheduler, GUI_RENDERER, RENDER_OPTIONS);
         this.server = Validator.notNull(server, "server cannot be null");
+        this.logger = Validator.notNull(logger, "logger cannot be null");
         this.guiConfig = Validator.notNull(guiConfig, "guiConfig cannot be null");
-        this.playtimeTopGuiConfig = Validator.notNull(playtimeTopGuiConfig, "playtimeTopGuiConfig cannot be null");
+        this.topGuiConfig = Validator.notNull(topGuiConfig, "playtimeTopGuiConfig cannot be null");
+        this.messageService = Validator.notNull(messageService, "messageService cannot be null");
         this.userService = Validator.notNull(userService, "userService cannot be null");
     }
 
@@ -66,8 +75,7 @@ public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGu
     public @NotNull BaseGui createGui(@NotNull Player viewer, @NotNull List<User> users) {
         Validator.notNull(viewer, "viewer cannot be null");
         Validator.notNull(users, "users cannot be null");
-
-        return GuiFactory.build(playtimeTopGuiConfig, BaseGui::disableAllInteractions);
+        return GuiFactory.build(topGuiConfig, BaseGui::disableAllInteractions);
     }
 
     @Override
@@ -77,13 +85,13 @@ public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGu
         Validator.notNull(users, "users cannot be null");
 
         if (guiConfig.fillBorder) {
-            final GuiItem border = ItemGuiTransformer.toGuiItem(guiConfig.borderItem);
+            final var border = ItemGuiTransformer.toGuiItem(guiConfig.borderItem);
             gui.getFiller().fillBorder(border);
         }
 
         placeExit(gui, viewer, e -> gui.close(viewer));
 
-        if (playtimeTopGuiConfig.type == GuiType.PAGINATED) {
+        if (topGuiConfig.type == GuiType.PAGINATED) {
             placeNext(gui, viewer);
             placePrevious(gui, viewer);
         }
@@ -98,17 +106,26 @@ public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGu
             final var placeholders = createPlaceholders(user, position);
 
             final Consumer<InventoryClickEvent> onClick = (click) -> {
-                if (click.getClick() != playtimeTopGuiConfig.resetClickType) {
+                if (click.getClick() != topGuiConfig.resetClickType) {
                     return;
                 }
 
+                gui.close(viewer);
+
                 user.setPlaytime(UserTime.ZERO);
-                userService.save(user, UserSaveReason.GUI_RESET_CLICK);
-                gui.close(viewer);// TODO ADD MESSAGE HANDLING
+                userService.save(user, UserSaveReason.GUI_RESET_CLICK)
+                        .thenAccept(result -> messageService.send(viewer, n -> n.playtimeMessages.playerPlaytimeReset))
+                        .exceptionally(e -> {
+                            messageService.send(viewer, n -> n.actionExecutionError);
+                            return null;
+                        });
             };
 
-            final Consumer<ItemBuilder> editor = (builder) -> {
-                builder.setSkullOwner(server.getOfflinePlayer(user.getUuid()));
+            final Consumer<BaseItemBuilder<?>> editor = (builder) -> {
+                if (builder instanceof SkullBuilder skullBuilder) {
+                    skullBuilder.owner(server.getOfflinePlayer(user.getUuid()));
+                }
+
                 builder.name(AdventureFormatter.format(item.name(), placeholders));
                 builder.lore(AdventureFormatter.format(item.lore(), placeholders));
             };
@@ -118,8 +135,8 @@ public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGu
     }
 
     private ItemGui resolveItemFor(Player viewer, RenderContext context) {
-        final ItemGui adminItem = playtimeTopGuiConfig.playerEntryAdminItem;
-        final ItemGui item = playtimeTopGuiConfig.playerEntryItem;
+        final var adminItem = topGuiConfig.playerEntryAdminItem;
+        final var item = topGuiConfig.playerEntryItem;
 
         return ITEM_VARIANT_RESOLVER.resolve(viewer, context, List.of(adminItem), item);
     }
@@ -129,8 +146,15 @@ public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGu
                 .with("{PLAYER_NAME}", topUser.getName())
                 .with("{PLAYER_POSITION}", position)
                 .with("{PLAYER_PLAYTIME}", Durations.format(topUser.getPlaytime().toDuration()))
-                .with("{CLICK_RESET}", playtimeTopGuiConfig.resetClickType.name())
+                .with("{CLICK_RESET}", topGuiConfig.resetClickType.name())
                 .build();
+    }
+
+    private void resetPlayTimeFor(Player viewer, User user) {
+        viewer.closeInventory();
+
+        user.setPlaytime(UserTime.ZERO);
+        userService.save(user, UserSaveReason.GUI_RESET_CLICK);
     }
 
     @Override

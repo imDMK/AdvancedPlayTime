@@ -59,17 +59,6 @@ public final class DatabaseConnector {
     private volatile ConnectionSource connectionSource;
 
     /**
-     * Creates a new connector using the default {@link DriverConfigurer}
-     * resolved from {@link DriverConfigurerFactory} based on {@link DatabaseConfig#databaseMode}.
-     *
-     * @param logger the plugin logger (never null)
-     * @param config the database configuration (never null)
-     */
-    public DatabaseConnector(@NotNull PluginLogger logger, @NotNull DatabaseConfig config) {
-        this(logger, config, DriverConfigurerFactory.getFor(config.databaseMode));
-    }
-
-    /**
      * Creates a new connector with an explicit {@link DriverConfigurer}.
      * Useful for testing or advanced customization.
      *
@@ -85,6 +74,17 @@ public final class DatabaseConnector {
         this.logger = Validator.notNull(logger, "logger cannot be null");
         this.config = Validator.notNull(config, "config cannot be null");
         this.driverConfigurer = Validator.notNull(driverConfigurer, "driverConfigurer cannot be null");
+    }
+
+    /**
+     * Creates a new connector using the default {@link DriverConfigurer}
+     * resolved from {@link DriverConfigurerFactory} based on {@link DatabaseConfig#databaseMode}.
+     *
+     * @param logger the plugin logger (never null)
+     * @param config the database configuration (never null)
+     */
+    public DatabaseConnector(@NotNull PluginLogger logger, @NotNull DatabaseConfig config) {
+        this(logger, config, DriverConfigurerFactory.getFor(config.databaseMode));
     }
 
     /**

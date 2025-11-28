@@ -95,7 +95,7 @@ public final class UserRepositoryOrmLite
             try {
                 return mapper.toDomainList(
                         dao.queryBuilder()
-                                .orderBy(UserEntityMeta.Col.SPENT_MILLIS, false) // DESC
+                                .orderBy(UserEntityMeta.Col.PLAYTIME_MILLIS, false) // DESC
                                 .orderBy(UserEntityMeta.Col.UUID, true)          // deterministic tiebreaker
                                 .limit(limit)
                                 .query()

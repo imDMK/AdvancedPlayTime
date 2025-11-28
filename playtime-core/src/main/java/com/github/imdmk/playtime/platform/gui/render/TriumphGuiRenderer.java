@@ -3,7 +3,7 @@ package com.github.imdmk.playtime.platform.gui.render;
 import com.github.imdmk.playtime.platform.gui.item.ItemGui;
 import com.github.imdmk.playtime.platform.gui.item.ItemGuiTransformer;
 import com.github.imdmk.playtime.shared.Validator;
-import dev.triumphteam.gui.builder.item.ItemBuilder;
+import dev.triumphteam.gui.builder.item.BaseItemBuilder;
 import dev.triumphteam.gui.components.GuiAction;
 import dev.triumphteam.gui.guis.BaseGui;
 import dev.triumphteam.gui.guis.GuiItem;
@@ -62,7 +62,7 @@ public final class TriumphGuiRenderer implements GuiRenderer {
             @NotNull final RenderContext context,
             @NotNull final RenderOptions options,
             @NotNull final Consumer<InventoryClickEvent> onClick,
-            @NotNull final Consumer<ItemBuilder> builderEditor
+            @NotNull final Consumer<BaseItemBuilder<?>> builderEditor
     ) {
         validateArgs(gui, item, context, options, onClick, builderEditor);
 
@@ -91,7 +91,7 @@ public final class TriumphGuiRenderer implements GuiRenderer {
             @NotNull final RenderContext context,
             @NotNull final RenderOptions options,
             @NotNull final Consumer<InventoryClickEvent> onClick,
-            @NotNull final Consumer<ItemBuilder> builderEditor
+            @NotNull final Consumer<BaseItemBuilder<?>> builderEditor
     ) {
         validateArgs(gui, item, context, options, onClick, builderEditor);
 
@@ -117,7 +117,7 @@ public final class TriumphGuiRenderer implements GuiRenderer {
             @NotNull final RenderContext context,
             @NotNull final RenderOptions options,
             @NotNull final Consumer<InventoryClickEvent> onClick,
-            @NotNull final Consumer<ItemBuilder> builderEditor
+            @NotNull final Consumer<BaseItemBuilder<?>> builderEditor
     ) {
         final String requiredPerm = item.requiredPermission();
 
@@ -165,7 +165,7 @@ public final class TriumphGuiRenderer implements GuiRenderer {
             final RenderContext context,
             final RenderOptions options,
             final Consumer<InventoryClickEvent> onClick,
-            final Consumer<ItemBuilder> builderEditor
+            final Consumer<BaseItemBuilder<?>> builderEditor
     ) {
         Validator.notNull(gui, "gui cannot be null");
         Validator.notNull(item, "item cannot be null");

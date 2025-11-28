@@ -27,7 +27,7 @@ public final class UserEntityMapper implements EntityMapper<UserEntity, User> {
         return new User(
                 entity.getUuid(),
                 entity.getName(),
-                UserTime.ofMillis(entity.getPlaytime())
+                UserTime.ofMillis(entity.getPlaytimeMillis())
         );
     }
 }

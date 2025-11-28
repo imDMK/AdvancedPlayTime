@@ -1,9 +1,11 @@
 package com.github.imdmk.playtime.platform.gui.item;
 
 import com.github.imdmk.playtime.shared.Validator;
+import dev.triumphteam.gui.builder.item.BaseItemBuilder;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.components.GuiAction;
 import dev.triumphteam.gui.guis.GuiItem;
+import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
@@ -69,14 +71,17 @@ public final class ItemGuiTransformer {
     public static @NotNull GuiItem toGuiItem(
             @NotNull ItemGui item,
             @NotNull GuiAction<InventoryClickEvent> onClick,
-            @NotNull Consumer<ItemBuilder> builderEditor) {
+            @NotNull Consumer<BaseItemBuilder<?>> builderEditor) {
         Validator.notNull(item, "item cannot be null");
         Validator.notNull(onClick, "onClick cannot be null");
         Validator.notNull(builderEditor, "builderEditor cannot be null");
 
-        final ItemBuilder builder = ItemBuilder.from(item.material())
-                .name(item.name())
-                .lore(item.lore());
+        final Material material = item.material();
+        final BaseItemBuilder<?> builder =
+                material == Material.PLAYER_HEAD ? ItemBuilder.skull() : ItemBuilder.from(material);
+
+        builder.name(item.name());
+        builder.lore(item.lore());
 
         final var enchantments = item.enchantments();
         if (enchantments != null && !enchantments.isEmpty()) {
