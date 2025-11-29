@@ -20,7 +20,7 @@ Paste the logs from the server console here.
 Use **/ver** command and paste here.
 
 **Plugin version**
-Use **/ver SpentTime** command and paste here.
+Use **/ver PlayTime** command and paste here.
 
 **Plugin configuration**
 Paste here your plugin configuration.
