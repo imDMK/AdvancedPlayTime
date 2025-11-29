@@ -4,6 +4,7 @@ import com.github.imdmk.playtime.infrastructure.module.Module;
 import com.github.imdmk.playtime.infrastructure.module.phase.CommandPhase;
 import com.github.imdmk.playtime.infrastructure.module.phase.ListenerPhase;
 import com.github.imdmk.playtime.infrastructure.module.phase.RepositoryPhase;
+import com.github.imdmk.playtime.infrastructure.module.phase.TaskPhase;
 import com.github.imdmk.playtime.user.cache.CaffeineUserCache;
 import com.github.imdmk.playtime.user.cache.UserCache;
 import com.github.imdmk.playtime.user.listener.UserJoinListener;
@@ -61,5 +62,12 @@ public final class UserModule implements Module {
         return configurer -> configurer.configure(builder -> {
             builder.argument(User.class, injector.newInstance(UserArgument.class));
         });
+    }
+
+    @Override
+    public TaskPhase tasks(@NotNull Injector injector) {
+        return scheduler -> {
+            scheduler.runTimerAsync(injector.newInstance(UserSaveTask.class));
+        };
     }
 }

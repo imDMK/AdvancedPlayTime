@@ -44,15 +44,16 @@
 
 ### 🔐 Command Permissions
 
-| Command                     | Permission                    |
-|-----------------------------|-------------------------------|
-| `/playtime`                | `command.playtime`           |
-| `/playtime <target>`       | `command.playtime.target`    |
-| `/playtime top`            | `command.playtime.top`       |          
-| `/playtime set`            | `command.playtime.set`       |
-| `/playtime reset`          | `command.playtime.reset`     |
-| `/playtime reset-all`      | `command.playtime.reset.all` |
-| `/playtime reload`         | `command.playtime.reload`    |
+| Command                     | Permission                        |
+|-----------------------------|-----------------------------------|
+| `/playtime`                 | `command.playtime`                |
+| `/playtime <target>`        | `command.playtime.target`         |
+| `/playtime top`             | `command.playtime.top`            |         
+| `/playtime top invalidate` | `command.playtime.top.invalidate`  |
+| `/playtime set`             | `command.playtime.set`            |
+| `/playtime reset`           | `command.playtime.reset`          |
+| `/playtime reset-all`       | `command.playtime.reset.all`      |
+| `/playtime reload`          | `command.playtime.reload`         |
 
 ---
 
@@ -88,15 +89,15 @@
 
 ### 🧩 PlaceholderAPI
 
-| Placeholder       | Description                                |
-|-------------------|--------------------------------------------|
-| `%spent-time%`    | Displays player's playtime in readable format (e.g., `10h 35m`) |
+| Placeholder          | Description                                                             |
+|----------------------|-------------------------------------------------------------------------|
+| `%advancedplaytime%` | Displays player's playtime in default readable format (e.g., `10h 35m`) |
 
 ---
 
 ### ❓ Why isn’t my time updated instantly?
 
-To maximize performance, time is updated on player join/leave and periodically via a background task. You can configure the frequency in `spentTimeSaveDelay`.
+To maximize performance, time is updated on player join/leave and periodically via a background task.
 
 ---
 
@@ -109,4 +110,4 @@ Have a suggestion, found a bug, or want to contribute?
 
 ### ⭐ Like the plugin?
 
-If you enjoy using PlayTime, consider leaving a positive review or star on [SpigotMC](https://www.spigotmc.org/resources/playtime.111938/) or [GitHub](https://github.com/imDMK/PlayTime) — it really helps!
+If you enjoy using PlayTime, consider leaving a positive review or star on [SpigotMC](https://www.spigotmc.org/resources/advancedplaytime.111938/) or [GitHub](https://github.com/imDMK/AdvancedPlayTime) — it really helps!

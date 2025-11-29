@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 final class PlayTimeExecutorFactory {
 
-    private static final String WORKER_THREAD_NAME = "PlayTime-Worker";
+    private static final String WORKER_THREAD_NAME = "AdvancedPlayTime-Worker";
     private static final Duration SHUTDOWN_TIMEOUT = Duration.ofSeconds(3);
 
     private PlayTimeExecutorFactory() {

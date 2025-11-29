@@ -45,7 +45,8 @@ public final class TimeCommand {
     void targetPlaytime(@Context Player viewer, @Arg @Async User target) {
         final UserTime time = playtimeService.getTime(target.getUuid());
 
-        messageService.create().notice(n -> n.playtimeMessages.playerPlaytimeTarget())
+        messageService.create()
+                .notice(n -> n.playtimeMessages.playerPlaytimeTarget())
                 .viewer(viewer)
                 .placeholder("{PLAYER_NAME}", target.getName())
                 .placeholder("{PLAYER_PLAYTIME}", Durations.format(time.toDuration()))

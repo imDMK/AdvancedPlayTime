@@ -1,4 +1,4 @@
-rootProject.name = "PlayTime"
+rootProject.name = "AdvancedPlayTime"
 
 include("playtime-api")
 include("playtime-bukkit-api")

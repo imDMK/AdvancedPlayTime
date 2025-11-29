@@ -12,6 +12,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+
 public final class PlayTimeTopGuiConfig extends OkaeriConfig implements ConfigurableGui {
 
     @Comment({
@@ -24,8 +26,16 @@ public final class PlayTimeTopGuiConfig extends OkaeriConfig implements Configur
 
     @Comment({
             "#",
-            "# GUI layout type used to render the top playtime list.",
-            "# Recommended: SCROLLING_HORIZONTAL for paginated horizontal scrolling.",
+            "# Defines how the Top Playtime GUI should be rendered.",
+            "#",
+            "# Available layouts:",
+            "#  • STANDARD             – fixed-size GUI, no pagination; best for small static lists.",
+            "#  • PAGINATED            – multipage layout; recommended for larger datasets (> 45 items).",
+            "#  • SCROLLING_VERTICAL   – scrollable up/down; good for tall list-like interfaces.",
+            "#  • SCROLLING_HORIZONTAL – horizontal scrolling; ideal for wide ranking views.",
+            "#",
+            "# Recommended for Top Playtime: SCROLLING_HORIZONTAL",
+            "# (smooth movement through player ranks, best UX for long leaderboards).",
             "#"
     })
     public GuiType type = GuiType.SCROLLING_HORIZONTAL;
@@ -37,6 +47,16 @@ public final class PlayTimeTopGuiConfig extends OkaeriConfig implements Configur
             "#"
     })
     public int rows = 6;
+
+    @Comment({" ", "# Enable border item around GUI?", " "})
+    public boolean fillBorder = true;
+
+    @Comment({" ", "# Item used as the border around GUIs", " "})
+    public ItemGui borderItem = ItemGui.builder()
+            .material(Material.GRAY_STAINED_GLASS_PANE)
+            .name(AdventureComponents.text(" "))
+            .lore(Collections.emptyList())
+            .build();
 
     @Comment({
             "#",
