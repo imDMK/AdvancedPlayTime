@@ -1,18 +1,18 @@
-# ⏳ SpentTime
+# ⏳ Advanced PlayTime Plugin
 
-[![Build Status](https://github.com/imDMK/SpentTime/actions/workflows/gradle.yml/badge.svg)](https://github.com/imDMK/SpentTime/actions/workflows/gradle.yml)
+[![Build Status](https://github.com/imDMK/PlayTime/actions/workflows/gradle.yml/badge.svg)](https://github.com/imDMK/PlayTime/actions/workflows/gradle.yml)
 ![JDK](https://img.shields.io/badge/JDK-1.17-blue.svg)
 ![Supported versions](https://img.shields.io/badge/Minecraft-1.17--1.21.5-green.svg)
-[![SpigotMC](https://img.shields.io/badge/SpigotMC-yellow.svg)](https://www.spigotmc.org/resources/spenttime.111938/)
-[![Bukkit](https://img.shields.io/badge/Bukkit-blue.svg)](https://dev.bukkit.org/projects/spenttime)
-[![PaperMC](https://img.shields.io/badge/Paper-004ee9.svg)](https://hangar.papermc.io/imDMK/SpentTime)
-[![Modrinth](https://img.shields.io/badge/Modrinth-1bd96a.svg)](https://modrinth.com/plugin/spenttime)
-[![Polymart](https://img.shields.io/badge/Polymart-green.svg)](https://polymart.org/product/7888/spenttime-1-17-1-21-5)
-[![bStats](https://img.shields.io/badge/bStats-00695c)](https://bstats.org/plugin/bukkit/SpentTime/19362)
+[![SpigotMC](https://img.shields.io/badge/SpigotMC-yellow.svg)](https://www.spigotmc.org/resources/playtime.111938/)
+[![Bukkit](https://img.shields.io/badge/Bukkit-blue.svg)](https://dev.bukkit.org/projects/playtime)
+[![PaperMC](https://img.shields.io/badge/Paper-004ee9.svg)](https://hangar.papermc.io/imDMK/PlayTime)
+[![Modrinth](https://img.shields.io/badge/Modrinth-1bd96a.svg)](https://modrinth.com/plugin/playtime)
+[![Polymart](https://img.shields.io/badge/Polymart-green.svg)](https://polymart.org/product/7888/playtime-1-17-1-21-5)
+[![bStats](https://img.shields.io/badge/bStats-00695c)](https://bstats.org/plugin/bukkit/PlayTime/19362)
 
 > **Track it. Visualize it. Control it.**
 >
-> SpentTime is a powerful and ultra-efficient plugin that allows players to check their playtime and compare it with others — all in a stunning, fully customizable GUI.
+> Advanced PlayTime is a powerful and ultra-efficient plugin that allows players to check their playtime and compare it with others — all in a stunning, fully customizable GUI.
 
 ---
 
@@ -31,7 +31,7 @@
 
 ### 🖼️ Preview
 
-#### 🏆 Top Spent Time GUI  
+#### 🏆 Top PlayTime GUI  
 ![Top GUI](assets/top.gif)
 
 #### ⌛ Checking Your Time  
@@ -44,17 +44,16 @@
 
 ### 🔐 Command Permissions
 
-| Command                     | Permission                    |
-|-----------------------------|-------------------------------|
-| `/spenttime`                | `command.spenttime`           |
-| `/spenttime <target>`       | `command.spenttime.target`    |
-| `/spenttime top`            | `command.spenttime.top`       |          
-| `/spenttime set`            | `command.spenttime.set`       |
-| `/spenttime reset`          | `command.spenttime.reset`     |
-| `/spenttime reset-all`      | `command.spenttime.reset.all` |
-| `/spenttime reload`         | `command.spenttime.reload`    |
-| `/spenttime migrate`        | `command.spenttime.migrate`   |
-| `/spenttime migrate cancel` | `command.spenttime.migrate`   |
+| Command                     | Permission                        |
+|-----------------------------|-----------------------------------|
+| `/playtime`                 | `command.playtime`                |
+| `/playtime <target>`        | `command.playtime.target`         |
+| `/playtime top`             | `command.playtime.top`            |         
+| `/playtime top invalidate` | `command.playtime.top.invalidate`  |
+| `/playtime set`             | `command.playtime.set`            |
+| `/playtime reset`           | `command.playtime.reset`          |
+| `/playtime reset-all`       | `command.playtime.reset.all`      |
+| `/playtime reload`          | `command.playtime.reload`         |
 
 ---
 
@@ -82,30 +81,33 @@
 
 - `SQLITE`  
 - `MYSQL`  
+- `H2`
+- `SQL`
+- `Postgresql`
 
 ---
 
 ### 🧩 PlaceholderAPI
 
-| Placeholder       | Description                                |
-|-------------------|--------------------------------------------|
-| `%spent-time%`    | Displays player's playtime in readable format (e.g., `10h 35m`) |
+| Placeholder          | Description                                                             |
+|----------------------|-------------------------------------------------------------------------|
+| `%advancedplaytime%` | Displays player's playtime in default readable format (e.g., `10h 35m`) |
 
 ---
 
 ### ❓ Why isn’t my time updated instantly?
 
-To maximize performance, time is updated on player join/leave and periodically via a background task. You can configure the frequency in `spentTimeSaveDelay`.
+To maximize performance, time is updated on player join/leave and periodically via a background task.
 
 ---
 
 ### 💡 Feedback & Support
 
 Have a suggestion, found a bug, or want to contribute?  
-👉 [Open an issue here](https://github.com/imDMK/SpentTime/issues)
+👉 [Open an issue here](https://github.com/imDMK/PlayTime/issues)
 
 ---
 
 ### ⭐ Like the plugin?
 
-If you enjoy using SpentTime, consider leaving a positive review or star on [SpigotMC](https://www.spigotmc.org/resources/spenttime.111938/) or [GitHub](https://github.com/imDMK/SpentTime) — it really helps!
+If you enjoy using PlayTime, consider leaving a positive review or star on [SpigotMC](https://www.spigotmc.org/resources/advancedplaytime.111938/) or [GitHub](https://github.com/imDMK/AdvancedPlayTime) — it really helps!
