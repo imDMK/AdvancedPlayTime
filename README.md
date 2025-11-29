@@ -1,7 +1,7 @@
 # ⏳ Advanced PlayTime Plugin
 
 [![Build Status](https://github.com/imDMK/AdvancedPlayTime/actions/workflows/gradle.yml/badge.svg)](https://github.com/imDMK/AdvancedPlayTime/actions/workflows/gradle.yml)
-![JDK](https://img.shields.io/badge/JDK-1.17-blue.svg)
+![JDK](https://img.shields.io/badge/JDK-1.21-blue.svg)
 ![Supported versions](https://img.shields.io/badge/Minecraft-1.21--1.21.10-green.svg)
 [![SpigotMC](https://img.shields.io/badge/SpigotMC-yellow.svg)](https://www.spigotmc.org/resources/%E2%8F%B0%EF%B8%8F-advancedplaytime-1-21-1-21-10.130458/)
 [![Modrinth](https://img.shields.io/badge/Modrinth-1bd96a.svg)](https://modrinth.com/plugin/advancedplaytime)
