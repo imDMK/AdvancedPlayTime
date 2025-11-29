@@ -1,18 +1,15 @@
 # ⏳ Advanced PlayTime Plugin
 
-[![Build Status](https://github.com/imDMK/PlayTime/actions/workflows/gradle.yml/badge.svg)](https://github.com/imDMK/PlayTime/actions/workflows/gradle.yml)
+[![Build Status](https://github.com/imDMK/AdvancedPlayTime/actions/workflows/gradle.yml/badge.svg)](https://github.com/imDMK/AdvancedPlayTime/actions/workflows/gradle.yml)
 ![JDK](https://img.shields.io/badge/JDK-1.17-blue.svg)
-![Supported versions](https://img.shields.io/badge/Minecraft-1.17--1.21.5-green.svg)
-[![SpigotMC](https://img.shields.io/badge/SpigotMC-yellow.svg)](https://www.spigotmc.org/resources/playtime.111938/)
-[![Bukkit](https://img.shields.io/badge/Bukkit-blue.svg)](https://dev.bukkit.org/projects/playtime)
-[![PaperMC](https://img.shields.io/badge/Paper-004ee9.svg)](https://hangar.papermc.io/imDMK/PlayTime)
-[![Modrinth](https://img.shields.io/badge/Modrinth-1bd96a.svg)](https://modrinth.com/plugin/playtime)
-[![Polymart](https://img.shields.io/badge/Polymart-green.svg)](https://polymart.org/product/7888/playtime-1-17-1-21-5)
+![Supported versions](https://img.shields.io/badge/Minecraft-1.21--1.21.10-green.svg)
+[![SpigotMC](https://img.shields.io/badge/SpigotMC-yellow.svg)](https://www.spigotmc.org/resources/%E2%8F%B0%EF%B8%8F-advancedplaytime-1-21-1-21-10.130458/)
+[![Modrinth](https://img.shields.io/badge/Modrinth-1bd96a.svg)](https://modrinth.com/plugin/advancedplaytime)
 [![bStats](https://img.shields.io/badge/bStats-00695c)](https://bstats.org/plugin/bukkit/PlayTime/19362)
 
 > **Track it. Visualize it. Control it.**
 >
-> Advanced PlayTime is a powerful and ultra-efficient plugin that allows players to check their playtime and compare it with others — all in a stunning, fully customizable GUI.
+> AdvancedPlayTime is a powerful and ultra-efficient plugin that allows players to check their playtime and compare it with others — all in a stunning, fully customizable GUI.
 
 ---
 
@@ -104,10 +101,10 @@ To maximize performance, time is updated on player join/leave and periodically v
 ### 💡 Feedback & Support
 
 Have a suggestion, found a bug, or want to contribute?  
-👉 [Open an issue here](https://github.com/imDMK/PlayTime/issues)
+👉 [Open an issue here](https://github.com/imDMK/AdvancedPlayTime/issues)
 
 ---
 
 ### ⭐ Like the plugin?
 
-If you enjoy using PlayTime, consider leaving a positive review or star on [SpigotMC](https://www.spigotmc.org/resources/advancedplaytime.111938/) or [GitHub](https://github.com/imDMK/AdvancedPlayTime) — it really helps!
+If you enjoy using PlayTime, consider leaving a positive review or star on [SpigotMC](https://www.spigotmc.org/resources/advancedplaytime.111938/) or [GitHub](https://www.spigotmc.org/resources/%E2%8F%B0%EF%B8%8F-advancedplaytime-1-21-1-21-10.130458/) — it really helps!
