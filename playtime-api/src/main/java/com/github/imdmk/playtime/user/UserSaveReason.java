@@ -1,14 +1,13 @@
 package com.github.imdmk.playtime.user;
 
 /**
- * Enumerates the possible reasons for persisting a {@link User} instance.
+ * Describes the context in which a {@link User} instance is persisted.
  *
- * <p>This enum is typically used by services or repositories handling user data
- * to describe the context under which a save or update operation occurs.
- * It provides semantic clarity for logging, auditing, or event-based triggers.</p>
+ * <p>These reasons help services, repositories, logging and auditing systems
+ * understand why a save operation took place.</p>
  *
- * <p><strong>Usage:</strong> Passed to user-saving routines (e.g. {@code UserService#save(User, UserSaveReason)})
- * to indicate why the user's state was persisted.</p>
+ * <p>Typical usage: passed to {@code UserService#save(User, UserSaveReason)}
+ * to provide semantic context for persistence logic.</p>
  *
  * @see User
  * @see UserService
@@ -16,27 +15,33 @@ package com.github.imdmk.playtime.user;
 public enum UserSaveReason {
 
     /**
-     * The player joined the server — user data should be loaded or created.
+     * The player joined the server — user data is loaded or created.
      */
     PLAYER_JOIN,
 
     /**
-     * The player left the server — user data should be persisted to storage.
+     * The player left the server — user data should be persisted.
      */
     PLAYER_LEAVE,
 
     /**
-     * The user's time was explicitly set via a command.
+     * An administrator explicitly set the user's playtime via command.
      */
     SET_COMMAND,
 
     /**
-     * The user's time was reset via a command.
+     * An administrator reset the user's playtime via command.
      */
     RESET_COMMAND,
 
     /**
-     * The user's time was reset through a GUI interaction (e.g., button click).
+     * The user's data was persisted by a scheduled task
+     * (e.g., automatic save every 5 minutes).
      */
-    GUI_RESET_CLICK,
+    SCHEDULED_SAVE,
+
+    /**
+     * The user's playtime was reset by a GUI action (e.g., button click).
+     */
+    GUI_RESET_CLICK
 }

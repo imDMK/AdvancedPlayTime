@@ -6,131 +6,143 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Duration;
+
 /**
- * Concrete {@link TaskScheduler} implementation backed by the Bukkit {@link BukkitScheduler}.
- * <p>
- * Provides convenient methods for executing synchronous and asynchronous tasks,
- * as well as delayed and repeating operations bound to a specific {@link Plugin}.
- * <p>
- * All delay and period values are expressed in <strong>ticks</strong> (20 ticks = 1 second).
- * <p>
- * <strong>Thread safety:</strong> This class is thread-safe and stateless.
- * <p>
- * <strong>Lifecycle:</strong> The {@link #shutdown()} method cancels all tasks
- * currently scheduled under the associated plugin instance.
+ * {@link TaskScheduler} implementation backed by the Bukkit {@link BukkitScheduler}.
+ *
+ * <p>Provides a clean, Duration-based API for scheduling synchronous and asynchronous
+ * tasks, including delayed and repeating executions.</p>
+ *
+ * <p>All time values are expressed using {@link Duration} and internally converted
+ * to Minecraft ticks (1 tick = 50 ms).</p>
+ *
+ * <p><strong>Thread-safety:</strong> This class is thread-safe. It holds only immutable
+ * references to {@link Plugin} and {@link BukkitScheduler}.</p>
  */
 public final class BukkitTaskScheduler implements TaskScheduler {
 
-    private final Plugin plugin;
-    private final BukkitScheduler bukkitScheduler;
+    /** Number of milliseconds per Minecraft tick. */
+    private static final long MILLIS_PER_TICK = 50L;
 
-    public BukkitTaskScheduler(@NotNull Plugin plugin, @NotNull BukkitScheduler bukkitScheduler) {
+    private final Plugin plugin;
+    private final BukkitScheduler scheduler;
+
+    public BukkitTaskScheduler(@NotNull Plugin plugin, @NotNull BukkitScheduler scheduler) {
         this.plugin = Validator.notNull(plugin, "plugin cannot be null");
-        this.bukkitScheduler = Validator.notNull(bukkitScheduler, "bukkitScheduler cannot be null");
+        this.scheduler = Validator.notNull(scheduler, "scheduler cannot be null");
     }
 
-    /**
-     * Executes a runnable synchronously on the main server thread.
-     *
-     * @param runnable the task to execute; must not be {@code null}
-     * @return the created {@link BukkitTask} handle
-     * @throws NullPointerException if {@code runnable} is {@code null}
-     */
     @Override
     public @NotNull BukkitTask runSync(@NotNull Runnable runnable) {
         Validator.notNull(runnable, "runnable cannot be null");
-        return bukkitScheduler.runTask(plugin, runnable);
+        return scheduler.runTask(plugin, runnable);
     }
 
-    /**
-     * Executes a runnable asynchronously in a separate thread.
-     *
-     * @param runnable the task to execute; must not be {@code null}
-     * @return the created {@link BukkitTask} handle
-     * @throws NullPointerException if {@code runnable} is {@code null}
-     */
+    @Override
+    public @NotNull BukkitTask runSync(@NotNull PluginTask task) {
+        Validator.notNull(task, "task cannot be null");
+        return scheduler.runTask(plugin, task);
+    }
+
     @Override
     public @NotNull BukkitTask runAsync(@NotNull Runnable runnable) {
         Validator.notNull(runnable, "runnable cannot be null");
-        return bukkitScheduler.runTaskAsynchronously(plugin, runnable);
+        return scheduler.runTaskAsynchronously(plugin, runnable);
     }
 
-    /**
-     * Executes a runnable asynchronously after a specified delay.
-     *
-     * @param runnable the task to execute; must not be {@code null}
-     * @param delay    delay in ticks before execution (20 ticks = 1 second)
-     * @return the created {@link BukkitTask} handle
-     * @throws NullPointerException if {@code runnable} is {@code null}
-     */
     @Override
-    public @NotNull BukkitTask runLaterAsync(@NotNull Runnable runnable, long delay) {
-        Validator.notNull(runnable, "runnable cannot be null");
-        return bukkitScheduler.runTaskLaterAsynchronously(plugin, runnable, delay);
+    public @NotNull BukkitTask runAsync(@NotNull PluginTask task) {
+        Validator.notNull(task, "task cannot be null");
+        return scheduler.runTaskAsynchronously(plugin, task);
     }
 
-    /**
-     * Executes a runnable synchronously after a specified delay.
-     *
-     * @param runnable the task to execute; must not be {@code null}
-     * @param delay    delay in ticks before execution (20 ticks = 1 second)
-     * @return the created {@link BukkitTask} handle
-     * @throws NullPointerException if {@code runnable} is {@code null}
-     */
     @Override
-    public BukkitTask runLaterSync(@NotNull Runnable runnable, long delay) {
+    public @NotNull BukkitTask runLaterAsync(@NotNull Runnable runnable, @NotNull Duration delay) {
         Validator.notNull(runnable, "runnable cannot be null");
-        return bukkitScheduler.runTaskLater(plugin, runnable, delay);
+        Validator.notNull(delay, "delay cannot be null");
+        return scheduler.runTaskLaterAsynchronously(plugin, runnable, toTicks(delay));
     }
 
-    /**
-     * Executes a repeating runnable synchronously on the main thread.
-     *
-     * @param runnable the task to execute; must not be {@code null}
-     * @param delay    initial delay in ticks before the first run
-     * @param period   interval in ticks between consecutive executions
-     * @return the created {@link BukkitTask} handle
-     * @throws NullPointerException if {@code runnable} is {@code null}
-     */
     @Override
-    public @NotNull BukkitTask runTimerSync(@NotNull Runnable runnable, long delay, long period) {
-        Validator.notNull(runnable, "runnable cannot be null");
-        return bukkitScheduler.runTaskTimer(plugin, runnable, delay, period);
+    public @NotNull BukkitTask runLaterAsync(@NotNull PluginTask task) {
+        Validator.notNull(task, "task cannot be null");
+        return runLaterAsync(task, task.delay());
     }
 
-    /**
-     * Executes a repeating runnable asynchronously.
-     *
-     * @param runnable the task to execute; must not be {@code null}
-     * @param delay    initial delay in ticks before the first run
-     * @param period   interval in ticks between consecutive executions
-     * @return the created {@link BukkitTask} handle
-     * @throws NullPointerException if {@code runnable} is {@code null}
-     */
     @Override
-    public @NotNull BukkitTask runTimerAsync(@NotNull Runnable runnable, long delay, long period) {
+    public @NotNull BukkitTask runLaterSync(@NotNull Runnable runnable, @NotNull Duration delay) {
         Validator.notNull(runnable, "runnable cannot be null");
-        return bukkitScheduler.runTaskTimerAsynchronously(plugin, runnable, delay, period);
+        Validator.notNull(delay, "delay cannot be null");
+        return scheduler.runTaskLater(plugin, runnable, toTicks(delay));
     }
 
-    /**
-     * Cancels the task associated with the given Bukkit scheduler ID.
-     *
-     * @param taskId the numeric task identifier
-     */
+    @Override
+    public @NotNull BukkitTask runLaterSync(@NotNull PluginTask task) {
+        Validator.notNull(task, "task cannot be null");
+        return runLaterSync(task, task.delay());
+    }
+
+    @Override
+    public @NotNull BukkitTask runTimerSync(
+            @NotNull Runnable runnable,
+            @NotNull Duration delay,
+            @NotNull Duration period
+    ) {
+        Validator.notNull(runnable, "runnable cannot be null");
+        Validator.notNull(delay, "delay cannot be null");
+        Validator.notNull(period, "period cannot be null");
+
+        return scheduler.runTaskTimer(plugin, runnable, toTicks(delay), toTicks(period));
+    }
+
+    @Override
+    public @NotNull BukkitTask runTimerSync(@NotNull PluginTask task) {
+        Validator.notNull(task, "task cannot be null");
+        return runTimerSync(task, task.delay(), task.period());
+    }
+
+    @Override
+    public @NotNull BukkitTask runTimerAsync(
+            @NotNull Runnable runnable,
+            @NotNull Duration delay,
+            @NotNull Duration period
+    ) {
+        Validator.notNull(runnable, "runnable cannot be null");
+        Validator.notNull(delay, "delay cannot be null");
+        Validator.notNull(period, "period cannot be null");
+
+        return scheduler.runTaskTimerAsynchronously(plugin, runnable, toTicks(delay), toTicks(period));
+    }
+
+    @Override
+    public @NotNull BukkitTask runTimerAsync(@NotNull PluginTask task) {
+        Validator.notNull(task, "task cannot be null");
+        return runTimerAsync(task, task.delay(), task.period());
+    }
+
     @Override
     public void cancelTask(int taskId) {
-        bukkitScheduler.cancelTask(taskId);
+        scheduler.cancelTask(taskId);
+    }
+
+    @Override
+    public void shutdown() {
+        scheduler.cancelTasks(plugin);
     }
 
     /**
-     * Cancels all scheduled tasks that were registered by this plugin instance.
+     * Converts the given duration to Minecraft ticks.
      * <p>
-     * Useful when unloading or disabling the plugin to ensure no residual
-     * scheduled tasks continue to run.
+     * Fractions are truncated. Negative durations return {@code 0}.
+     *
+     * @param duration duration to convert; must not be null
+     * @return number of ticks (≥ 0)
      */
-    @Override
-    public void shutdown() {
-        bukkitScheduler.cancelTasks(plugin);
+    private static int toTicks(@NotNull Duration duration) {
+        Validator.notNull(duration, "duration cannot be null");
+
+        long ticks = duration.toMillis() / MILLIS_PER_TICK;
+        return ticks <= 0 ? 0 : (int) ticks;
     }
 }

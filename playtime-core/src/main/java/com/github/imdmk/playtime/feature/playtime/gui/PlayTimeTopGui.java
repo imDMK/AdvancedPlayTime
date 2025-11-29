@@ -1,6 +1,5 @@
 package com.github.imdmk.playtime.feature.playtime.gui;
 
-import com.github.imdmk.playtime.platform.gui.config.GuiConfig;
 import com.github.imdmk.playtime.platform.gui.config.NavigationBarConfig;
 import com.github.imdmk.playtime.platform.gui.factory.GuiFactory;
 import com.github.imdmk.playtime.platform.gui.item.ItemGui;
@@ -13,7 +12,6 @@ import com.github.imdmk.playtime.platform.gui.render.RenderOptions;
 import com.github.imdmk.playtime.platform.gui.render.TriumphGuiRenderer;
 import com.github.imdmk.playtime.platform.gui.view.AbstractGui;
 import com.github.imdmk.playtime.platform.gui.view.ParameterizedGui;
-import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.playtime.shared.Validator;
 import com.github.imdmk.playtime.shared.adventure.AdventureFormatter;
@@ -37,7 +35,9 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGui<List<User>> {
+public final class PlayTimeTopGui
+        extends AbstractGui
+        implements ParameterizedGui<List<User>> {
 
     private static final String GUI_IDENTIFIER = "playtime-top";
 
@@ -46,8 +46,6 @@ public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGu
     private static final ItemVariantResolver ITEM_VARIANT_RESOLVER = new ItemVariantPermissionResolver();
 
     private final Server server;
-    private final PluginLogger logger;
-    private final GuiConfig guiConfig;
     private final PlayTimeTopGuiConfig topGuiConfig;
     private final MessageService messageService;
     private final UserService userService;
@@ -55,8 +53,6 @@ public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGu
     @Inject
     public PlayTimeTopGui(
             @NotNull Server server,
-            @NotNull PluginLogger logger,
-            @NotNull GuiConfig guiConfig,
             @NotNull NavigationBarConfig navigationBarConfig,
             @NotNull PlayTimeTopGuiConfig topGuiConfig,
             @NotNull TaskScheduler taskScheduler,
@@ -64,8 +60,6 @@ public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGu
             @NotNull UserService userService) {
         super(navigationBarConfig, taskScheduler, GUI_RENDERER, RENDER_OPTIONS);
         this.server = Validator.notNull(server, "server cannot be null");
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.guiConfig = Validator.notNull(guiConfig, "guiConfig cannot be null");
         this.topGuiConfig = Validator.notNull(topGuiConfig, "playtimeTopGuiConfig cannot be null");
         this.messageService = Validator.notNull(messageService, "messageService cannot be null");
         this.userService = Validator.notNull(userService, "userService cannot be null");
@@ -84,8 +78,8 @@ public final class PlayTimeTopGui extends AbstractGui implements ParameterizedGu
         Validator.notNull(viewer, "viewer cannot be null");
         Validator.notNull(users, "users cannot be null");
 
-        if (guiConfig.fillBorder) {
-            final var border = ItemGuiTransformer.toGuiItem(guiConfig.borderItem);
+        if (topGuiConfig.fillBorder) {
+            final var border = ItemGuiTransformer.toGuiItem(topGuiConfig.borderItem);
             gui.getFiller().fillBorder(border);
         }
 

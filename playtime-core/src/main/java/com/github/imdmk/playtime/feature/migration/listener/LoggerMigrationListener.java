@@ -8,8 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 public final class LoggerMigrationListener implements MigrationListener {
 
-    private static final String PREFIX = "[MIGRATION]";
-
     private final PluginLogger logger;
 
     private volatile int completed;
@@ -23,7 +21,7 @@ public final class LoggerMigrationListener implements MigrationListener {
     public void onStart(int total) {
         this.total = total;
         this.completed = 0;
-        logger.info("%s Starting first-time migration of %d players...", PREFIX, total);
+        logger.info("Starting first-time migration of %d players...", total);
     }
 
     @Override
@@ -33,13 +31,13 @@ public final class LoggerMigrationListener implements MigrationListener {
 
     @Override
     public void onFailed(@NotNull OfflinePlayer player, @NotNull Throwable throwable) {
-        logger.warn("%s Migration failed for %s: %s", PREFIX, player.getUniqueId(), throwable.getMessage());
+        logger.warn("Migration failed for %s: %s", player.getUniqueId(), throwable.getMessage());
         incrementAndLogProgress();
     }
 
     @Override
     public void onEnd(@NotNull MigrationResult result) {
-        logger.info("%s Migration ended: success=%d, failed=%d, took=%sms", PREFIX, result.successful(), result.failed(), result.took().toMillis());
+        logger.info("Migration ended: success=%d, failed=%d, took=%sms", result.successful(), result.failed(), result.took().toMillis());
     }
 
     private void incrementAndLogProgress() {
@@ -48,7 +46,7 @@ public final class LoggerMigrationListener implements MigrationListener {
         int percent = (int) ((done * 100L) / total);
 
         if (percent % 5 == 0 || done == total) {
-            logger.info("%s Progress: %d%% (%d/%d)", PREFIX, percent, done, total);
+            logger.info("Migration progress: %d%% (%d/%d)", percent, done, total);
         }
     }
 }

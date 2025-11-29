@@ -1,14 +1,8 @@
 package com.github.imdmk.playtime.shared.config;
 
 import eu.okaeri.configs.OkaeriConfig;
-import eu.okaeri.configs.exception.OkaeriException;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Abstract base class for configuration sections.
@@ -40,67 +34,4 @@ public abstract class ConfigSection extends OkaeriConfig {
      * @return non-null configuration file name
      */
     public abstract @NotNull String getFileName();
-
-    /**
-     * Loads the configuration from disk, then processes any post-load logic.
-     * Recursively loads any nested {@link ConfigSection} fields declared in this class.
-     *
-     * @return this configuration instance for chaining
-     * @throws OkaeriException if an error occurs during loading
-     */
-    @Override
-    public OkaeriConfig load() throws OkaeriException {
-        super.load();
-        this.loadProcessedProperties();
-        try {
-            this.loadNestedConfigSections(this.getClass());
-        }
-        catch (IllegalAccessException e) {
-            LoggerFactory.getLogger(ConfigSection.class).error("Could not load config section", e);
-        }
-        return this;
-    }
-
-    /**
-     * Recursively loads nested {@link ConfigSection} fields declared as inner classes
-     * or fields of this config section.
-     *
-     * @param fromClass the class to inspect for nested config sections
-     * @throws IllegalAccessException if reflection access fails
-     */
-    private void loadNestedConfigSections(Class<?> fromClass) throws IllegalAccessException {
-        List<Class<? extends ConfigSection>> nestedClasses = new ArrayList<>();
-
-        // Collect all inner classes that extend ConfigSection
-        for (Class<?> declaredClass : fromClass.getDeclaredClasses()) {
-            if (ConfigSection.class.isAssignableFrom(declaredClass)) {
-                nestedClasses.add(declaredClass.asSubclass(ConfigSection.class));
-            }
-        }
-
-        // For each field, if its type matches one of the nested ConfigSection classes,
-        // invoke loading logic on that field's instance.
-        for (Field field : fromClass.getDeclaredFields()) {
-            for (Class<?> nestedClass : nestedClasses) {
-                if (field.getType().equals(nestedClass)) {
-                    field.setAccessible(true);
-                    if (field.canAccess(this)) {
-                        ConfigSection nestedConfig = (ConfigSection) field.get(this);
-                        if (nestedConfig != null) {
-                            nestedConfig.loadProcessedProperties();
-                            nestedConfig.loadNestedConfigSections(nestedClass);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Hook method called after configuration loading is completed.
-     * Override in subclasses to perform validation or further processing.
-     */
-    public void loadProcessedProperties() {
-        // Default no-op implementation
-    }
 }

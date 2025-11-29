@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 final class UserArgument extends ArgumentResolver<CommandSender, User> {
 
-    private static final long LOOKUP_TIMEOUT_MS = 2000;
+    private static final Duration LOOKUP_TIMEOUT = Duration.ofSeconds(2);
 
     private final PluginLogger logger;
     private final Server server;
@@ -58,7 +59,7 @@ final class UserArgument extends ArgumentResolver<CommandSender, User> {
 
         // Off-thread -> full lookup (cache → DB)
         return userService.findByName(argument)
-                .orTimeout(LOOKUP_TIMEOUT_MS, TimeUnit.MILLISECONDS)
+                .orTimeout(LOOKUP_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .join()
                 .map(ParseResult::success)
                 .orElse(ParseResult.failure(messageConfig.playerNotFound));
