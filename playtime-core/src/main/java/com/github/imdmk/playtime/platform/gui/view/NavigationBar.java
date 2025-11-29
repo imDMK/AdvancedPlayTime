@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.Duration;
 import java.util.function.Consumer;
 
 /**
@@ -29,7 +30,7 @@ import java.util.function.Consumer;
  */
 final class NavigationBar {
 
-    private static final long RESTORE_DELAY_TICKS = 60L;
+    private static final Duration RESTORE_DELAY = Duration.ofSeconds(1);
 
     private final NavigationBarConfig config;
     private final TaskScheduler scheduler;
@@ -121,7 +122,7 @@ final class NavigationBar {
      */
     private void restoreLater(@NotNull Runnable restoreAction) {
         Validator.notNull(restoreAction, "restoreAction cannot be null");
-        scheduler.runLaterSync(restoreAction, RESTORE_DELAY_TICKS);
+        scheduler.runLaterSync(restoreAction, RESTORE_DELAY);
     }
 
     private void noop(@NotNull InventoryClickEvent e) {
