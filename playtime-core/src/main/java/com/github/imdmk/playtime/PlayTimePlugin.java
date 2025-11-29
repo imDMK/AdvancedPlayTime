@@ -55,7 +55,7 @@ import java.util.concurrent.ExecutorService;
  */
 final class PlayTimePlugin {
 
-    private static final String PREFIX = "PlayTime";
+    private static final String PREFIX = "AdvancedPlayTime";
     private static final int PLUGIN_METRICS_ID = 19362;
 
     @BindCore private final ModuleRegistry moduleRegistry = new ModuleRegistry();
@@ -119,6 +119,7 @@ final class PlayTimePlugin {
         // Database
         final DatabaseConfig databaseConfig = configManager.require(DatabaseConfig.class);
 
+        logger.info("Resolving database driver...");
         final DriverDependencyLoader databaseDependencyLoader = new DriverDependencyLoader(plugin);
         databaseDependencyLoader.loadDriverFor(databaseConfig.databaseMode);
 
@@ -171,7 +172,8 @@ final class PlayTimePlugin {
             try {
                 repositoryManager.startAll(connection);
             } catch (SQLException e) {
-                logger.error(e, "An error occurred while trying to start all repositories");
+                logger.error(e, "An error occurred while trying to start all repositories. Disabling plugin...");
+                plugin.getPluginLoader().disablePlugin(plugin);
                 throw new IllegalStateException("Repository startup failed", e);
             }
         });
@@ -190,7 +192,7 @@ final class PlayTimePlugin {
         PlayTimeApiProvider.register(api);
 
         final Duration elapsed = stopwatch.stop().elapsed();
-        logger.info("AdvancedPlaytime plugin enabled in %s ms", elapsed.toMillis());
+        logger.info("%s plugin enabled in %s ms", PREFIX, elapsed.toMillis());
     }
 
     void disable() {
@@ -207,6 +209,6 @@ final class PlayTimePlugin {
 
         PlayTimeApiProvider.unregister();
 
-        logger.info("PlayTime plugin disabled successfully.");
+        logger.info("%s plugin disabled successfully.", PREFIX);
     }
 }
