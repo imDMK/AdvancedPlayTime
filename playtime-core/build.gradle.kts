@@ -19,7 +19,7 @@ dependencies {
     implementation("com.eternalcode:multification-okaeri:1.2.3")
 
     // Cache / DB layer
-    implementation("com.github.ben-manes.caffeine:caffeine:3.2.1")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
     implementation("com.zaxxer:HikariCP:6.2.1")
     implementation("com.j256.ormlite:ormlite-jdbc:6.1")
 
