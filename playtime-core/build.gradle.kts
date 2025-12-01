@@ -15,8 +15,8 @@ dependencies {
     implementation("com.alessiodp.libby:libby-bukkit:2.0.0-SNAPSHOT")
 
     // Multification
-    implementation("com.eternalcode:multification-bukkit:1.2.2")
-    implementation("com.eternalcode:multification-okaeri:1.2.2")
+    implementation("com.eternalcode:multification-bukkit:1.2.3")
+    implementation("com.eternalcode:multification-okaeri:1.2.3")
 
     // Cache / DB layer
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.1")
