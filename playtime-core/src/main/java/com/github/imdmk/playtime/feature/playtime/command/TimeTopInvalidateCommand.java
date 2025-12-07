@@ -19,7 +19,10 @@ public final class TimeTopInvalidateCommand {
     private final TopUsersCache topUsersCache;
 
     @Inject
-    public TimeTopInvalidateCommand(@NotNull MessageService messageService, @NotNull TopUsersCache topUsersCache) {
+    public TimeTopInvalidateCommand(
+            @NotNull MessageService messageService,
+            @NotNull TopUsersCache topUsersCache
+    ) {
         this.messageService = Validator.notNull(messageService, "messageService cannot be null");
         this.topUsersCache = Validator.notNull(topUsersCache, "topUsersCache cannot be null");
     }

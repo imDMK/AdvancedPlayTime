@@ -44,7 +44,8 @@ public final class PlaceholderAdapterFactory {
     public static PlaceholderAdapter createFor(
             @NotNull Plugin plugin,
             @NotNull Server server,
-            @NotNull PluginLogger logger) {
+            @NotNull PluginLogger logger
+    ) {
         Validator.notNull(plugin, "plugin cannot be null");
         Validator.notNull(server, "server cannot be null");
         Validator.notNull(logger, "logger cannot be null");

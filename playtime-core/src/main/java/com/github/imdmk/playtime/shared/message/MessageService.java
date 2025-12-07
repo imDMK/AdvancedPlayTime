@@ -51,10 +51,11 @@ public final class MessageService extends BukkitMultification<MessageConfig> {
     public MessageService(
             @NotNull MessageConfig messageConfig,
             @NotNull AudienceProvider audienceProvider,
-            @NotNull MiniMessage miniMessage) {
-        this.messageConfig = Validator.notNull(messageConfig, "messageConfig cannot be null");
-        this.audienceProvider = Validator.notNull(audienceProvider, "audienceProvider cannot be null");
-        this.miniMessage = Validator.notNull(miniMessage, "miniMessage cannot be null");
+            @NotNull MiniMessage miniMessage
+    ) {
+        this.messageConfig = Validator.notNull(messageConfig, "messageConfig");
+        this.audienceProvider = Validator.notNull(audienceProvider, "audienceProvider");
+        this.miniMessage = Validator.notNull(miniMessage, "miniMessage");
     }
 
     public MessageService(@NotNull MessageConfig messageConfig, @NotNull BukkitAudiences bukkitAudiences) {
@@ -116,8 +117,8 @@ public final class MessageService extends BukkitMultification<MessageConfig> {
      * @throws NullPointerException if {@code sender} or {@code notice} is null
      */
     public void send(@NotNull CommandSender sender, @NotNull NoticeProvider<MessageConfig> notice) {
-        Validator.notNull(sender, "sender cannot be null");
-        Validator.notNull(notice, "notice cannot be null");
+        Validator.notNull(sender, "sender");
+        Validator.notNull(notice, "notice");
         create().viewer(sender).notice(notice).send();
     }
 

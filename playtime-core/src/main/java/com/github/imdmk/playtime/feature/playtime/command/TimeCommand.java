@@ -23,7 +23,10 @@ public final class TimeCommand {
     private final PlaytimeService playtimeService;
 
     @Inject
-    public TimeCommand(@NotNull MessageService messageService, @NotNull PlaytimeService playtimeService) {
+    public TimeCommand(
+            @NotNull MessageService messageService,
+            @NotNull PlaytimeService playtimeService
+    ) {
         this.messageService = Validator.notNull(messageService, "messageService cannot be null");
         this.playtimeService = Validator.notNull(playtimeService, "playtimeService cannot be null");
     }

@@ -45,7 +45,8 @@ public final class TimeResetAllCommand {
             @NotNull PlaytimeService playtimeService,
             @NotNull UserService userService,
             @NotNull UserRepository userRepository,
-            @NotNull TaskScheduler taskScheduler) {
+            @NotNull TaskScheduler taskScheduler
+    ) {
         this.server = Validator.notNull(server, "server cannot be null");
         this.logger = Validator.notNull(logger, "logger cannot be null");
         this.messageService = Validator.notNull(messageService, "messageService cannot be null");

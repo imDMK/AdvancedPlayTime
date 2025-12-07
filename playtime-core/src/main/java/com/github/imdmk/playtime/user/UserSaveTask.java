@@ -28,10 +28,10 @@ final class UserSaveTask implements PluginTask {
             @NotNull PlaytimeService playtimeService,
             @NotNull UserService userService
     ) {
-        this.server = Validator.notNull(server, "server cannot be null");
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.playtimeService = Validator.notNull(playtimeService, "playtime cannot be null");
-        this.userService = Validator.notNull(userService, "userService cannot be null");
+        this.server = Validator.notNull(server, "server");
+        this.logger = Validator.notNull(logger, "logger");
+        this.playtimeService = Validator.notNull(playtimeService, "playtime");
+        this.userService = Validator.notNull(userService, "userService");
     }
 
     @Override

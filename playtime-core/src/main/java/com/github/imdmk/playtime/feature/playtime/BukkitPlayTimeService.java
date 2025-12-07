@@ -34,7 +34,7 @@ final class BukkitPlayTimeService implements PlaytimeService {
 
     @Inject
     BukkitPlayTimeService(@NotNull Server server) {
-        this.server = Validator.notNull(server, "server cannot be null");
+        this.server = Validator.notNull(server, "server");
     }
 
     /**

@@ -43,10 +43,12 @@ final class NavigationBar {
      * @param renderer      GUI renderer enforcing permission policy
      * @param renderOptions render options (no-permission policy, onDenied)
      */
-    NavigationBar(@NotNull NavigationBarConfig config,
-                  @NotNull TaskScheduler scheduler,
-                  @NotNull GuiRenderer renderer,
-                  @NotNull RenderOptions renderOptions) {
+    NavigationBar(
+            @NotNull NavigationBarConfig config,
+            @NotNull TaskScheduler scheduler,
+            @NotNull GuiRenderer renderer,
+            @NotNull RenderOptions renderOptions
+    ) {
         this.config = Validator.notNull(config, "config cannot be null");
         this.renderer = Validator.notNull(renderer, "renderer cannot be null");
         this.scheduler = Validator.notNull(scheduler, "scheduler cannot be null");

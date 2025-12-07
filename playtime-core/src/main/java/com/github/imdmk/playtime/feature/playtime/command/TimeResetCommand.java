@@ -31,7 +31,8 @@ public final class TimeResetCommand {
     public TimeResetCommand(
             @NotNull PluginLogger logger,
             @NotNull MessageService messageService,
-            @NotNull UserService userService) {
+            @NotNull UserService userService
+    ) {
         this.logger = Validator.notNull(logger, "logger cannot be null");
         this.messageService = Validator.notNull(messageService, "messageService cannot be null");
         this.userService = Validator.notNull(userService, "userService cannot be null");

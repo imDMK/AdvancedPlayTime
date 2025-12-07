@@ -24,7 +24,7 @@ public final class AdventurePlaceholders {
     private final Map<String, Component> map;
 
     private AdventurePlaceholders(@NotNull Map<String, Component> map) {
-        Validator.notNull(map, "map cannot be null");
+        Validator.notNull(map, "map");
         this.map = Collections.unmodifiableMap(map);
     }
 
@@ -91,8 +91,8 @@ public final class AdventurePlaceholders {
          */
         @Contract("_,_ -> this")
         public @NotNull Builder with(@NotNull String key, @NotNull Component value) {
-            Validator.notNull(key, "key cannot be null");
-            Validator.notNull(value, "value cannot be null");
+            Validator.notNull(key, "key");
+            Validator.notNull(value, "value");
             this.entries.put(key, value);
             return this;
         }

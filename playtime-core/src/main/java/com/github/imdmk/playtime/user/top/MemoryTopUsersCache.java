@@ -26,9 +26,9 @@ public final class MemoryTopUsersCache implements TopUsersCache {
             @NotNull TopUsersCacheConfig config,
             @NotNull UserRepository userRepository
     ) {
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.config = Validator.notNull(config, "config cannot be null");
-        this.userRepository = Validator.notNull(userRepository, "userRepository cannot be null");
+        this.logger = Validator.notNull(logger, "logger");
+        this.config = Validator.notNull(config, "config");
+        this.userRepository = Validator.notNull(userRepository, "userRepository");
     }
 
     @Override

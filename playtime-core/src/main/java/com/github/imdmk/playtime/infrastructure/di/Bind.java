@@ -21,5 +21,5 @@ import java.lang.annotation.Target;
 @Injectable
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface BindCore {
+public @interface Bind {
 }

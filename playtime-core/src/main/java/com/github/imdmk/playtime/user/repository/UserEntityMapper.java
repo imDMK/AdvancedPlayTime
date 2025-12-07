@@ -13,7 +13,7 @@ public final class UserEntityMapper implements EntityMapper<UserEntity, User> {
 
     @Override
     public @NotNull UserEntity toEntity(@NotNull User user) {
-        Validator.notNull(user, "user cannot be null");
+        Validator.notNull(user, "user");
         return new UserEntity(
                 user.getUuid(),
                 user.getName(),
@@ -23,7 +23,7 @@ public final class UserEntityMapper implements EntityMapper<UserEntity, User> {
 
     @Override
     public @NotNull User toDomain(@NotNull UserEntity entity) {
-        Validator.notNull(entity, "entity cannot be null");
+        Validator.notNull(entity, "entity");
         return new User(
                 entity.getUuid(),
                 entity.getName(),

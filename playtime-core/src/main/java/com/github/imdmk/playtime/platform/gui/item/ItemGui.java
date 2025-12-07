@@ -30,7 +30,8 @@ public record ItemGui(
         @Nullable Integer slot,
         @Nullable Map<Enchantment, Integer> enchantments,
         @Nullable List<ItemFlag> flags,
-        @Nullable String requiredPermission) {
+        @Nullable String requiredPermission
+) {
 
     public ItemGui {
         Validator.notNull(material, "material cannot be null");

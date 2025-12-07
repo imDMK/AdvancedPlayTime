@@ -16,7 +16,10 @@ public final class RepositoryPlayerMigrator implements PlayerMigrator {
     private final UserFactory userFactory;
 
     @Inject
-    public RepositoryPlayerMigrator(@NotNull UserRepository userRepository, @NotNull UserFactory userFactory) {
+    public RepositoryPlayerMigrator(
+            @NotNull UserRepository userRepository,
+            @NotNull UserFactory userFactory
+    ) {
         this.userRepository = Validator.notNull(userRepository, "userRepository cannot be null");
         this.userFactory = Validator.notNull(userFactory, "userFactory cannot be null");
     }

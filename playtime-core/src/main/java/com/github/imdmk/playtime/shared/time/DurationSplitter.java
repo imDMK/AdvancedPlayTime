@@ -27,7 +27,7 @@ public final class DurationSplitter {
      * @return map of {@link DurationUnit} to its value in the given duration
      */
     public static @NotNull Map<DurationUnit, Integer> split(@NotNull Duration duration) {
-        Validator.notNull(duration, "duration cannot be null");
+        Validator.notNull(duration, "duration");
 
         EnumMap<DurationUnit, Integer> parts = new EnumMap<>(DurationUnit.class);
         for (DurationUnit unit : DurationUnit.ORDERED) {
