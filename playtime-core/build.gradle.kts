@@ -1,8 +1,7 @@
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.21.10-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.7")
 
-    implementation(project(":playtime-bukkit-api"))
+    api(project(":playtime-bukkit-api"))
 
     // DI
     implementation("org.panda-lang.utilities:di:1.8.0")
@@ -25,7 +24,7 @@ dependencies {
 
     // Okaeri configs
     api("eu.okaeri:okaeri-configs-yaml-snakeyaml:5.0.9")
-    api("eu.okaeri:okaeri-configs-serdes-commons:5.0.5")
+    implementation("eu.okaeri:okaeri-configs-serdes-commons:5.0.5")
 
     // GUI, metrics, commands
     implementation("dev.triumphteam:triumph-gui:3.1.13")

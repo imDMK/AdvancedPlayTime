@@ -57,9 +57,10 @@ public final class PlayTimeTopGui
             @NotNull PlayTimeTopGuiConfig topGuiConfig,
             @NotNull TaskScheduler taskScheduler,
             @NotNull MessageService messageService,
-            @NotNull UserService userService) {
+            @NotNull UserService userService
+    ) {
         super(navigationBarConfig, taskScheduler, GUI_RENDERER, RENDER_OPTIONS);
-        this.server = Validator.notNull(server, "server cannot be null");
+        this.server = Validator.notNull(server, "server");
         this.topGuiConfig = Validator.notNull(topGuiConfig, "playtimeTopGuiConfig cannot be null");
         this.messageService = Validator.notNull(messageService, "messageService cannot be null");
         this.userService = Validator.notNull(userService, "userService cannot be null");
@@ -108,7 +109,7 @@ public final class PlayTimeTopGui
 
                 user.setPlaytime(UserTime.ZERO);
                 userService.save(user, UserSaveReason.GUI_RESET_CLICK)
-                        .thenAccept(result -> messageService.send(viewer, n -> n.playtimeMessages.playerPlaytimeReset))
+                        .thenAccept(result -> messageService.send(viewer, n -> n.playtimeMessages.playerPlaytimeReset()))
                         .exceptionally(e -> {
                             messageService.send(viewer, n -> n.actionExecutionError);
                             return null;

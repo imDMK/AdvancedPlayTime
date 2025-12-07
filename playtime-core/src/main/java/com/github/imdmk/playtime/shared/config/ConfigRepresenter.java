@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class ConfigRepresenter extends Representer {
+final class ConfigRepresenter extends Representer {
 
-    public ConfigRepresenter(DumperOptions options) {
+    ConfigRepresenter(DumperOptions options) {
         super(options);
         this.representers.put(String.class, new RepresentString());
         this.representers.put(Boolean.class, new RepresentBoolean());

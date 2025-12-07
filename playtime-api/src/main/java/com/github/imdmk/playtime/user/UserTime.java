@@ -109,7 +109,7 @@ public record UserTime(long millis) implements Comparable<UserTime>, Serializabl
      */
     @Contract("_ -> new")
     public static @NotNull UserTime from(@NotNull Duration duration) {
-        Objects.requireNonNull(duration, "duration is null");
+        Objects.requireNonNull(duration, "duration cannot be null");
         return new UserTime(duration.toMillis());
     }
 

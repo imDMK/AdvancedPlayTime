@@ -71,7 +71,8 @@ public final class ItemGuiTransformer {
     public static @NotNull GuiItem toGuiItem(
             @NotNull ItemGui item,
             @NotNull GuiAction<InventoryClickEvent> onClick,
-            @NotNull Consumer<BaseItemBuilder<?>> builderEditor) {
+            @NotNull Consumer<BaseItemBuilder<?>> builderEditor
+    ) {
         Validator.notNull(item, "item cannot be null");
         Validator.notNull(onClick, "onClick cannot be null");
         Validator.notNull(builderEditor, "builderEditor cannot be null");

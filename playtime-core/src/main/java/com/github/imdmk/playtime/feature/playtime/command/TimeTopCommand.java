@@ -30,7 +30,8 @@ public final class TimeTopCommand {
             @NotNull PluginLogger logger,
             @NotNull MessageService messageService,
             @NotNull UserService userService,
-            @NotNull GuiOpener guiOpener) {
+            @NotNull GuiOpener guiOpener
+    ) {
         this.logger = Validator.notNull(logger, "logger cannot be null");
         this.messageService = Validator.notNull(messageService, "messageService cannot be null");
         this.userService = Validator.notNull(userService, "userService cannot be null");

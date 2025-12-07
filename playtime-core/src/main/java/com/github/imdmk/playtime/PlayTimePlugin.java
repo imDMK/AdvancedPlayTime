@@ -6,7 +6,7 @@ import com.github.imdmk.playtime.infrastructure.database.DatabaseConnector;
 import com.github.imdmk.playtime.infrastructure.database.driver.dependency.DriverDependencyLoader;
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryContext;
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryManager;
-import com.github.imdmk.playtime.infrastructure.di.BindCore;
+import com.github.imdmk.playtime.infrastructure.di.Bind;
 import com.github.imdmk.playtime.infrastructure.module.Module;
 import com.github.imdmk.playtime.infrastructure.module.ModuleContext;
 import com.github.imdmk.playtime.infrastructure.module.ModuleInitializer;
@@ -26,9 +26,9 @@ import com.github.imdmk.playtime.platform.placeholder.adapter.PlaceholderAdapter
 import com.github.imdmk.playtime.platform.scheduler.BukkitTaskScheduler;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.playtime.shared.Validator;
-import com.github.imdmk.playtime.shared.config.ConfigBinder;
 import com.github.imdmk.playtime.shared.config.ConfigManager;
 import com.github.imdmk.playtime.shared.config.ConfigSection;
+import com.github.imdmk.playtime.shared.config.InjectorConfigBinder;
 import com.github.imdmk.playtime.shared.config.PluginConfig;
 import com.github.imdmk.playtime.shared.message.MessageConfig;
 import com.github.imdmk.playtime.shared.message.MessageService;
@@ -58,27 +58,27 @@ final class PlayTimePlugin {
     private static final String PREFIX = "AdvancedPlayTime";
     private static final int PLUGIN_METRICS_ID = 19362;
 
-    @BindCore private final ModuleRegistry moduleRegistry = new ModuleRegistry();
+    @Bind private final ModuleRegistry moduleRegistry = new ModuleRegistry();
 
-    @BindCore private final Plugin plugin;
-    @BindCore private final PluginLogger logger;
-    @BindCore private final Server server;
-    @BindCore private final ExecutorService executor;
+    @Bind private final Plugin plugin;
+    @Bind private final PluginLogger logger;
+    @Bind private final Server server;
+    @Bind private final ExecutorService executor;
 
-    @BindCore private ConfigManager configManager;
+    @Bind private ConfigManager configManager;
 
-    @BindCore private DatabaseConnector databaseConnector;
-    @BindCore private RepositoryContext repositoryContext;
-    @BindCore private RepositoryManager repositoryManager;
+    @Bind private DatabaseConnector databaseConnector;
+    @Bind private RepositoryContext repositoryContext;
+    @Bind private RepositoryManager repositoryManager;
 
-    @BindCore private MessageService messageService;
-    @BindCore private TaskScheduler taskScheduler;
-    @BindCore private BukkitEventCaller eventCaller;
-    @BindCore private BukkitListenerRegistrar listenerRegistrar;
-    @BindCore private GuiRegistry guiRegistry;
-    @BindCore private PlaceholderAdapter placeholderAdapter;
+    @Bind private MessageService messageService;
+    @Bind private TaskScheduler taskScheduler;
+    @Bind private BukkitEventCaller eventCaller;
+    @Bind private BukkitListenerRegistrar listenerRegistrar;
+    @Bind private GuiRegistry guiRegistry;
+    @Bind private PlaceholderAdapter placeholderAdapter;
 
-    @BindCore private LiteCommandsRegistrar LiteCommandsRegistrar;
+    @Bind private LiteCommandsRegistrar LiteCommandsRegistrar;
     private LiteCommands<CommandSender> liteCommands;
 
     private Metrics metrics;
@@ -89,11 +89,12 @@ final class PlayTimePlugin {
             @NotNull Plugin plugin,
             @NotNull Server server,
             @NotNull PluginLogger logger,
-            @NotNull ExecutorService executor) {
-        this.plugin = Validator.notNull(plugin, "plugin cannot be null");
-        this.server = Validator.notNull(server, "server cannot be null");
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.executor = Validator.notNull(executor, "executorService cannot be null");
+            @NotNull ExecutorService executor
+    ) {
+        this.plugin = Validator.notNull(plugin, "plugin");
+        this.server = Validator.notNull(server, "server");
+        this.logger = Validator.notNull(logger, "logger");
+        this.executor = Validator.notNull(executor, "executorService");
     }
 
     PlayTimePlugin(@NotNull Plugin plugin, @NotNull ExecutorService executor) {
@@ -102,14 +103,15 @@ final class PlayTimePlugin {
 
     void enable(
             @NotNull List<Class<? extends ConfigSection>> enabledConfigs,
-            @NotNull List<Class<? extends Module>> enabledModules) {
-        Validator.notNull(enabledConfigs, "enabledConfigs cannot be null");
-        Validator.notNull(enabledModules, "enabled modules cannot be null");
+            @NotNull List<Class<? extends Module>> enabledModules
+    ) {
+        Validator.notNull(enabledConfigs, "enabledConfigs");
+        Validator.notNull(enabledModules, "enabled modules");
 
         final Stopwatch stopwatch = Stopwatch.createStarted();
 
         // Configuration
-        configManager = new ConfigManager(logger, executor, plugin.getDataFolder());
+        configManager = new ConfigManager(logger, plugin.getDataFolder());
         configManager.createAll(enabledConfigs);
 
         // Duration format style
@@ -154,8 +156,8 @@ final class PlayTimePlugin {
 
         // Dependency Injection
         injector = DependencyInjection.createInjector(resources -> {
-            new PlayTimeCoreBinder(this).bind(resources);
-            ConfigBinder.bind(resources, configManager.getConfigs());
+            new PlayTimeBinder(this).bind(resources);
+            InjectorConfigBinder.bind(resources, configManager.getConfigs());
         });
 
         // Module initialization
@@ -197,8 +199,8 @@ final class PlayTimePlugin {
 
     void disable() {
         Validator.ifNotNull(configManager, (manager) -> {
-            manager.saveAllSync();
-            manager.shutdown();
+            manager.saveAll();
+            manager.clearAll();
         });
         Validator.ifNotNull(repositoryManager, RepositoryManager::close);
         Validator.ifNotNull(databaseConnector, DatabaseConnector::close);

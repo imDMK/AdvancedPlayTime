@@ -41,10 +41,12 @@ public abstract class AbstractGui {
      * @param renderer    renderer that places items and enforces permission policy
      * @param renderOptions  render options (no-permission policy, onDenied)
      */
-    protected AbstractGui(@NotNull NavigationBarConfig config,
-                          @NotNull TaskScheduler taskScheduler,
-                          @NotNull GuiRenderer renderer,
-                          @NotNull RenderOptions renderOptions) {
+    protected AbstractGui(
+            @NotNull NavigationBarConfig config,
+            @NotNull TaskScheduler taskScheduler,
+            @NotNull GuiRenderer renderer,
+            @NotNull RenderOptions renderOptions
+    ) {
         this.config = Validator.notNull(config, "config cannot be null");
         this.scheduler = Validator.notNull(taskScheduler, "taskScheduler cannot be null");
         this.renderer = Validator.notNull(renderer, "renderer cannot be null");

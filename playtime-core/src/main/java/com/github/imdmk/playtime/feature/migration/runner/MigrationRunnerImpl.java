@@ -30,7 +30,8 @@ final class MigrationRunnerImpl {
             @NotNull MigrationConfig config,
             @NotNull PlayerProvider provider,
             @NotNull PlayerMigrator migrator,
-            @NotNull List<MigrationListener> listeners) {
+            @NotNull List<MigrationListener> listeners
+    ) {
         this.config = Validator.notNull(config, "config cannot be null");
         this.provider = Validator.notNull(provider, "provider cannot be null");
         this.migrator = Validator.notNull(migrator, "migrator cannot be null");

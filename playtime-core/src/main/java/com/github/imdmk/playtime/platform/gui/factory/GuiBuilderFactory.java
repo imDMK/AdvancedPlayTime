@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 public final class GuiBuilderFactory {
 
     private GuiBuilderFactory() {
-        throw new UnsupportedOperationException("Utility class");
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated.");
     }
 
     /**

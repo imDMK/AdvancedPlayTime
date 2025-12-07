@@ -19,7 +19,7 @@ public final class MissingPermissionsHandlerImpl implements MissingPermissionsHa
 
     @Override
     public void handle(Invocation<CommandSender> invocation, MissingPermissions permissions, ResultHandlerChain<CommandSender> chain) {
-        this.messageService.create()
+        messageService.create()
                 .viewer(invocation.sender())
                 .notice(n -> n.commandPermissionMissing)
                 .placeholder("{PERMISSIONS}", String.join(", ", permissions.getPermissions()))

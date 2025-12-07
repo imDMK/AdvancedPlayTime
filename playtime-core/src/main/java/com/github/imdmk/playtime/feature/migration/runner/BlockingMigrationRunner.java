@@ -26,7 +26,8 @@ public final class BlockingMigrationRunner implements MigrationRunner<MigrationR
             @NotNull PluginLogger logger,
             @NotNull MigrationConfig config,
             @NotNull PlayerProvider provider,
-            @NotNull PlayerMigrator migrator) {
+            @NotNull PlayerMigrator migrator
+    ) {
         this.logger = Validator.notNull(logger, "logger cannot be null");
         this.config = Validator.notNull(config, "config cannot be null");
         this.provider = Validator.notNull(provider, "provider cannot be null");

@@ -37,11 +37,12 @@ final class UserArgument extends ArgumentResolver<CommandSender, User> {
             @NotNull PluginLogger logger,
             @NotNull Server server,
             @NotNull MessageConfig messageConfig,
-            @NotNull UserService userService) {
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.server = Validator.notNull(server, "server cannot be null");
-        this.messageConfig = Validator.notNull(messageConfig, "config cannot be null");
-        this.userService = Validator.notNull(userService, "userService cannot be null");
+            @NotNull UserService userService
+    ) {
+        this.logger = Validator.notNull(logger, "logger");
+        this.server = Validator.notNull(server, "server");
+        this.messageConfig = Validator.notNull(messageConfig, "config");
+        this.userService = Validator.notNull(userService, "userService");
     }
 
     @Override

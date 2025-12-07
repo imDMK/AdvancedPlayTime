@@ -20,11 +20,11 @@ public final class InvalidUsageHandlerImpl implements InvalidUsageHandler<Comman
 
     @Override
     public void handle(Invocation<CommandSender> invocation, InvalidUsage<CommandSender> result, ResultHandlerChain<CommandSender> chain) {
-        CommandSender sender = invocation.sender();
-        Schematic schematic = result.getSchematic();
+        final CommandSender sender = invocation.sender();
+        final Schematic schematic = result.getSchematic();
 
         if (schematic.isOnlyFirst()) {
-            this.messageService.create()
+            messageService.create()
                     .viewer(sender)
                     .notice(notice -> notice.commandUsageInvalid)
                     .placeholder("{USAGE}", schematic.first())
@@ -32,13 +32,13 @@ public final class InvalidUsageHandlerImpl implements InvalidUsageHandler<Comman
             return;
         }
 
-        this.messageService.create()
+        messageService.create()
                 .viewer(sender)
                 .notice(notice -> notice.commandUsageHeader)
                 .send();
 
-        for (String scheme : schematic.all()) {
-            this.messageService.create()
+        for (final String scheme : schematic.all()) {
+            messageService.create()
                     .viewer(sender)
                     .notice(notice -> notice.commandUsageEntry)
                     .placeholder("{USAGE}", scheme)

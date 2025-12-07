@@ -28,7 +28,7 @@ public final class AdventureFormatter {
      * @return formatted component
      */
     public static @NotNull Component format(@NotNull String input, @NotNull AdventurePlaceholders placeholders) {
-        Validator.notNull(input, "input cannot be null");
+        Validator.notNull(input, "input");
         return format(AdventureComponents.text(input), placeholders);
     }
 
@@ -40,7 +40,7 @@ public final class AdventureFormatter {
      * @return formatted components
      */
     public static @NotNull List<Component> format(@NotNull List<Component> components, @NotNull AdventurePlaceholders placeholders) {
-        Validator.notNull(components, "components cannot be null");
+        Validator.notNull(components, "components");
         return components.stream()
                 .map(component -> format(component, placeholders))
                 .collect(Collectors.toList());
@@ -54,8 +54,8 @@ public final class AdventureFormatter {
      * @return formatted component
      */
     public static @NotNull Component format(@NotNull Component input, @NotNull AdventurePlaceholders placeholders) {
-        Validator.notNull(input, "input cannot be null");
-        Validator.notNull(placeholders, "placeholders cannot be null");
+        Validator.notNull(input, "input");
+        Validator.notNull(placeholders, "placeholders");
 
         if (placeholders.isEmpty()) {
             return input;

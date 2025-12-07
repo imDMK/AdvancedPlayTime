@@ -29,8 +29,8 @@ public final class CaffeineUserCache implements UserCache {
     private final Cache<String, UUID> cacheByName;
 
     public CaffeineUserCache(@NotNull Duration expireAfterAccess, @NotNull Duration expireAfterWrite) {
-        Validator.notNull(expireAfterAccess, "expireAfterAccess cannot be null");
-        Validator.notNull(expireAfterWrite, "expireAfterWrite cannot be null");
+        Validator.notNull(expireAfterAccess, "expireAfterAccess");
+        Validator.notNull(expireAfterWrite, "expireAfterWrite");
 
         this.cacheByName = Caffeine.newBuilder()
                 .expireAfterWrite(expireAfterWrite)
@@ -54,7 +54,7 @@ public final class CaffeineUserCache implements UserCache {
 
     @Override
     public void cacheUser(@NotNull User user) {
-        Validator.notNull(user, "user cannot be null");
+        Validator.notNull(user, "user");
 
         final UUID uuid = user.getUuid();
         final String name = user.getName();
@@ -73,7 +73,7 @@ public final class CaffeineUserCache implements UserCache {
 
     @Override
     public void invalidateUser(@NotNull User user) {
-        Validator.notNull(user, "user cannot be null");
+        Validator.notNull(user, "user");
 
         cacheByUuid.invalidate(user.getUuid());
         cacheByName.invalidate(user.getName());
@@ -81,7 +81,7 @@ public final class CaffeineUserCache implements UserCache {
 
     @Override
     public void invalidateByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid cannot be null");
+        Validator.notNull(uuid, "uuid");
 
         final User cached = cacheByUuid.getIfPresent(uuid);
         cacheByUuid.invalidate(uuid);
@@ -92,7 +92,7 @@ public final class CaffeineUserCache implements UserCache {
 
     @Override
     public void invalidateByName(@NotNull String name) {
-        Validator.notNull(name, "name cannot be null");
+        Validator.notNull(name, "name");
 
         final UUID uuid = cacheByName.getIfPresent(name);
         if (uuid != null) {
@@ -104,13 +104,13 @@ public final class CaffeineUserCache implements UserCache {
 
     @Override
     public @NotNull Optional<User> getUserByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid cannot be null");
+        Validator.notNull(uuid, "uuid");
         return Optional.ofNullable(cacheByUuid.getIfPresent(uuid));
     }
 
     @Override
     public @NotNull Optional<User> getUserByName(@NotNull String name) {
-        Validator.notNull(name, "name cannot be null");
+        Validator.notNull(name, "name");
 
         final UUID uuid = cacheByName.getIfPresent(name);
         return uuid == null ? Optional.empty() : Optional.ofNullable(cacheByUuid.getIfPresent(uuid));

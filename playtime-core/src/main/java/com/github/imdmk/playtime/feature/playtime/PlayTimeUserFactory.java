@@ -35,7 +35,7 @@ public final class PlayTimeUserFactory implements UserFactory {
 
     @Inject
     public PlayTimeUserFactory(@NotNull PlaytimeService playtimeService) {
-        this.playtimeService = Validator.notNull(playtimeService, "playtimeService cannot be null");
+        this.playtimeService = Validator.notNull(playtimeService, "playtimeService");
     }
 
     /**

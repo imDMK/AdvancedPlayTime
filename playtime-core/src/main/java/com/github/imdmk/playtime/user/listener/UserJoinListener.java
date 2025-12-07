@@ -40,10 +40,11 @@ public final class UserJoinListener implements Listener {
             @NotNull PluginLogger logger,
             @NotNull UserService userService,
             @NotNull UserFactory userFactory,
-            @NotNull TaskScheduler taskScheduler) {
-        this.server = Validator.notNull(server, "server cannot be null");
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.userService = Validator.notNull(userService, "userService cannot be null");
+            @NotNull TaskScheduler taskScheduler
+    ) {
+        this.server = Validator.notNull(server, "server");
+        this.logger = Validator.notNull(logger, "logger");
+        this.userService = Validator.notNull(userService, "userService");
         this.userFactory = Validator.notNull(userFactory, "userFactory cannot be null");
         this.taskScheduler = Validator.notNull(taskScheduler, "taskScheduler cannot be null");
     }

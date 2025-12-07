@@ -29,7 +29,11 @@ public final class TimeSetCommand {
     private final UserService userService;
 
     @Inject
-    public TimeSetCommand(@NotNull PluginLogger logger, @NotNull MessageService messageService, @NotNull UserService userService) {
+    public TimeSetCommand(
+            @NotNull PluginLogger logger,
+            @NotNull MessageService messageService,
+            @NotNull UserService userService
+    ) {
         this.logger = Validator.notNull(logger, "logger cannot be null");
         this.messageService = Validator.notNull(messageService, "messageService cannot be null");
         this.userService = Validator.notNull(userService, "userService cannot be null");

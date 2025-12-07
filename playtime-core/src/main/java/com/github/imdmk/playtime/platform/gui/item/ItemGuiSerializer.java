@@ -1,6 +1,5 @@
-package com.github.imdmk.playtime.platform.serdes;
+package com.github.imdmk.playtime.platform.gui.item;
 
-import com.github.imdmk.playtime.platform.gui.item.ItemGui;
 import eu.okaeri.configs.schema.GenericsDeclaration;
 import eu.okaeri.configs.serdes.DeserializationData;
 import eu.okaeri.configs.serdes.ObjectSerializer;

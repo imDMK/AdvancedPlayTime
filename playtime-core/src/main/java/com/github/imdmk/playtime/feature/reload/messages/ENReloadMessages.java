@@ -10,7 +10,7 @@ public final class ENReloadMessages extends OkaeriConfig implements ReloadMessag
             "# Sent when configuration files for the PlayTime plugin have been reloaded successfully.",
             "# Used after a reload command is executed."
     })
-    public Notice configReloadedSuccess = Notice.chat(
+    Notice configReloadedSuccess = Notice.chat(
             "<dark_gray>• <green>PlayTime configuration has been reloaded successfully.<dark_gray>"
     );
 
@@ -20,7 +20,7 @@ public final class ENReloadMessages extends OkaeriConfig implements ReloadMessag
             "# ",
             "# Note: No placeholders."
     })
-    public Notice configReloadFailed = Notice.chat(
+    Notice configReloadFailed = Notice.chat(
             "<dark_gray>• <red>Failed to reload PlayTime configuration files. "
                     + "<red>Disable the plugin and verify your config files."
     );

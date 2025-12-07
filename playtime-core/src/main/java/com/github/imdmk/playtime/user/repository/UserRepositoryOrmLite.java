@@ -27,10 +27,11 @@ public final class UserRepositoryOrmLite
     public UserRepositoryOrmLite(
             @NotNull PluginLogger logger,
             @NotNull RepositoryContext context,
-            @NotNull UserEntityMapper mapper) {
+            @NotNull UserEntityMapper mapper
+    ) {
         super(logger, context);
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.mapper = Validator.notNull(mapper, "mapper cannot be null");
+        this.logger = Validator.notNull(logger, "logger");
+        this.mapper = Validator.notNull(mapper, "mapper");
     }
 
     @Override
@@ -45,7 +46,7 @@ public final class UserRepositoryOrmLite
 
     @Override
     public @NotNull CompletableFuture<Optional<User>> findByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid cannot be null");
+        Validator.notNull(uuid, "uuid");
         return executeAsync(() -> {
             try {
                 return Optional.ofNullable(dao.queryForId(uuid))
@@ -59,7 +60,7 @@ public final class UserRepositoryOrmLite
 
     @Override
     public @NotNull CompletableFuture<Optional<User>> findByName(@NotNull String name) {
-        Validator.notNull(name, "name cannot be null");
+        Validator.notNull(name, "name");
         return executeAsync(() -> {
             try {
                 UserEntity entity = dao.queryBuilder()
@@ -109,7 +110,7 @@ public final class UserRepositoryOrmLite
 
     @Override
     public @NotNull CompletableFuture<User> save(@NotNull User user) {
-        Validator.notNull(user, "user cannot be null");
+        Validator.notNull(user, "user");
         return executeAsync(() -> {
             try {
                 dao.createOrUpdate(mapper.toEntity(user));
@@ -123,7 +124,7 @@ public final class UserRepositoryOrmLite
 
     @Override
     public @NotNull CompletableFuture<UserDeleteResult> deleteByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid cannot be null");
+        Validator.notNull(uuid, "uuid");
         return executeAsync(() -> {
             try {
                 UserEntity userEntity = dao.queryForId(uuid);
@@ -146,7 +147,7 @@ public final class UserRepositoryOrmLite
 
     @Override
     public @NotNull CompletableFuture<UserDeleteResult> deleteByName(@NotNull String name) {
-        Validator.notNull(name, "name cannot be null");
+        Validator.notNull(name, "name");
         return executeAsync(() -> {
             try {
                 UserEntity userEntity = dao.queryBuilder()

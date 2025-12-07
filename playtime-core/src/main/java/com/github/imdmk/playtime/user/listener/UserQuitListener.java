@@ -26,8 +26,8 @@ public final class UserQuitListener implements Listener {
 
     @Inject
     public UserQuitListener(@NotNull PluginLogger logger, @NotNull UserService userService) {
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.userService = Validator.notNull(userService, "userService cannot be null");
+        this.logger = Validator.notNull(logger, "logger");
+        this.userService = Validator.notNull(userService, "userService");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
