@@ -16,6 +16,6 @@ public final class ReloadModule implements Module {
 
     @Override
     public CommandPhase commands(@NotNull Injector injector) {
-        return configurer -> configurer.registerCommands(injector.newInstance(ReloadCommand.class));
+        return builder -> builder.commands(injector.newInstance(ReloadCommand.class));
     }
 }

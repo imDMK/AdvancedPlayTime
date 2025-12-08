@@ -36,7 +36,7 @@ public final class BlockingMigrationRunner implements MigrationRunner<MigrationR
 
     @Override
     public MigrationResult execute() {
-        var runner = new MigrationRunnerImpl(config, provider, migrator, listeners());
+        final var runner = new MigrationRunnerImpl(config, provider, migrator, listeners());
         return runner.execute();
     }
 

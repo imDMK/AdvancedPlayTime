@@ -112,7 +112,7 @@ public final class ModuleInitializer {
         forEachModule("activateFeatures", m -> {
             m.tasks(injector).schedule(context.taskScheduler());
             m.listeners(injector).register(context.listenerRegistrar());
-            m.commands(injector).configure(context.liteCommandsRegistrar());
+            m.commands(injector).configure(context.liteCommandsBuilder());
             m.guis(injector).register(context.guiRegistry());
             m.placeholders(injector).register(context.placeholderAdapter());
             m.afterRegister(context.plugin(), context.server(), injector);

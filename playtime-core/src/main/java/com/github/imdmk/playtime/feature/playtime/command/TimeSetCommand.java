@@ -47,7 +47,7 @@ public final class TimeSetCommand {
         target.setPlaytime(newTime);
 
         userService.save(target, UserSaveReason.SET_COMMAND)
-                .thenAccept(r -> messageService.create()
+                .thenAccept(v -> messageService.create()
                         .notice(n -> n.playtimeMessages.playerPlaytimeUpdated())
                         .placeholder("{PLAYER_NAME}", target.getName())
                         .placeholder("{PLAYER_PLAYTIME}", Durations.format(normalizedTime))
