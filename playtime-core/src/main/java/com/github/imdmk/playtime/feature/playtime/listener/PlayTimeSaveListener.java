@@ -3,7 +3,7 @@ package com.github.imdmk.playtime.feature.playtime.listener;
 import com.github.imdmk.playtime.PlaytimeService;
 import com.github.imdmk.playtime.UserPreSaveEvent;
 import com.github.imdmk.playtime.UserSaveEvent;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserTime;

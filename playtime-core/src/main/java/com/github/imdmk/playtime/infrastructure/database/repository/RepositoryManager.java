@@ -2,7 +2,7 @@ package com.github.imdmk.playtime.infrastructure.database.repository;
 
 import com.github.imdmk.playtime.infrastructure.database.repository.ormlite.BaseDaoRepository;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.j256.ormlite.support.ConnectionSource;
 import org.jetbrains.annotations.NotNull;
 

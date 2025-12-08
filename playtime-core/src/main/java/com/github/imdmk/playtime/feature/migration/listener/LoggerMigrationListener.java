@@ -2,7 +2,7 @@ package com.github.imdmk.playtime.feature.migration.listener;
 
 import com.github.imdmk.playtime.feature.migration.MigrationResult;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 

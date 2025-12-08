@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.shared.config;
+package com.github.imdmk.playtime.config;
 
 public class ConfigAccessException extends RuntimeException {
 

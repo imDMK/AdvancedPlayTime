@@ -2,8 +2,8 @@ package com.github.imdmk.playtime.platform.gui.view;
 
 import com.github.imdmk.playtime.platform.gui.GuiRegistry;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
-import com.github.imdmk.playtime.shared.Validator;
-import com.github.imdmk.playtime.shared.gui.IdentifiableGui;
+import com.github.imdmk.playtime.shared.validate.Validator;
+import com.github.imdmk.playtime.platform.gui.IdentifiableGui;
 import dev.triumphteam.gui.guis.BaseGui;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

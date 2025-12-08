@@ -1,5 +1,6 @@
 package com.github.imdmk.playtime.shared.adventure;
 
+import com.github.imdmk.playtime.platform.adventure.AdventurePlaceholders;
 import net.kyori.adventure.text.Component;
 import org.junit.jupiter.api.Test;
 

@@ -2,7 +2,7 @@ package com.github.imdmk.playtime.infrastructure.database;
 
 import com.github.imdmk.playtime.infrastructure.database.driver.dependency.DriverDependencyLoader;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.j256.ormlite.support.ConnectionSource;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;

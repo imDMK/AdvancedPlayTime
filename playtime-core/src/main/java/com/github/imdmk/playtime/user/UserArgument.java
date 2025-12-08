@@ -1,8 +1,8 @@
 package com.github.imdmk.playtime.user;
 
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
-import com.github.imdmk.playtime.shared.message.MessageConfig;
+import com.github.imdmk.playtime.shared.validate.Validator;
+import com.github.imdmk.playtime.message.MessageConfig;
 import dev.rollczi.litecommands.argument.Argument;
 import dev.rollczi.litecommands.argument.parser.ParseResult;
 import dev.rollczi.litecommands.argument.resolver.ArgumentResolver;

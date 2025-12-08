@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.shared.config;
+package com.github.imdmk.playtime.config;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.nodes.Node;

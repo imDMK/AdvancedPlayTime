@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.platform.gui.item;
 
 import com.github.imdmk.playtime.platform.gui.render.RenderContext;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.bukkit.entity.HumanEntity;
 import org.jetbrains.annotations.NotNull;
 
