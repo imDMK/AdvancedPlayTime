@@ -14,11 +14,11 @@ dependencies {
     implementation("com.alessiodp.libby:libby-bukkit:2.0.0-SNAPSHOT")
 
     // Multification
-    implementation("com.eternalcode:multification-bukkit:1.2.2")
-    implementation("com.eternalcode:multification-okaeri:1.2.2")
+    implementation("com.eternalcode:multification-bukkit:1.2.3")
+    implementation("com.eternalcode:multification-okaeri:1.2.3")
 
     // Cache / DB layer
-    implementation("com.github.ben-manes.caffeine:caffeine:3.2.1")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
     implementation("com.zaxxer:HikariCP:6.2.1")
     implementation("com.j256.ormlite:ormlite-jdbc:6.1")
 
@@ -32,7 +32,7 @@ dependencies {
     implementation("dev.rollczi:litecommands-bukkit:3.10.6")
     implementation("dev.rollczi:litecommands-annotations:3.10.6")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.0.1")
     testImplementation("org.assertj:assertj-core:3.25.2")
     testImplementation("org.mockito:mockito-core:5.8.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.8.0")

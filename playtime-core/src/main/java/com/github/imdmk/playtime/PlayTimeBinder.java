@@ -15,7 +15,7 @@ import java.lang.reflect.Modifier;
  * <p>
  * This approach keeps {@link PlayTimePlugin} focused on lifecycle/bootstrap logic
  * while delegating dependency wiring to a dedicated, reflection-based binder.
- * Only non-static fields with {@code @BindCore} are processed.
+ * Only non-static fields with {@code @Bind} are processed.
  */
 final class PlayTimeBinder {
 
