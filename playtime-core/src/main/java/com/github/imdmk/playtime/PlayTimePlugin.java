@@ -1,6 +1,10 @@
 package com.github.imdmk.playtime;
 
 import com.eternalcode.multification.notice.Notice;
+import com.github.imdmk.playtime.config.ConfigManager;
+import com.github.imdmk.playtime.config.ConfigSection;
+import com.github.imdmk.playtime.config.InjectorConfigBinder;
+import com.github.imdmk.playtime.config.PluginConfig;
 import com.github.imdmk.playtime.infrastructure.database.DatabaseConfig;
 import com.github.imdmk.playtime.infrastructure.database.DatabaseManager;
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryContext;
@@ -10,6 +14,8 @@ import com.github.imdmk.playtime.infrastructure.module.Module;
 import com.github.imdmk.playtime.infrastructure.module.ModuleContext;
 import com.github.imdmk.playtime.infrastructure.module.ModuleInitializer;
 import com.github.imdmk.playtime.infrastructure.module.ModuleRegistry;
+import com.github.imdmk.playtime.message.MessageConfig;
+import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.events.BukkitEventCaller;
 import com.github.imdmk.playtime.platform.events.BukkitListenerRegistrar;
 import com.github.imdmk.playtime.platform.gui.GuiRegistry;
@@ -22,14 +28,8 @@ import com.github.imdmk.playtime.platform.placeholder.adapter.PlaceholderAdapter
 import com.github.imdmk.playtime.platform.placeholder.adapter.PlaceholderAdapterFactory;
 import com.github.imdmk.playtime.platform.scheduler.BukkitTaskScheduler;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
-import com.github.imdmk.playtime.shared.validate.Validator;
-import com.github.imdmk.playtime.config.ConfigManager;
-import com.github.imdmk.playtime.config.ConfigSection;
-import com.github.imdmk.playtime.config.InjectorConfigBinder;
-import com.github.imdmk.playtime.config.PluginConfig;
-import com.github.imdmk.playtime.message.MessageConfig;
-import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.shared.time.Durations;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.LiteCommandsBuilder;

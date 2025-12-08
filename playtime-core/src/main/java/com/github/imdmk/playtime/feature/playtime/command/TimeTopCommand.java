@@ -1,10 +1,10 @@
 package com.github.imdmk.playtime.feature.playtime.command;
 
 import com.github.imdmk.playtime.feature.playtime.gui.PlayTimeTopGui;
+import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.gui.view.GuiOpener;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.shared.validate.Validator;
-import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.user.UserService;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
