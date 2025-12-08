@@ -5,7 +5,7 @@ import com.github.imdmk.playtime.feature.migration.MigrationResult;
 import com.github.imdmk.playtime.feature.migration.listener.MigrationListener;
 import com.github.imdmk.playtime.feature.migration.migrator.PlayerMigrator;
 import com.github.imdmk.playtime.feature.migration.provider.PlayerProvider;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.google.common.base.Stopwatch;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;

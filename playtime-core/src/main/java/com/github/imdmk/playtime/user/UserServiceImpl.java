@@ -5,7 +5,7 @@ import com.github.imdmk.playtime.UserPreSaveEvent;
 import com.github.imdmk.playtime.UserSaveEvent;
 import com.github.imdmk.playtime.platform.events.BukkitEventCaller;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.cache.UserCache;
 import com.github.imdmk.playtime.user.repository.UserRepository;
 import com.github.imdmk.playtime.user.top.TopUsersCache;

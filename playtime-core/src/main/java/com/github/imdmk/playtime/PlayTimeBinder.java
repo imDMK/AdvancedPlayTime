@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime;
 
-import com.github.imdmk.playtime.infrastructure.di.Bind;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.infrastructure.injector.Bind;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
 import org.panda_lang.utilities.inject.Resources;

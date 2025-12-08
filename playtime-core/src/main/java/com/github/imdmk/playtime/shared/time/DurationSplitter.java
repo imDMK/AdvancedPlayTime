@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.shared.time;
 
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;

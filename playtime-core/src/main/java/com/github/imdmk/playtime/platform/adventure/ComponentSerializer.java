@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.shared.adventure;
+package com.github.imdmk.playtime.platform.adventure;
 
 import eu.okaeri.configs.schema.GenericsDeclaration;
 import eu.okaeri.configs.serdes.DeserializationData;

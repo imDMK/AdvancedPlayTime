@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.platform.gui.factory;
 
-import com.github.imdmk.playtime.shared.Validator;
-import com.github.imdmk.playtime.shared.gui.GuiType;
+import com.github.imdmk.playtime.shared.validate.Validator;
+import com.github.imdmk.playtime.platform.gui.GuiType;
 import dev.triumphteam.gui.builder.gui.BaseGuiBuilder;
 import dev.triumphteam.gui.components.ScrollType;
 import dev.triumphteam.gui.guis.Gui;

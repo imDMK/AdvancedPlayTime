@@ -2,7 +2,7 @@ package com.github.imdmk.playtime.feature.playtime.placeholder;
 
 import com.github.imdmk.playtime.PlaytimeService;
 import com.github.imdmk.playtime.platform.placeholder.PluginPlaceholder;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.shared.time.Durations;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

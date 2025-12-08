@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.feature.migration.migrator;
 
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserFactory;
 import com.github.imdmk.playtime.user.repository.UserRepository;

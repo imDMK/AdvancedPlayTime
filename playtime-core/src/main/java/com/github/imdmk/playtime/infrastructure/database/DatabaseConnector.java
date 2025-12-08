@@ -3,7 +3,7 @@ package com.github.imdmk.playtime.infrastructure.database;
 import com.github.imdmk.playtime.infrastructure.database.driver.configurer.DriverConfigurer;
 import com.github.imdmk.playtime.infrastructure.database.driver.configurer.DriverConfigurerFactory;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.zaxxer.hikari.HikariDataSource;

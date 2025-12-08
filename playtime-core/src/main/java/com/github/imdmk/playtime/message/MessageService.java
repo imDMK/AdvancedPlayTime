@@ -1,10 +1,10 @@
-package com.github.imdmk.playtime.shared.message;
+package com.github.imdmk.playtime.message;
 
 import com.eternalcode.multification.adventure.AudienceConverter;
 import com.eternalcode.multification.bukkit.BukkitMultification;
 import com.eternalcode.multification.notice.provider.NoticeProvider;
 import com.eternalcode.multification.translation.TranslationProvider;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;

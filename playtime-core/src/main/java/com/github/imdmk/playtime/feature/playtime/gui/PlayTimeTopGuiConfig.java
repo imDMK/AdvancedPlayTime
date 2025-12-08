@@ -2,8 +2,8 @@ package com.github.imdmk.playtime.feature.playtime.gui;
 
 import com.github.imdmk.playtime.platform.gui.config.ConfigurableGui;
 import com.github.imdmk.playtime.platform.gui.item.ItemGui;
-import com.github.imdmk.playtime.shared.adventure.AdventureComponents;
-import com.github.imdmk.playtime.shared.gui.GuiType;
+import com.github.imdmk.playtime.platform.adventure.AdventureComponents;
+import com.github.imdmk.playtime.platform.gui.GuiType;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 import net.kyori.adventure.text.Component;

@@ -3,7 +3,7 @@ package com.github.imdmk.playtime.infrastructure.database.driver.dependency;
 import com.alessiodp.libby.BukkitLibraryManager;
 import com.alessiodp.libby.Library;
 import com.github.imdmk.playtime.infrastructure.database.DatabaseMode;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 

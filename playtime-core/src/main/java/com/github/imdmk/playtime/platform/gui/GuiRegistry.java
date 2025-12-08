@@ -1,7 +1,6 @@
 package com.github.imdmk.playtime.platform.gui;
 
-import com.github.imdmk.playtime.shared.Validator;
-import com.github.imdmk.playtime.shared.gui.IdentifiableGui;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
