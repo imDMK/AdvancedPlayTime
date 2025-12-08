@@ -5,7 +5,7 @@ import com.github.imdmk.playtime.feature.migration.MigrationResult;
 import com.github.imdmk.playtime.feature.migration.listener.MigrationListener;
 import com.github.imdmk.playtime.feature.migration.migrator.PlayerMigrator;
 import com.github.imdmk.playtime.feature.migration.provider.PlayerProvider;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.google.common.base.Stopwatch;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,8 @@ final class MigrationRunnerImpl {
             @NotNull MigrationConfig config,
             @NotNull PlayerProvider provider,
             @NotNull PlayerMigrator migrator,
-            @NotNull List<MigrationListener> listeners) {
+            @NotNull List<MigrationListener> listeners
+    ) {
         this.config = Validator.notNull(config, "config cannot be null");
         this.provider = Validator.notNull(provider, "provider cannot be null");
         this.migrator = Validator.notNull(migrator, "migrator cannot be null");

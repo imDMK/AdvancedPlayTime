@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly("org.jetbrains:annotations:26.0.2-1")
+    compileOnlyApi("org.jetbrains:annotations:26.0.2-1")
 
     testImplementation("org.junit.jupiter:junit-jupiter:6.0.1")
     testImplementation("org.assertj:assertj-core:3.25.2")

@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime;
 
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -16,8 +16,8 @@ public final class PlayTimePluginLoader extends JavaPlugin {
     private volatile PlayTimePlugin pluginCore;
 
     public PlayTimePluginLoader(@NotNull ExecutorService executor, @NotNull LoaderSettings settings) {
-        this.executor = Validator.notNull(executor, "executor cannot be null");
-        this.settings = Validator.notNull(settings, "settings cannot be null");
+        this.executor = Validator.notNull(executor, "executor");
+        this.settings = Validator.notNull(settings, "settings");
     }
 
     public PlayTimePluginLoader() {

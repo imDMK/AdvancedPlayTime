@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.shared;
+package com.github.imdmk.playtime.shared.validate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,14 +25,14 @@ public final class Validator {
      * provided message.
      *
      * @param obj     the value to validate; may be null
-     * @param message exception message used when {@code obj} is null
+     * @param context context of exception used when {@code obj} is null
      * @param <T>     type of the validated object
      * @return the non-null value of {@code obj}
      * @throws NullPointerException if {@code obj} is null
      */
-    public static <T> T notNull(@Nullable T obj, @NotNull String message) {
+    public static <T> T notNull(@Nullable T obj, @NotNull String context) {
         if (obj == null) {
-            throw new NullPointerException(message);
+            throw new NullPointerException(context + " cannot be null");
         }
         return obj;
     }

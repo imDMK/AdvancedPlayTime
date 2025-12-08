@@ -21,7 +21,8 @@ public interface GuiRenderer {
                          @NotNull ItemGui item,
                          @NotNull RenderContext context,
                          @NotNull RenderOptions options,
-                         @NotNull Consumer<InventoryClickEvent> onClick) {
+                         @NotNull Consumer<InventoryClickEvent> onClick
+    ) {
         setItem(gui, slot, item, context, options, onClick, b -> {});
     }
 
@@ -36,14 +37,16 @@ public interface GuiRenderer {
                  @NotNull RenderContext context,
                  @NotNull RenderOptions options,
                  @NotNull Consumer<InventoryClickEvent> onClick,
-                 @NotNull Consumer<BaseItemBuilder<?>> builderEditor);
+                 @NotNull Consumer<BaseItemBuilder<?>> builderEditor
+    );
 
     @Contract(mutates = "param1")
     default void setItem(@NotNull BaseGui gui,
                          @NotNull ItemGui item,
                          @NotNull RenderContext context,
                          @NotNull RenderOptions options,
-                         @NotNull Consumer<InventoryClickEvent> onClick) {
+                         @NotNull Consumer<InventoryClickEvent> onClick
+    ) {
         var slot = item.slot();
         if (slot == null) {
             throw new IllegalArgumentException("Item slot is null (use add(...) for non-slotted items)");
@@ -58,7 +61,8 @@ public interface GuiRenderer {
                          @NotNull RenderContext context,
                          @NotNull RenderOptions options,
                          @NotNull Consumer<InventoryClickEvent> onClick,
-                         @NotNull Consumer<BaseItemBuilder<?>> builderEditor) {
+                         @NotNull Consumer<BaseItemBuilder<?>> builderEditor
+    ) {
         var slot = item.slot();
         if (slot == null) {
             throw new IllegalArgumentException("Item slot is null (use add(...) for non-slotted items)");
@@ -72,7 +76,8 @@ public interface GuiRenderer {
                          @NotNull ItemGui item,
                          @NotNull RenderContext context,
                          @NotNull RenderOptions options,
-                         @NotNull Consumer<InventoryClickEvent> onClick) {
+                         @NotNull Consumer<InventoryClickEvent> onClick
+    ) {
         addItem(gui, item, context, options, onClick, b -> {});
     }
 

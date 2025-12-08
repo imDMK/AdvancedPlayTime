@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.feature.playtime.command;
 
-import com.github.imdmk.playtime.shared.Validator;
-import com.github.imdmk.playtime.shared.message.MessageService;
+import com.github.imdmk.playtime.message.MessageService;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.top.TopUsersCache;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
@@ -19,7 +19,10 @@ public final class TimeTopInvalidateCommand {
     private final TopUsersCache topUsersCache;
 
     @Inject
-    public TimeTopInvalidateCommand(@NotNull MessageService messageService, @NotNull TopUsersCache topUsersCache) {
+    public TimeTopInvalidateCommand(
+            @NotNull MessageService messageService,
+            @NotNull TopUsersCache topUsersCache
+    ) {
         this.messageService = Validator.notNull(messageService, "messageService cannot be null");
         this.topUsersCache = Validator.notNull(topUsersCache, "topUsersCache cannot be null");
     }

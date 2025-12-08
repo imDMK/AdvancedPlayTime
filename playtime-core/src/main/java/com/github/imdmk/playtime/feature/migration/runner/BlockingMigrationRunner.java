@@ -8,7 +8,7 @@ import com.github.imdmk.playtime.feature.migration.listener.MigrationListener;
 import com.github.imdmk.playtime.feature.migration.migrator.PlayerMigrator;
 import com.github.imdmk.playtime.feature.migration.provider.PlayerProvider;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
@@ -26,7 +26,8 @@ public final class BlockingMigrationRunner implements MigrationRunner<MigrationR
             @NotNull PluginLogger logger,
             @NotNull MigrationConfig config,
             @NotNull PlayerProvider provider,
-            @NotNull PlayerMigrator migrator) {
+            @NotNull PlayerMigrator migrator
+    ) {
         this.logger = Validator.notNull(logger, "logger cannot be null");
         this.config = Validator.notNull(config, "config cannot be null");
         this.provider = Validator.notNull(provider, "provider cannot be null");
@@ -35,7 +36,7 @@ public final class BlockingMigrationRunner implements MigrationRunner<MigrationR
 
     @Override
     public MigrationResult execute() {
-        var runner = new MigrationRunnerImpl(config, provider, migrator, listeners());
+        final var runner = new MigrationRunnerImpl(config, provider, migrator, listeners());
         return runner.execute();
     }
 

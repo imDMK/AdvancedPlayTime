@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.feature.playtime;
 
 import com.github.imdmk.playtime.PlaytimeService;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserFactory;
 import com.github.imdmk.playtime.user.UserTime;
@@ -35,7 +35,7 @@ public final class PlayTimeUserFactory implements UserFactory {
 
     @Inject
     public PlayTimeUserFactory(@NotNull PlaytimeService playtimeService) {
-        this.playtimeService = Validator.notNull(playtimeService, "playtimeService cannot be null");
+        this.playtimeService = Validator.notNull(playtimeService, "playtimeService");
     }
 
     /**

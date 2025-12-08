@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.shared.gui;
+package com.github.imdmk.playtime.platform.gui;
 
 /**
  * Defines the supported GUI layout types within the plugin.

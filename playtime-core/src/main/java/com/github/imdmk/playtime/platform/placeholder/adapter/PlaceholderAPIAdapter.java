@@ -2,7 +2,7 @@ package com.github.imdmk.playtime.platform.placeholder.adapter;
 
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.placeholder.PluginPlaceholder;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

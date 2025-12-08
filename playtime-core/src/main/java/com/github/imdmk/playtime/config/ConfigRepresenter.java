@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.shared.config;
+package com.github.imdmk.playtime.config;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.nodes.Node;
@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class ConfigRepresenter extends Representer {
+final class ConfigRepresenter extends Representer {
 
-    public ConfigRepresenter(DumperOptions options) {
+    ConfigRepresenter(DumperOptions options) {
         super(options);
         this.representers.put(String.class, new RepresentString());
         this.representers.put(Boolean.class, new RepresentBoolean());

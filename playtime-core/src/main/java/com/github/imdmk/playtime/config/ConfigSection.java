@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.shared.config;
+package com.github.imdmk.playtime.config;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;

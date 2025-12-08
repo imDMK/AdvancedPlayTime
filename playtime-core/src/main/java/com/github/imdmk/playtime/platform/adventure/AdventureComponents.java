@@ -1,6 +1,6 @@
-package com.github.imdmk.playtime.shared.adventure;
+package com.github.imdmk.playtime.platform.adventure;
 
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -41,7 +41,7 @@ public final class AdventureComponents {
      * @return the deserialized component
      */
     public static @NotNull Component text(@NotNull CharSequence text) {
-        Validator.notNull(text, "text cannot be null");
+        Validator.notNull(text, "text");
         return MINI_MESSAGE.deserialize(text.toString());
     }
 
@@ -52,7 +52,7 @@ public final class AdventureComponents {
      * @return an unmodifiable list of deserialized components
      */
     public static @NotNull List<Component> text(@NotNull CharSequence... texts) {
-        Validator.notNull(texts, "texts cannot be null");
+        Validator.notNull(texts, "texts");
 
         final List<Component> out = new ArrayList<>(texts.length);
         for (CharSequence text : texts) {
@@ -69,7 +69,7 @@ public final class AdventureComponents {
      * @return an unmodifiable list of deserialized components
      */
     public static @NotNull List<Component> text(@NotNull Iterable<? extends CharSequence> texts) {
-        Validator.notNull(texts, "texts cannot be null");
+        Validator.notNull(texts, "texts");
 
         final List<Component> out = new ArrayList<>();
         for (CharSequence text : texts) {
@@ -87,7 +87,7 @@ public final class AdventureComponents {
      * @return a new component without italics
      */
     public static @NotNull Component withoutItalics(@NotNull Component component) {
-        Validator.notNull(component, "component cannot be null");
+        Validator.notNull(component, "component");
         return component.decoration(TextDecoration.ITALIC, false);
     }
 
@@ -108,7 +108,7 @@ public final class AdventureComponents {
      * @return a new component without italics
      */
     public static @NotNull Component withoutItalics(@NotNull ComponentLike like) {
-        Validator.notNull(like, "component cannot be null");
+        Validator.notNull(like, "component");
         return like.asComponent().decoration(TextDecoration.ITALIC, false);
     }
 

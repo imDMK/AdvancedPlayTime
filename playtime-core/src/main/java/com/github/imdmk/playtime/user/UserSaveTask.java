@@ -3,7 +3,7 @@ package com.github.imdmk.playtime.user;
 import com.github.imdmk.playtime.PlaytimeService;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.PluginTask;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -28,10 +28,10 @@ final class UserSaveTask implements PluginTask {
             @NotNull PlaytimeService playtimeService,
             @NotNull UserService userService
     ) {
-        this.server = Validator.notNull(server, "server cannot be null");
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.playtimeService = Validator.notNull(playtimeService, "playtime cannot be null");
-        this.userService = Validator.notNull(userService, "userService cannot be null");
+        this.server = Validator.notNull(server, "server");
+        this.logger = Validator.notNull(logger, "logger");
+        this.playtimeService = Validator.notNull(playtimeService, "playtime");
+        this.userService = Validator.notNull(userService, "userService");
     }
 
     @Override

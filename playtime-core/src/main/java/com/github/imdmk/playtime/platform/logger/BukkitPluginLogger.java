@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.platform.logger;
 
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 

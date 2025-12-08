@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.shared.gui;
+package com.github.imdmk.playtime.platform.gui;
 import org.jetbrains.annotations.NotNull;
 
 /**

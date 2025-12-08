@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.shared.time;
 
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -27,7 +27,7 @@ public final class DurationSplitter {
      * @return map of {@link DurationUnit} to its value in the given duration
      */
     public static @NotNull Map<DurationUnit, Integer> split(@NotNull Duration duration) {
-        Validator.notNull(duration, "duration cannot be null");
+        Validator.notNull(duration, "duration");
 
         EnumMap<DurationUnit, Integer> parts = new EnumMap<>(DurationUnit.class);
         for (DurationUnit unit : DurationUnit.ORDERED) {

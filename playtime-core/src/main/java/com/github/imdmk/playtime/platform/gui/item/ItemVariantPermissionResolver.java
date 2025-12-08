@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.platform.gui.item;
 
 import com.github.imdmk.playtime.platform.gui.render.RenderContext;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.bukkit.entity.HumanEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,7 +44,8 @@ public final class ItemVariantPermissionResolver implements ItemVariantResolver 
             @NotNull HumanEntity viewer,
             @NotNull RenderContext context,
             @NotNull Iterable<? extends ItemGui> candidates,
-            @NotNull ItemGui fallback) {
+            @NotNull ItemGui fallback
+    ) {
         Validator.notNull(viewer, "viewer cannot be null");
         Validator.notNull(context, "context cannot be null");
         Validator.notNull(candidates, "candidates cannot be null");

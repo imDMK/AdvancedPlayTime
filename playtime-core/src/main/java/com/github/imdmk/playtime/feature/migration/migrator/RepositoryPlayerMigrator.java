@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.feature.migration.migrator;
 
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserFactory;
 import com.github.imdmk.playtime.user.repository.UserRepository;
@@ -16,7 +16,10 @@ public final class RepositoryPlayerMigrator implements PlayerMigrator {
     private final UserFactory userFactory;
 
     @Inject
-    public RepositoryPlayerMigrator(@NotNull UserRepository userRepository, @NotNull UserFactory userFactory) {
+    public RepositoryPlayerMigrator(
+            @NotNull UserRepository userRepository,
+            @NotNull UserFactory userFactory
+    ) {
         this.userRepository = Validator.notNull(userRepository, "userRepository cannot be null");
         this.userFactory = Validator.notNull(userFactory, "userFactory cannot be null");
     }

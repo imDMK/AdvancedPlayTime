@@ -1,11 +1,11 @@
 package com.github.imdmk.playtime.platform.gui.config;
 
+import com.github.imdmk.playtime.config.ConfigSection;
 import com.github.imdmk.playtime.feature.playtime.gui.PlayTimeTopGuiConfig;
-import com.github.imdmk.playtime.platform.serdes.ComponentSerializer;
+import com.github.imdmk.playtime.platform.adventure.ComponentSerializer;
+import com.github.imdmk.playtime.platform.gui.item.ItemGuiSerializer;
 import com.github.imdmk.playtime.platform.serdes.EnchantmentSerializer;
-import com.github.imdmk.playtime.platform.serdes.ItemGuiSerializer;
 import com.github.imdmk.playtime.platform.serdes.SoundSerializer;
-import com.github.imdmk.playtime.shared.config.ConfigSection;
 import eu.okaeri.configs.annotation.Comment;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import org.jetbrains.annotations.NotNull;

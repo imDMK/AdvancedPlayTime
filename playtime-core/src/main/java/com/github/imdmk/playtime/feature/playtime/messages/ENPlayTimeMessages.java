@@ -14,7 +14,7 @@ public final class ENPlayTimeMessages extends OkaeriConfig implements PlayTimeMe
             "#   {PLAYER_PLAYTIME} - formatted playtime of the player (e.g. 5h 32m).",
             "#"
     })
-    public Notice playerPlaytimeSelf = Notice.chat(
+    Notice playerPlaytimeSelf = Notice.chat(
             "<dark_gray>• <gray>You have spent <red>{PLAYER_PLAYTIME} <gray>on this server.<dark_gray>"
     );
 
@@ -27,7 +27,7 @@ public final class ENPlayTimeMessages extends OkaeriConfig implements PlayTimeMe
             "#   {PLAYER_PLAYTIME}  - formatted playtime of the target player.",
             "#"
     })
-    public Notice playerPlaytimeTarget = Notice.chat(
+    Notice playerPlaytimeTarget = Notice.chat(
             "<dark_gray>• <gray>Player <red>{PLAYER_NAME} <gray>has spent <red>{PLAYER_PLAYTIME} <gray>on this server.<dark_gray>"
     );
 
@@ -40,7 +40,7 @@ public final class ENPlayTimeMessages extends OkaeriConfig implements PlayTimeMe
             "#   {PLAYER_PLAYTIME}  - new formatted playtime value.",
             "#"
     })
-    public Notice playerPlaytimeUpdated = Notice.chat(
+    Notice playerPlaytimeUpdated = Notice.chat(
             "<dark_gray>• <gray>Updated playtime for player <red>{PLAYER_NAME} <gray>to <red>{PLAYER_PLAYTIME}<dark_gray>."
     );
 
@@ -52,7 +52,7 @@ public final class ENPlayTimeMessages extends OkaeriConfig implements PlayTimeMe
             "#   {PLAYER_NAME} - target player's nickname.",
             "#"
     })
-    public Notice playerPlaytimeReset = Notice.chat(
+    Notice playerPlaytimeReset = Notice.chat(
             "<dark_gray>• <gray>Playtime for player <red>{PLAYER_NAME} <gray>has been reset to <red>ZERO<gray>.<dark_gray>"
     );
 
@@ -61,7 +61,7 @@ public final class ENPlayTimeMessages extends OkaeriConfig implements PlayTimeMe
             "# Sent when a global reset of all players' playtime is triggered.",
             "#"
     })
-    public Notice playerPlaytimeResetAllStarted = Notice.chat(
+    Notice playerPlaytimeResetAllStarted = Notice.chat(
             "<dark_gray>• <green>Global playtime reset started... <gray>Please wait.<dark_gray>"
     );
 
@@ -70,7 +70,7 @@ public final class ENPlayTimeMessages extends OkaeriConfig implements PlayTimeMe
             "# Sent to the executor if the global playtime reset fails.",
             "#"
     })
-    public Notice playerPlaytimeResetAllFailed = Notice.chat(
+    Notice playerPlaytimeResetAllFailed = Notice.chat(
             "<dark_gray>• <red>An error occurred while resetting playtime for all players. "
                     + "<gray>Check console for details.<dark_gray>"
     );
@@ -80,7 +80,7 @@ public final class ENPlayTimeMessages extends OkaeriConfig implements PlayTimeMe
             "# Sent when the global playtime reset finishes successfully.",
             "#"
     })
-    public Notice playerPlaytimeResetAllFinished = Notice.chat(
+    Notice playerPlaytimeResetAllFinished = Notice.chat(
             "<dark_gray>• <green>Successfully reset playtime for all stored players.<dark_gray>"
     );
 
@@ -89,7 +89,7 @@ public final class ENPlayTimeMessages extends OkaeriConfig implements PlayTimeMe
             "# Sent after invalidating the Top users playtime cache.",
             "#"
     })
-    public Notice topUsersCacheInvalidated = Notice.chat(
+    Notice topUsersCacheInvalidated = Notice.chat(
             "<dark_gray>• <green>Successfully invalidated the PlayTime Top cache.<dark_gray>"
     );
 
