@@ -32,7 +32,7 @@ public final class Validator {
      */
     public static <T> T notNull(@Nullable T obj, @NotNull String context) {
         if (obj == null) {
-            throw new NullPointerException(context + "");
+            throw new NullPointerException(context + " cannot be null");
         }
         return obj;
     }
