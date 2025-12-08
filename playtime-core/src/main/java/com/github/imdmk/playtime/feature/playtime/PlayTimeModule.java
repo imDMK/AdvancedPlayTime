@@ -39,7 +39,7 @@ public final class PlayTimeModule implements Module {
 
     @Override
     public CommandPhase commands(@NotNull Injector injector) {
-        return configurer -> configurer.registerCommands(
+        return builder -> builder.commands(
                 injector.newInstance(TimeCommand.class),
                 injector.newInstance(TimeSetCommand.class),
                 injector.newInstance(TimeTopCommand.class),
@@ -51,7 +51,7 @@ public final class PlayTimeModule implements Module {
 
     @Override
     public ListenerPhase listeners(@NotNull Injector injector) {
-        return configurer -> configurer.register(
+        return builder -> builder.register(
                 injector.newInstance(PlayTimeSaveListener.class)
         );
     }

@@ -2,8 +2,7 @@ package com.github.imdmk.playtime;
 
 import com.eternalcode.multification.notice.Notice;
 import com.github.imdmk.playtime.infrastructure.database.DatabaseConfig;
-import com.github.imdmk.playtime.infrastructure.database.DatabaseConnector;
-import com.github.imdmk.playtime.infrastructure.database.driver.dependency.DriverDependencyLoader;
+import com.github.imdmk.playtime.infrastructure.database.DatabaseManager;
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryContext;
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryManager;
 import com.github.imdmk.playtime.infrastructure.di.Bind;
@@ -17,8 +16,6 @@ import com.github.imdmk.playtime.platform.gui.GuiRegistry;
 import com.github.imdmk.playtime.platform.litecommands.InvalidUsageHandlerImpl;
 import com.github.imdmk.playtime.platform.litecommands.MissingPermissionsHandlerImpl;
 import com.github.imdmk.playtime.platform.litecommands.NoticeResultHandlerImpl;
-import com.github.imdmk.playtime.platform.litecommands.configurer.BukkitLiteCommandsRegistrar;
-import com.github.imdmk.playtime.platform.litecommands.configurer.LiteCommandsRegistrar;
 import com.github.imdmk.playtime.platform.logger.BukkitPluginLogger;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.placeholder.adapter.PlaceholderAdapter;
@@ -35,6 +32,8 @@ import com.github.imdmk.playtime.shared.message.MessageService;
 import com.github.imdmk.playtime.shared.time.Durations;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.LiteCommands;
+import dev.rollczi.litecommands.LiteCommandsBuilder;
+import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
@@ -67,7 +66,7 @@ final class PlayTimePlugin {
 
     @Bind private ConfigManager configManager;
 
-    @Bind private DatabaseConnector databaseConnector;
+    @Bind private DatabaseManager databaseManager;
     @Bind private RepositoryContext repositoryContext;
     @Bind private RepositoryManager repositoryManager;
 
@@ -78,8 +77,8 @@ final class PlayTimePlugin {
     @Bind private GuiRegistry guiRegistry;
     @Bind private PlaceholderAdapter placeholderAdapter;
 
-    @Bind private LiteCommandsRegistrar LiteCommandsRegistrar;
-    private LiteCommands<CommandSender> liteCommands;
+    @Bind private LiteCommandsBuilder<CommandSender, ?, ?> liteCommandsBuilder;
+    @Bind private LiteCommands<?> liteCommands;
 
     private Metrics metrics;
 
@@ -120,18 +119,15 @@ final class PlayTimePlugin {
 
         // Database
         final DatabaseConfig databaseConfig = configManager.require(DatabaseConfig.class);
+        databaseManager = new DatabaseManager(plugin, logger, databaseConfig);
 
-        logger.info("Resolving database driver...");
-        final DriverDependencyLoader databaseDependencyLoader = new DriverDependencyLoader(plugin);
-        databaseDependencyLoader.loadDriverFor(databaseConfig.databaseMode);
-
-        logger.info("Connecting to database...");
-        databaseConnector = new DatabaseConnector(logger, databaseConfig);
+        databaseManager.loadDriver();
         try {
-            databaseConnector.connect(plugin.getDataFolder());
+            databaseManager.connect();
         } catch (SQLException e) {
-            logger.error(e, "Failed to connect database.");
-            throw new IllegalStateException("Database initialization failed", e);
+            logger.error(e, "An error occurred while trying to start all repositories. Disabling plugin...");
+            plugin.getPluginLoader().disablePlugin(plugin);
+            throw new IllegalStateException("Repository startup failed", e);
         }
 
         // Infrastructure services
@@ -147,12 +143,11 @@ final class PlayTimePlugin {
         guiRegistry = new GuiRegistry();
         placeholderAdapter = PlaceholderAdapterFactory.createFor(plugin, server, logger);
 
-        LiteCommandsRegistrar = new BukkitLiteCommandsRegistrar();
-        LiteCommandsRegistrar.configure(builder -> {
-            builder.invalidUsage(new InvalidUsageHandlerImpl(messageService));
-            builder.missingPermission(new MissingPermissionsHandlerImpl(messageService));
-            builder.result(Notice.class, new NoticeResultHandlerImpl(messageService));
-        });
+        liteCommandsBuilder = LiteBukkitFactory.builder(PREFIX, plugin, server);
+        liteCommandsBuilder
+                .invalidUsage(new InvalidUsageHandlerImpl(messageService))
+                .missingPermission(new MissingPermissionsHandlerImpl(messageService))
+                .result(Notice.class, new NoticeResultHandlerImpl(messageService));
 
         // Dependency Injection
         injector = DependencyInjection.createInjector(resources -> {
@@ -170,7 +165,7 @@ final class PlayTimePlugin {
         initializer.registerRepositories();
 
         // Start repositories
-        Validator.ifNotNull(databaseConnector.getConnectionSource(), connection -> {
+        Validator.ifNotNull(databaseManager.getConnection(), connection -> {
             try {
                 repositoryManager.startAll(connection);
             } catch (SQLException e) {
@@ -183,8 +178,8 @@ final class PlayTimePlugin {
         // Activate all feature modules
         initializer.activateFeatures();
 
-        // Build and register commands
-        liteCommands = LiteCommandsRegistrar.create(PREFIX, plugin, server);
+        // Build commands
+        liteCommands = liteCommandsBuilder.build();
 
         // Metrics
         metrics = new Metrics(plugin, PLUGIN_METRICS_ID);
@@ -203,7 +198,7 @@ final class PlayTimePlugin {
             manager.clearAll();
         });
         Validator.ifNotNull(repositoryManager, RepositoryManager::close);
-        Validator.ifNotNull(databaseConnector, DatabaseConnector::close);
+        Validator.ifNotNull(databaseManager, DatabaseManager::shutdown);
         Validator.ifNotNull(messageService, MessageService::shutdown);
         Validator.ifNotNull(taskScheduler, TaskScheduler::shutdown);
         Validator.ifNotNull(liteCommands, LiteCommands::unregister);

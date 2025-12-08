@@ -31,8 +31,8 @@ public final class MigrationModule implements Module {
         this.migrator = injector.newInstance(RepositoryPlayerMigrator.class);
         this.provider = injector.newInstance(BukkitPlayerProvider.class);
 
-        var blockingRunner = injector.newInstance(BlockingMigrationRunner.class);
-        blockingRunner.execute();
+        final BlockingMigrationRunner migrationRunner = injector.newInstance(BlockingMigrationRunner.class);
+        migrationRunner.execute();
     }
 
     @Override

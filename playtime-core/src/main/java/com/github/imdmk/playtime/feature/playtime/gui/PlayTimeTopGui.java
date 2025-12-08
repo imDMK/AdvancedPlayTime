@@ -40,6 +40,7 @@ public final class PlayTimeTopGui
         implements ParameterizedGui<List<User>> {
 
     private static final String GUI_IDENTIFIER = "playtime-top";
+    private static final UserSaveReason SAVE_REASON = UserSaveReason.GUI_RESET_CLICK;
 
     private static final GuiRenderer GUI_RENDERER = TriumphGuiRenderer.newRenderer();
     private static final RenderOptions RENDER_OPTIONS = RenderOptions.defaultHide();
@@ -108,7 +109,7 @@ public final class PlayTimeTopGui
                 gui.close(viewer);
 
                 user.setPlaytime(UserTime.ZERO);
-                userService.save(user, UserSaveReason.GUI_RESET_CLICK)
+                userService.save(user, SAVE_REASON)
                         .thenAccept(result -> messageService.send(viewer, n -> n.playtimeMessages.playerPlaytimeReset()))
                         .exceptionally(e -> {
                             messageService.send(viewer, n -> n.actionExecutionError);
@@ -143,13 +144,6 @@ public final class PlayTimeTopGui
                 .with("{PLAYER_PLAYTIME}", Durations.format(topUser.getPlaytime().toDuration()))
                 .with("{CLICK_RESET}", topGuiConfig.resetClickType.name())
                 .build();
-    }
-
-    private void resetPlayTimeFor(Player viewer, User user) {
-        viewer.closeInventory();
-
-        user.setPlaytime(UserTime.ZERO);
-        userService.save(user, UserSaveReason.GUI_RESET_CLICK);
     }
 
     @Override

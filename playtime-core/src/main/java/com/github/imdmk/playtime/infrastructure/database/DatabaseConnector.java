@@ -15,30 +15,12 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Level;
 
-/**
- * Provides a unified connection management layer between HikariCP and ORMLite.
- * <p>
- * This class is responsible for:
- * <ul>
- *     <li>creating and configuring a shared {@link HikariDataSource} with sane defaults,</li>
- *     <li>delegating engine-specific JDBC configuration to a {@link DriverConfigurer},</li>
- *     <li>exposing an ORMLite {@link ConnectionSource} to repository code,</li>
- *     <li>managing a clean connecting → use → close lifecycle.</li>
- * </ul>
- * <p>
- * The selection of JDBC driver and engine-specific URL/flags is handled externally
- * by {@link DriverConfigurer} implementations and {@link DriverConfigurerFactory},
- * keeping this class focused purely on connection management.
- *
- * <p><strong>Thread-safety:</strong> {@link #connect(File)} and {@link #close()} are synchronized.
- * Concurrent read access via {@link #getConnectionSource()} is safe.</p>
- */
-public final class DatabaseConnector {
+final class DatabaseConnector {
 
     private static final String POOL_NAME = "playtime-db-pool";
 
-    private static final int DEFAULT_MAX_POOL_SIZE = 5;
-    private static final int DEFAULT_MIN_IDLE = 1;
+    private static final int DEFAULT_MAX_POOL_SIZE = 4;
+    private static final int DEFAULT_MIN_IDLE = 0;
 
     private static final long DEFAULT_CONNECTION_TIMEOUT_MS = 10_000L;
     private static final long DEFAULT_IDLE_TIMEOUT_MS = 60_000L;
@@ -66,7 +48,7 @@ public final class DatabaseConnector {
      * @param config           the database configuration (never null)
      * @param driverConfigurer strategy used to configure the underlying JDBC driver (never null)
      */
-    public DatabaseConnector(
+    DatabaseConnector(
             @NotNull PluginLogger logger,
             @NotNull DatabaseConfig config,
             @NotNull DriverConfigurer driverConfigurer
@@ -83,7 +65,10 @@ public final class DatabaseConnector {
      * @param logger the plugin logger (never null)
      * @param config the database configuration (never null)
      */
-    public DatabaseConnector(@NotNull PluginLogger logger, @NotNull DatabaseConfig config) {
+    DatabaseConnector(
+            @NotNull PluginLogger logger,
+            @NotNull DatabaseConfig config
+    ) {
         this(logger, config, DriverConfigurerFactory.getFor(config.databaseMode));
     }
 
@@ -98,7 +83,7 @@ public final class DatabaseConnector {
      * @throws SQLException          if JDBC or ORMLite initialization fails
      * @throws IllegalStateException if a connection is already active
      */
-    public synchronized void connect(@NotNull File dataFolder) throws SQLException {
+    synchronized void connect(@NotNull File dataFolder) throws SQLException {
         Validator.notNull(dataFolder, "dataFolder cannot be null");
 
         if (dataSource != null || connectionSource != null) {
@@ -111,7 +96,12 @@ public final class DatabaseConnector {
             // Delegated engine-specific configuration (JDBC URL, engine flags, filesystem prep)
             driverConfigurer.configure(ds, config, dataFolder);
 
-            final ConnectionSource source = new DataSourceConnectionSource(ds, ds.getJdbcUrl());
+            final String jdbcUrl = ds.getJdbcUrl();
+            if (jdbcUrl == null || jdbcUrl.isBlank()) {
+                throw new IllegalStateException("DriverConfigurer did not set JDBC URL for mode " + config.databaseMode);
+            }
+
+            final ConnectionSource source = new DataSourceConnectionSource(ds, jdbcUrl);
 
             dataSource = ds;
             connectionSource = source;
@@ -137,7 +127,7 @@ public final class DatabaseConnector {
      * <p>
      * Safe to call multiple times. Exceptions during close are logged but ignored.
      */
-    public synchronized void close() {
+    synchronized void close() {
         if (connectionSource == null && dataSource == null) {
             logger.warn("DatabaseConnector#close() called, but not connected.");
             return;
@@ -164,7 +154,7 @@ public final class DatabaseConnector {
      *
      * @return {@code true} if both {@link ConnectionSource} and {@link HikariDataSource} are active
      */
-    public boolean isConnected() {
+    boolean isConnected() {
         final HikariDataSource ds = dataSource;
         return connectionSource != null && ds != null && !ds.isClosed();
     }
@@ -174,7 +164,7 @@ public final class DatabaseConnector {
      *
      * @return active ORMLite connection source, or {@code null} if disconnected
      */
-    public @Nullable ConnectionSource getConnectionSource() {
+    @Nullable ConnectionSource getConnectionSource() {
         return connectionSource;
     }
 
@@ -194,7 +184,7 @@ public final class DatabaseConnector {
         final HikariDataSource data = new HikariDataSource();
         data.setPoolName(POOL_NAME);
 
-        data.setMaximumPoolSize(DEFAULT_MAX_POOL_SIZE);
+        data.setMaximumPoolSize(Math.max(DEFAULT_MAX_POOL_SIZE, Runtime.getRuntime().availableProcessors()));
         data.setMinimumIdle(DEFAULT_MIN_IDLE);
 
         data.setUsername(config.databaseUserName);
@@ -229,7 +219,6 @@ public final class DatabaseConnector {
             if (ds != null) {
                 ds.close();
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 }
