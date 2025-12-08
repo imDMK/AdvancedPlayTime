@@ -3,11 +3,12 @@ package com.github.imdmk.playtime.infrastructure.module;
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryManager;
 import com.github.imdmk.playtime.platform.events.BukkitListenerRegistrar;
 import com.github.imdmk.playtime.platform.gui.GuiRegistry;
-import com.github.imdmk.playtime.platform.litecommands.configurer.LiteCommandsRegistrar;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.placeholder.adapter.PlaceholderAdapter;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
+import dev.rollczi.litecommands.LiteCommandsBuilder;
 import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
@@ -34,7 +35,7 @@ public record ModuleContext(
         @NotNull TaskScheduler taskScheduler,
         @NotNull RepositoryManager repositoryManager,
         @NotNull BukkitListenerRegistrar listenerRegistrar,
-        @NotNull LiteCommandsRegistrar liteCommandsRegistrar,
+        @NotNull LiteCommandsBuilder<CommandSender, ?, ?> liteCommandsBuilder,
         @NotNull GuiRegistry guiRegistry,
         @NotNull PlaceholderAdapter placeholderAdapter) {
 }

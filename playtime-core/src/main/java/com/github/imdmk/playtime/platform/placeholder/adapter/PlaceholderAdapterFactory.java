@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.platform.placeholder.adapter;
 
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +44,8 @@ public final class PlaceholderAdapterFactory {
     public static PlaceholderAdapter createFor(
             @NotNull Plugin plugin,
             @NotNull Server server,
-            @NotNull PluginLogger logger) {
+            @NotNull PluginLogger logger
+    ) {
         Validator.notNull(plugin, "plugin cannot be null");
         Validator.notNull(server, "server cannot be null");
         Validator.notNull(logger, "logger cannot be null");

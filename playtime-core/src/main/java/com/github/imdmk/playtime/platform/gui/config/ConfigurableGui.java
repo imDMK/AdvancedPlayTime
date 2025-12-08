@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.platform.gui.config;
 
-import com.github.imdmk.playtime.shared.gui.GuiType;
+import com.github.imdmk.playtime.platform.gui.GuiType;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 

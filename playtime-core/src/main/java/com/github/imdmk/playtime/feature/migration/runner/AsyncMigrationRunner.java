@@ -8,7 +8,7 @@ import com.github.imdmk.playtime.feature.migration.listener.MigrationListener;
 import com.github.imdmk.playtime.feature.migration.migrator.PlayerMigrator;
 import com.github.imdmk.playtime.feature.migration.provider.PlayerProvider;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 import org.panda_lang.utilities.inject.annotations.PostConstruct;
@@ -41,7 +41,8 @@ public final class AsyncMigrationRunner
             @NotNull PluginLogger logger,
             @NotNull MigrationConfig config,
             @NotNull PlayerProvider provider,
-            @NotNull PlayerMigrator migrator) {
+            @NotNull PlayerMigrator migrator
+    ) {
         this.logger = Validator.notNull(logger, "logger cannot be null");
         this.config = Validator.notNull(config, "config cannot be null");
         this.provider = Validator.notNull(provider, "provider cannot be null");

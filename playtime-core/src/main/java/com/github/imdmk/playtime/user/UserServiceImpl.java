@@ -5,7 +5,7 @@ import com.github.imdmk.playtime.UserPreSaveEvent;
 import com.github.imdmk.playtime.UserSaveEvent;
 import com.github.imdmk.playtime.platform.events.BukkitEventCaller;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.cache.UserCache;
 import com.github.imdmk.playtime.user.repository.UserRepository;
 import com.github.imdmk.playtime.user.top.TopUsersCache;
@@ -37,23 +37,24 @@ final class UserServiceImpl implements UserService {
             @NotNull UserCache cache,
             @NotNull TopUsersCache topUsersCache,
             @NotNull UserRepository repository,
-            @NotNull BukkitEventCaller eventCaller) {
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.cache = Validator.notNull(cache, "cache cannot be null");
-        this.topUsersCache = Validator.notNull(topUsersCache, "topUsersCache cannot be null");
-        this.repository = Validator.notNull(repository, "repository cannot be null");
-        this.eventCaller = Validator.notNull(eventCaller, "eventCaller cannot be null");
+            @NotNull BukkitEventCaller eventCaller
+    ) {
+        this.logger = Validator.notNull(logger, "logger");
+        this.cache = Validator.notNull(cache, "cache");
+        this.topUsersCache = Validator.notNull(topUsersCache, "topUsersCache");
+        this.repository = Validator.notNull(repository, "repository");
+        this.eventCaller = Validator.notNull(eventCaller, "eventCaller");
     }
 
     @Override
     public @NotNull Optional<User> findCachedByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid cannot be null");
+        Validator.notNull(uuid, "uuid");
         return cache.getUserByUuid(uuid);
     }
 
     @Override
     public @NotNull Optional<User> findCachedByName(@NotNull String name) {
-        Validator.notNull(name, "name cannot be null");
+        Validator.notNull(name, "name");
         return cache.getUserByName(name);
     }
 
@@ -65,7 +66,7 @@ final class UserServiceImpl implements UserService {
 
     @Override
     public @NotNull CompletableFuture<Optional<User>> findByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid cannot be null");
+        Validator.notNull(uuid, "uuid");
 
         Optional<User> cached = cache.getUserByUuid(uuid);
         if (cached.isPresent()) {
@@ -86,7 +87,7 @@ final class UserServiceImpl implements UserService {
 
     @Override
     public @NotNull CompletableFuture<Optional<User>> findByName(@NotNull String name) {
-        Validator.notNull(name, "name cannot be null");
+        Validator.notNull(name, "name");
 
         Optional<User> cached = cache.getUserByName(name);
         if (cached.isPresent()) {
@@ -112,8 +113,8 @@ final class UserServiceImpl implements UserService {
 
     @Override
     public @NotNull CompletableFuture<User> save(@NotNull User user, @NotNull UserSaveReason reason) {
-        Validator.notNull(user, "user cannot be null");
-        Validator.notNull(reason, "reason cannot be null");
+        Validator.notNull(user, "user");
+        Validator.notNull(reason, "reason");
 
         eventCaller.callEvent(new UserPreSaveEvent(user, reason));
 
@@ -132,7 +133,7 @@ final class UserServiceImpl implements UserService {
 
     @Override
     public @NotNull CompletableFuture<UserDeleteResult> deleteByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid cannot be null");
+        Validator.notNull(uuid, "uuid");
         return repository.deleteByUuid(uuid)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .thenApply(result -> {
@@ -150,7 +151,7 @@ final class UserServiceImpl implements UserService {
 
     @Override
     public @NotNull CompletableFuture<UserDeleteResult> deleteByName(@NotNull String name) {
-        Validator.notNull(name, "name cannot be null");
+        Validator.notNull(name, "name");
         return repository.deleteByName(name)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .thenApply(deleteResult -> {

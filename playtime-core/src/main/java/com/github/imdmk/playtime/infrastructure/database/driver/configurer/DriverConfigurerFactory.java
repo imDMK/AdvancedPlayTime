@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.infrastructure.database.driver.configurer;
 
 import com.github.imdmk.playtime.infrastructure.database.DatabaseMode;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

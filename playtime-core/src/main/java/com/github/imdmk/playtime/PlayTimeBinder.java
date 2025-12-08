@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime;
 
-import com.github.imdmk.playtime.infrastructure.di.BindCore;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.infrastructure.injector.Bind;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
 import org.panda_lang.utilities.inject.Resources;
@@ -10,14 +10,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
- * Discovers fields in {@link PlayTimePlugin} annotated with {@link BindCore}
+ * Discovers fields in {@link PlayTimePlugin} annotated with {@link Bind}
  * and registers their instances into the DI {@link Resources}.
  * <p>
  * This approach keeps {@link PlayTimePlugin} focused on lifecycle/bootstrap logic
  * while delegating dependency wiring to a dedicated, reflection-based binder.
- * Only non-static fields with {@code @BindCore} are processed.
+ * Only non-static fields with {@code @Bind} are processed.
  */
-final class PlayTimeCoreBinder {
+final class PlayTimeBinder {
 
     private final PlayTimePlugin core;
 
@@ -26,25 +26,25 @@ final class PlayTimeCoreBinder {
      *
      * @param core the plugin root object providing core dependencies
      */
-    PlayTimeCoreBinder(@NotNull PlayTimePlugin core) {
-        this.core = Validator.notNull(core, "core cannot be null");
+    PlayTimeBinder(@NotNull PlayTimePlugin core) {
+        this.core = Validator.notNull(core, "core");
     }
 
     /**
      * Scans the {@link PlayTimePlugin} class hierarchy, locates fields annotated with
-     * {@link BindCore}, reads their values, and registers them into the provided
+     * {@link Bind}, reads their values, and registers them into the provided
      * {@link Resources} instance.
      *
      * @param resources DI container resources to bind into
      */
     void bind(@NotNull Resources resources) {
-        Validator.notNull(resources, "resources cannot be null");
+        Validator.notNull(resources, "resources");
 
         Class<?> type = core.getClass();
 
         while (type != null && type != Object.class) {
             for (Field field : type.getDeclaredFields()) {
-                if (!field.isAnnotationPresent(BindCore.class)) {
+                if (!field.isAnnotationPresent(Bind.class)) {
                     continue;
                 }
 

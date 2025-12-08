@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime;
 
+import com.github.imdmk.playtime.config.ConfigSection;
 import com.github.imdmk.playtime.infrastructure.module.Module;
-import com.github.imdmk.playtime.shared.config.ConfigSection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

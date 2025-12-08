@@ -1,40 +1,39 @@
 package com.github.imdmk.playtime;
 
 import com.eternalcode.multification.notice.Notice;
+import com.github.imdmk.playtime.config.ConfigManager;
+import com.github.imdmk.playtime.config.ConfigSection;
+import com.github.imdmk.playtime.config.InjectorConfigBinder;
+import com.github.imdmk.playtime.config.PluginConfig;
 import com.github.imdmk.playtime.infrastructure.database.DatabaseConfig;
-import com.github.imdmk.playtime.infrastructure.database.DatabaseConnector;
-import com.github.imdmk.playtime.infrastructure.database.driver.dependency.DriverDependencyLoader;
+import com.github.imdmk.playtime.infrastructure.database.DatabaseManager;
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryContext;
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryManager;
-import com.github.imdmk.playtime.infrastructure.di.BindCore;
+import com.github.imdmk.playtime.infrastructure.injector.Bind;
 import com.github.imdmk.playtime.infrastructure.module.Module;
 import com.github.imdmk.playtime.infrastructure.module.ModuleContext;
 import com.github.imdmk.playtime.infrastructure.module.ModuleInitializer;
 import com.github.imdmk.playtime.infrastructure.module.ModuleRegistry;
+import com.github.imdmk.playtime.message.MessageConfig;
+import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.events.BukkitEventCaller;
 import com.github.imdmk.playtime.platform.events.BukkitListenerRegistrar;
 import com.github.imdmk.playtime.platform.gui.GuiRegistry;
 import com.github.imdmk.playtime.platform.litecommands.InvalidUsageHandlerImpl;
 import com.github.imdmk.playtime.platform.litecommands.MissingPermissionsHandlerImpl;
 import com.github.imdmk.playtime.platform.litecommands.NoticeResultHandlerImpl;
-import com.github.imdmk.playtime.platform.litecommands.configurer.BukkitLiteCommandsRegistrar;
-import com.github.imdmk.playtime.platform.litecommands.configurer.LiteCommandsRegistrar;
 import com.github.imdmk.playtime.platform.logger.BukkitPluginLogger;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.placeholder.adapter.PlaceholderAdapter;
 import com.github.imdmk.playtime.platform.placeholder.adapter.PlaceholderAdapterFactory;
 import com.github.imdmk.playtime.platform.scheduler.BukkitTaskScheduler;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
-import com.github.imdmk.playtime.shared.Validator;
-import com.github.imdmk.playtime.shared.config.ConfigBinder;
-import com.github.imdmk.playtime.shared.config.ConfigManager;
-import com.github.imdmk.playtime.shared.config.ConfigSection;
-import com.github.imdmk.playtime.shared.config.PluginConfig;
-import com.github.imdmk.playtime.shared.message.MessageConfig;
-import com.github.imdmk.playtime.shared.message.MessageService;
 import com.github.imdmk.playtime.shared.time.Durations;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.LiteCommands;
+import dev.rollczi.litecommands.LiteCommandsBuilder;
+import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
@@ -58,28 +57,28 @@ final class PlayTimePlugin {
     private static final String PREFIX = "AdvancedPlayTime";
     private static final int PLUGIN_METRICS_ID = 19362;
 
-    @BindCore private final ModuleRegistry moduleRegistry = new ModuleRegistry();
+    @Bind private final ModuleRegistry moduleRegistry = new ModuleRegistry();
 
-    @BindCore private final Plugin plugin;
-    @BindCore private final PluginLogger logger;
-    @BindCore private final Server server;
-    @BindCore private final ExecutorService executor;
+    @Bind private final Plugin plugin;
+    @Bind private final PluginLogger logger;
+    @Bind private final Server server;
+    @Bind private final ExecutorService executor;
 
-    @BindCore private ConfigManager configManager;
+    @Bind private ConfigManager configManager;
 
-    @BindCore private DatabaseConnector databaseConnector;
-    @BindCore private RepositoryContext repositoryContext;
-    @BindCore private RepositoryManager repositoryManager;
+    @Bind private DatabaseManager databaseManager;
+    @Bind private RepositoryContext repositoryContext;
+    @Bind private RepositoryManager repositoryManager;
 
-    @BindCore private MessageService messageService;
-    @BindCore private TaskScheduler taskScheduler;
-    @BindCore private BukkitEventCaller eventCaller;
-    @BindCore private BukkitListenerRegistrar listenerRegistrar;
-    @BindCore private GuiRegistry guiRegistry;
-    @BindCore private PlaceholderAdapter placeholderAdapter;
+    @Bind private MessageService messageService;
+    @Bind private TaskScheduler taskScheduler;
+    @Bind private BukkitEventCaller eventCaller;
+    @Bind private BukkitListenerRegistrar listenerRegistrar;
+    @Bind private GuiRegistry guiRegistry;
+    @Bind private PlaceholderAdapter placeholderAdapter;
 
-    @BindCore private LiteCommandsRegistrar LiteCommandsRegistrar;
-    private LiteCommands<CommandSender> liteCommands;
+    @Bind private LiteCommandsBuilder<CommandSender, ?, ?> liteCommandsBuilder;
+    @Bind private LiteCommands<?> liteCommands;
 
     private Metrics metrics;
 
@@ -89,11 +88,12 @@ final class PlayTimePlugin {
             @NotNull Plugin plugin,
             @NotNull Server server,
             @NotNull PluginLogger logger,
-            @NotNull ExecutorService executor) {
-        this.plugin = Validator.notNull(plugin, "plugin cannot be null");
-        this.server = Validator.notNull(server, "server cannot be null");
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.executor = Validator.notNull(executor, "executorService cannot be null");
+            @NotNull ExecutorService executor
+    ) {
+        this.plugin = Validator.notNull(plugin, "plugin");
+        this.server = Validator.notNull(server, "server");
+        this.logger = Validator.notNull(logger, "logger");
+        this.executor = Validator.notNull(executor, "executorService");
     }
 
     PlayTimePlugin(@NotNull Plugin plugin, @NotNull ExecutorService executor) {
@@ -102,14 +102,15 @@ final class PlayTimePlugin {
 
     void enable(
             @NotNull List<Class<? extends ConfigSection>> enabledConfigs,
-            @NotNull List<Class<? extends Module>> enabledModules) {
-        Validator.notNull(enabledConfigs, "enabledConfigs cannot be null");
-        Validator.notNull(enabledModules, "enabled modules cannot be null");
+            @NotNull List<Class<? extends Module>> enabledModules
+    ) {
+        Validator.notNull(enabledConfigs, "enabledConfigs");
+        Validator.notNull(enabledModules, "enabled modules");
 
         final Stopwatch stopwatch = Stopwatch.createStarted();
 
         // Configuration
-        configManager = new ConfigManager(logger, executor, plugin.getDataFolder());
+        configManager = new ConfigManager(logger, plugin.getDataFolder());
         configManager.createAll(enabledConfigs);
 
         // Duration format style
@@ -118,18 +119,15 @@ final class PlayTimePlugin {
 
         // Database
         final DatabaseConfig databaseConfig = configManager.require(DatabaseConfig.class);
+        databaseManager = new DatabaseManager(plugin, logger, databaseConfig);
 
-        logger.info("Resolving database driver...");
-        final DriverDependencyLoader databaseDependencyLoader = new DriverDependencyLoader(plugin);
-        databaseDependencyLoader.loadDriverFor(databaseConfig.databaseMode);
-
-        logger.info("Connecting to database...");
-        databaseConnector = new DatabaseConnector(logger, databaseConfig);
+        databaseManager.loadDriver();
         try {
-            databaseConnector.connect(plugin.getDataFolder());
+            databaseManager.connect();
         } catch (SQLException e) {
-            logger.error(e, "Failed to connect database.");
-            throw new IllegalStateException("Database initialization failed", e);
+            logger.error(e, "An error occurred while trying to start all repositories. Disabling plugin...");
+            plugin.getPluginLoader().disablePlugin(plugin);
+            throw new IllegalStateException("Repository startup failed", e);
         }
 
         // Infrastructure services
@@ -145,17 +143,16 @@ final class PlayTimePlugin {
         guiRegistry = new GuiRegistry();
         placeholderAdapter = PlaceholderAdapterFactory.createFor(plugin, server, logger);
 
-        LiteCommandsRegistrar = new BukkitLiteCommandsRegistrar();
-        LiteCommandsRegistrar.configure(builder -> {
-            builder.invalidUsage(new InvalidUsageHandlerImpl(messageService));
-            builder.missingPermission(new MissingPermissionsHandlerImpl(messageService));
-            builder.result(Notice.class, new NoticeResultHandlerImpl(messageService));
-        });
+        liteCommandsBuilder = LiteBukkitFactory.builder(PREFIX, plugin, server);
+        liteCommandsBuilder
+                .invalidUsage(new InvalidUsageHandlerImpl(messageService))
+                .missingPermission(new MissingPermissionsHandlerImpl(messageService))
+                .result(Notice.class, new NoticeResultHandlerImpl(messageService));
 
         // Dependency Injection
         injector = DependencyInjection.createInjector(resources -> {
-            new PlayTimeCoreBinder(this).bind(resources);
-            ConfigBinder.bind(resources, configManager.getConfigs());
+            new PlayTimeBinder(this).bind(resources);
+            InjectorConfigBinder.bind(resources, configManager.getConfigs());
         });
 
         // Module initialization
@@ -168,7 +165,7 @@ final class PlayTimePlugin {
         initializer.registerRepositories();
 
         // Start repositories
-        Validator.ifNotNull(databaseConnector.getConnectionSource(), connection -> {
+        Validator.ifNotNull(databaseManager.getConnection(), connection -> {
             try {
                 repositoryManager.startAll(connection);
             } catch (SQLException e) {
@@ -181,8 +178,8 @@ final class PlayTimePlugin {
         // Activate all feature modules
         initializer.activateFeatures();
 
-        // Build and register commands
-        liteCommands = LiteCommandsRegistrar.create(PREFIX, plugin, server);
+        // Build commands
+        liteCommands = liteCommandsBuilder.build();
 
         // Metrics
         metrics = new Metrics(plugin, PLUGIN_METRICS_ID);
@@ -197,11 +194,11 @@ final class PlayTimePlugin {
 
     void disable() {
         Validator.ifNotNull(configManager, (manager) -> {
-            manager.saveAllSync();
-            manager.shutdown();
+            manager.saveAll();
+            manager.clearAll();
         });
         Validator.ifNotNull(repositoryManager, RepositoryManager::close);
-        Validator.ifNotNull(databaseConnector, DatabaseConnector::close);
+        Validator.ifNotNull(databaseManager, DatabaseManager::shutdown);
         Validator.ifNotNull(messageService, MessageService::shutdown);
         Validator.ifNotNull(taskScheduler, TaskScheduler::shutdown);
         Validator.ifNotNull(liteCommands, LiteCommands::unregister);

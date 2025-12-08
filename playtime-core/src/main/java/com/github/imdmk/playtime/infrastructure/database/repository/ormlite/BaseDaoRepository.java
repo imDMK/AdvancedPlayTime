@@ -3,7 +3,7 @@ package com.github.imdmk.playtime.infrastructure.database.repository.ormlite;
 import com.github.imdmk.playtime.infrastructure.database.repository.Repository;
 import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryContext;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.logger.Level;

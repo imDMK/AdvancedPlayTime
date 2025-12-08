@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.user.top;
 
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -27,8 +27,8 @@ record CachedLeaderboard(
      * A defensive copy of the user list is created to ensure immutability.
      */
     CachedLeaderboard {
-        Validator.notNull(users, "users cannot be null");
-        Validator.notNull(loadedAt, "loadedAt cannot be null");
+        Validator.notNull(users, "users");
+        Validator.notNull(loadedAt, "loadedAt");
         users = List.copyOf(users);
     }
 
@@ -41,7 +41,7 @@ record CachedLeaderboard(
      * @return {@code true} if the leaderboard is fresh and large enough, otherwise {@code false}
      */
     boolean isUsable(int requestedLimit, @NotNull Duration expireAfter, @NotNull Instant now) {
-        Validator.notNull(now, "now cannot be null");
+        Validator.notNull(now, "now");
 
         if (this.limit < requestedLimit) {
             return false;

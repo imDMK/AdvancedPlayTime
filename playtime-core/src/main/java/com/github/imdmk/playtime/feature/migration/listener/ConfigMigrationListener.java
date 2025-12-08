@@ -2,7 +2,7 @@ package com.github.imdmk.playtime.feature.migration.listener;
 
 import com.github.imdmk.playtime.feature.migration.MigrationConfig;
 import com.github.imdmk.playtime.feature.migration.MigrationResult;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.jetbrains.annotations.NotNull;
 
 public final class ConfigMigrationListener implements MigrationListener {

@@ -1,6 +1,5 @@
-package com.github.imdmk.playtime.platform.serdes;
+package com.github.imdmk.playtime.platform.adventure;
 
-import com.github.imdmk.playtime.shared.adventure.AdventureComponents;
 import eu.okaeri.configs.schema.GenericsDeclaration;
 import eu.okaeri.configs.serdes.DeserializationData;
 import eu.okaeri.configs.serdes.ObjectSerializer;

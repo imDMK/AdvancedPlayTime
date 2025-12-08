@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.shared.time;
 
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -51,8 +51,8 @@ public final class Durations {
      * @throws IllegalArgumentException if duration or style are {@code null}
      */
     public static @NotNull String format(@NotNull Duration duration, @NotNull DurationFormatStyle style) {
-        Validator.notNull(duration, "duration cannot be null");
-        Validator.notNull(style, "style cannot be null");
+        Validator.notNull(duration, "duration");
+        Validator.notNull(style, "style");
 
         if (duration.isZero() || duration.isNegative()) {
             return LESS_THAN_SECOND;
@@ -72,7 +72,7 @@ public final class Durations {
      * @throws IllegalArgumentException if the provided style is {@code null}
      */
     public static void setDefaultFormatStyle(@NotNull DurationFormatStyle style) {
-        Validator.notNull(style, "durationFormatStyle cannot be null");
+        Validator.notNull(style, "durationFormatStyle");
         DEFAULT_FORMAT_STYLE = style;
     }
 
@@ -84,7 +84,7 @@ public final class Durations {
      * @return clamped, non-negative duration
      */
     public static @NotNull Duration clamp(@NotNull Duration input) {
-        Validator.notNull(input, "duration cannot be null");
+        Validator.notNull(input, "duration");
 
         if (input.isNegative()) {
             return Duration.ZERO;

@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.platform.litecommands;
 
-import com.github.imdmk.playtime.shared.Validator;
-import com.github.imdmk.playtime.shared.message.MessageService;
+import com.github.imdmk.playtime.message.MessageService;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import dev.rollczi.litecommands.handler.result.ResultHandlerChain;
 import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.permission.MissingPermissions;
@@ -19,7 +19,7 @@ public final class MissingPermissionsHandlerImpl implements MissingPermissionsHa
 
     @Override
     public void handle(Invocation<CommandSender> invocation, MissingPermissions permissions, ResultHandlerChain<CommandSender> chain) {
-        this.messageService.create()
+        messageService.create()
                 .viewer(invocation.sender())
                 .notice(n -> n.commandPermissionMissing)
                 .placeholder("{PERMISSIONS}", String.join(", ", permissions.getPermissions()))

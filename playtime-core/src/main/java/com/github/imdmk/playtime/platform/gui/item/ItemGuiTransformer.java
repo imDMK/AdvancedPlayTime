@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.platform.gui.item;
 
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import dev.triumphteam.gui.builder.item.BaseItemBuilder;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.components.GuiAction;
@@ -71,7 +71,8 @@ public final class ItemGuiTransformer {
     public static @NotNull GuiItem toGuiItem(
             @NotNull ItemGui item,
             @NotNull GuiAction<InventoryClickEvent> onClick,
-            @NotNull Consumer<BaseItemBuilder<?>> builderEditor) {
+            @NotNull Consumer<BaseItemBuilder<?>> builderEditor
+    ) {
         Validator.notNull(item, "item cannot be null");
         Validator.notNull(onClick, "onClick cannot be null");
         Validator.notNull(builderEditor, "builderEditor cannot be null");

@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.infrastructure.di;
+package com.github.imdmk.playtime.infrastructure.injector;
 
 import org.panda_lang.utilities.inject.annotations.Injectable;
 
@@ -21,5 +21,5 @@ import java.lang.annotation.Target;
 @Injectable
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface BindCore {
+public @interface Bind {
 }

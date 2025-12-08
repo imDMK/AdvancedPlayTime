@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.user.top;
 
-import com.github.imdmk.playtime.shared.config.ConfigSection;
+import com.github.imdmk.playtime.config.ConfigSection;
 import eu.okaeri.configs.annotation.Comment;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import org.jetbrains.annotations.NotNull;

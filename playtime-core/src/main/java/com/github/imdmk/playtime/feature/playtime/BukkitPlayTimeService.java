@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.feature.playtime;
 
 import com.github.imdmk.playtime.PlaytimeService;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.UserTime;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -34,7 +34,7 @@ final class BukkitPlayTimeService implements PlaytimeService {
 
     @Inject
     BukkitPlayTimeService(@NotNull Server server) {
-        this.server = Validator.notNull(server, "server cannot be null");
+        this.server = Validator.notNull(server, "server");
     }
 
     /**

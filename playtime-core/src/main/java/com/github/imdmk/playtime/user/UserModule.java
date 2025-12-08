@@ -59,9 +59,7 @@ public final class UserModule implements Module {
 
     @Override
     public CommandPhase commands(@NotNull Injector injector) {
-        return configurer -> configurer.configure(builder -> {
-            builder.argument(User.class, injector.newInstance(UserArgument.class));
-        });
+        return builder -> builder.argument(User.class, injector.newInstance(UserArgument.class));
     }
 
     @Override

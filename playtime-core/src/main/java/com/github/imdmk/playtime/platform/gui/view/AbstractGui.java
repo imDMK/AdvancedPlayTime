@@ -6,7 +6,7 @@ import com.github.imdmk.playtime.platform.gui.render.GuiRenderer;
 import com.github.imdmk.playtime.platform.gui.render.RenderContext;
 import com.github.imdmk.playtime.platform.gui.render.RenderOptions;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import dev.triumphteam.gui.guis.BaseGui;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -41,10 +41,12 @@ public abstract class AbstractGui {
      * @param renderer    renderer that places items and enforces permission policy
      * @param renderOptions  render options (no-permission policy, onDenied)
      */
-    protected AbstractGui(@NotNull NavigationBarConfig config,
-                          @NotNull TaskScheduler taskScheduler,
-                          @NotNull GuiRenderer renderer,
-                          @NotNull RenderOptions renderOptions) {
+    protected AbstractGui(
+            @NotNull NavigationBarConfig config,
+            @NotNull TaskScheduler taskScheduler,
+            @NotNull GuiRenderer renderer,
+            @NotNull RenderOptions renderOptions
+    ) {
         this.config = Validator.notNull(config, "config cannot be null");
         this.scheduler = Validator.notNull(taskScheduler, "taskScheduler cannot be null");
         this.renderer = Validator.notNull(renderer, "renderer cannot be null");

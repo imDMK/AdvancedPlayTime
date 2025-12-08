@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.platform.gui.factory;
 
 import com.github.imdmk.playtime.platform.gui.config.ConfigurableGui;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import dev.triumphteam.gui.guis.BaseGui;
 import org.jetbrains.annotations.NotNull;
 

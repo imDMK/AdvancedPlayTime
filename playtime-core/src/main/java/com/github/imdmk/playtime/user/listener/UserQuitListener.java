@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.user.listener;
 
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
 import org.bukkit.entity.Player;
@@ -26,8 +26,8 @@ public final class UserQuitListener implements Listener {
 
     @Inject
     public UserQuitListener(@NotNull PluginLogger logger, @NotNull UserService userService) {
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.userService = Validator.notNull(userService, "userService cannot be null");
+        this.logger = Validator.notNull(logger, "logger");
+        this.userService = Validator.notNull(userService, "userService");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

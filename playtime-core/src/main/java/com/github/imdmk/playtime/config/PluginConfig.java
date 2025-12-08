@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.shared.config;
+package com.github.imdmk.playtime.config;
 
 import com.github.imdmk.playtime.shared.time.DurationFormatStyle;
 import eu.okaeri.configs.annotation.Comment;

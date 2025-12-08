@@ -1,8 +1,8 @@
 package com.github.imdmk.playtime.user;
 
+import com.github.imdmk.playtime.message.MessageConfig;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.Validator;
-import com.github.imdmk.playtime.shared.message.MessageConfig;
+import com.github.imdmk.playtime.shared.validate.Validator;
 import dev.rollczi.litecommands.argument.Argument;
 import dev.rollczi.litecommands.argument.parser.ParseResult;
 import dev.rollczi.litecommands.argument.resolver.ArgumentResolver;
@@ -37,11 +37,12 @@ final class UserArgument extends ArgumentResolver<CommandSender, User> {
             @NotNull PluginLogger logger,
             @NotNull Server server,
             @NotNull MessageConfig messageConfig,
-            @NotNull UserService userService) {
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.server = Validator.notNull(server, "server cannot be null");
-        this.messageConfig = Validator.notNull(messageConfig, "config cannot be null");
-        this.userService = Validator.notNull(userService, "userService cannot be null");
+            @NotNull UserService userService
+    ) {
+        this.logger = Validator.notNull(logger, "logger");
+        this.server = Validator.notNull(server, "server");
+        this.messageConfig = Validator.notNull(messageConfig, "config");
+        this.userService = Validator.notNull(userService, "userService");
     }
 
     @Override
