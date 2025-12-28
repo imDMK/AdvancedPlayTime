@@ -1,6 +1,5 @@
 package com.github.imdmk.playtime.database.repository.ormlite;
 
-import com.github.imdmk.playtime.infrastructure.database.repository.ormlite.EntityMapper;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 

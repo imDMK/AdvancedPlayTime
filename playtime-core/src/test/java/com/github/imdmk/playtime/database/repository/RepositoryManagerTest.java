@@ -1,7 +1,5 @@
 package com.github.imdmk.playtime.database.repository;
 
-import com.github.imdmk.playtime.infrastructure.database.repository.Repository;
-import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryManager;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.j256.ormlite.support.ConnectionSource;
 import org.junit.jupiter.api.Test;

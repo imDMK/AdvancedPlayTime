@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.feature.reload;
 
-import com.github.imdmk.playtime.config.ConfigManager;
+import com.github.imdmk.playtime.config.ConfigService;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
@@ -19,19 +19,19 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 public final class ReloadCommand {
 
     private final PluginLogger logger;
-    private final ConfigManager configManager;
+    private final ConfigService configService;
     private final TaskScheduler taskScheduler;
     private final MessageService messageService;
 
     @Inject
     public ReloadCommand(
             @NotNull PluginLogger logger,
-            @NotNull ConfigManager configManager,
+            @NotNull ConfigService configService,
             @NotNull TaskScheduler taskScheduler,
             @NotNull MessageService messageService
     ) {
         this.logger = Validator.notNull(logger, "logger");
-        this.configManager = Validator.notNull(configManager, "configManager");
+        this.configService = Validator.notNull(configService, "configManager");
         this.taskScheduler = Validator.notNull(taskScheduler, "taskScheduler");
         this.messageService = Validator.notNull(messageService, "messageService");
     }
@@ -40,7 +40,7 @@ public final class ReloadCommand {
     void reload(@Context CommandSender sender) {
         taskScheduler.runAsync(() -> {
             try {
-                configManager.loadAll();
+                configService.loadAll();
                 messageService.send(sender, n -> n.reloadMessages.configReloadedSuccess());
             } catch (OkaeriException e) {
                 logger.error(e, "Failed to reload plugin configuration files");

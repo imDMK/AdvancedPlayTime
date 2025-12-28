@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.user.repository;
 
-import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryContext;
-import com.github.imdmk.playtime.infrastructure.database.repository.ormlite.BaseDaoRepository;
+import com.github.imdmk.playtime.database.repository.RepositoryContext;
+import com.github.imdmk.playtime.database.repository.ormlite.BaseDaoRepository;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;

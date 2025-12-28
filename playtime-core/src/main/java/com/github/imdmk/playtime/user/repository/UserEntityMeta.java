@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.user.repository;
 
-import com.github.imdmk.playtime.infrastructure.database.repository.ormlite.EntityMeta;
+import com.github.imdmk.playtime.database.repository.ormlite.EntityMeta;
 
 /**
  * Database metadata for the {@code advanced_playtime_users} table.

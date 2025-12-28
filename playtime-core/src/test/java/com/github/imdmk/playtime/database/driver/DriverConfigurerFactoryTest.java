@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.database.driver;
 
-import com.github.imdmk.playtime.infrastructure.database.DatabaseMode;
-import com.github.imdmk.playtime.infrastructure.database.driver.configurer.DriverConfigurerFactory;
+import com.github.imdmk.playtime.database.DatabaseMode;
+import com.github.imdmk.playtime.database.driver.configurer.DriverConfigurerFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatCode;

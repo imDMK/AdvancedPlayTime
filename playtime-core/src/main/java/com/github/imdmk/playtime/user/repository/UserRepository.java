@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.user.repository;
 
-import com.github.imdmk.playtime.infrastructure.database.repository.Repository;
+import com.github.imdmk.playtime.database.repository.Repository;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserDeleteResult;
 import org.jetbrains.annotations.NotNull;

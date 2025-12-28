@@ -1,7 +1,6 @@
 package com.github.imdmk.playtime.database.repository.ormlite;
 
-import com.github.imdmk.playtime.infrastructure.database.repository.RepositoryContext;
-import com.github.imdmk.playtime.infrastructure.database.repository.ormlite.BaseDaoRepository;
+import com.github.imdmk.playtime.database.repository.RepositoryContext;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.j256.ormlite.dao.Dao;
 import org.junit.jupiter.api.Test;

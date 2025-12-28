@@ -2,12 +2,13 @@ package com.github.imdmk.playtime.config;
 
 import com.github.imdmk.playtime.shared.validate.Validator;
 import eu.okaeri.configs.ConfigManager;
+import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.exception.OkaeriException;
 import org.jetbrains.annotations.NotNull;
 
 final class ConfigFactory {
 
-    <T extends ConfigSection> @NotNull T instantiate(@NotNull Class<T> type) {
+    <T extends OkaeriConfig> @NotNull T instantiate(@NotNull Class<T> type) {
         Validator.notNull(type, "type");
 
         try {
