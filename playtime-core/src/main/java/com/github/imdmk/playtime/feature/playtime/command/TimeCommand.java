@@ -1,9 +1,8 @@
 package com.github.imdmk.playtime.feature.playtime.command;
 
-import com.github.imdmk.playtime.PlaytimeService;
+import com.github.imdmk.playtime.PlayTimeService;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.shared.time.Durations;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserTime;
 import dev.rollczi.litecommands.annotations.argument.Arg;
@@ -20,15 +19,15 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 public final class TimeCommand {
 
     private final MessageService messageService;
-    private final PlaytimeService playtimeService;
+    private final PlayTimeService playtimeService;
 
     @Inject
     public TimeCommand(
             @NotNull MessageService messageService,
-            @NotNull PlaytimeService playtimeService
+            @NotNull PlayTimeService playtimeService
     ) {
-        this.messageService = Validator.notNull(messageService, "messageService cannot be null");
-        this.playtimeService = Validator.notNull(playtimeService, "playtimeService cannot be null");
+        this.messageService = messageService;
+        this.playtimeService = playtimeService;
     }
 
     @Execute

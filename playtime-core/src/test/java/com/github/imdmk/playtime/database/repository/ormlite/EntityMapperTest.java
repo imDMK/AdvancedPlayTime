@@ -17,7 +17,7 @@ class EntityMapperTest {
         }
 
         @Override
-        public @NotNull Integer toDomain(String entity) {
+        public @NotNull Integer toDomain(@NotNull String entity) {
             return Integer.parseInt(entity.substring(1));
         }
     }

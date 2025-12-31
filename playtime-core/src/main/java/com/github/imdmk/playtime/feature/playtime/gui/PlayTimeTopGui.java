@@ -18,7 +18,6 @@ import com.github.imdmk.playtime.platform.gui.view.AbstractGui;
 import com.github.imdmk.playtime.platform.gui.view.ParameterizedGui;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.playtime.shared.time.Durations;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
@@ -26,6 +25,7 @@ import com.github.imdmk.playtime.user.UserTime;
 import dev.triumphteam.gui.builder.item.BaseItemBuilder;
 import dev.triumphteam.gui.builder.item.SkullBuilder;
 import dev.triumphteam.gui.guis.BaseGui;
+import dev.triumphteam.gui.guis.GuiItem;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -61,28 +61,22 @@ public final class PlayTimeTopGui
             @NotNull UserService userService
     ) {
         super(navigationBarConfig, taskScheduler, GUI_RENDERER, RENDER_OPTIONS);
-        this.server = Validator.notNull(server, "server");
-        this.topGuiConfig = Validator.notNull(topGuiConfig, "playtimeTopGuiConfig cannot be null");
-        this.messageService = Validator.notNull(messageService, "messageService cannot be null");
-        this.userService = Validator.notNull(userService, "userService cannot be null");
+        this.server = server;
+        this.topGuiConfig = topGuiConfig;
+        this.messageService = messageService;
+        this.userService = userService;
     }
 
     @Override
     public @NotNull BaseGui createGui(@NotNull Player viewer, @NotNull List<User> users) {
-        Validator.notNull(viewer, "viewer cannot be null");
-        Validator.notNull(users, "users cannot be null");
         return GuiFactory.build(topGuiConfig, BaseGui::disableAllInteractions);
     }
 
     @Override
     public void prepareItems(@NotNull BaseGui gui, @NotNull Player viewer, @NotNull List<User> users) {
-        Validator.notNull(gui, "gui cannot be null");
-        Validator.notNull(viewer, "viewer cannot be null");
-        Validator.notNull(users, "users cannot be null");
-
         if (topGuiConfig.fillBorder) {
-            final var border = ItemGuiTransformer.toGuiItem(topGuiConfig.borderItem);
-            gui.getFiller().fillBorder(border);
+            final GuiItem borderItem = ItemGuiTransformer.toGuiItem(topGuiConfig.borderItem);
+            gui.getFiller().fillBorder(borderItem);
         }
 
         placeExit(gui, viewer, e -> gui.close(viewer));
@@ -92,14 +86,14 @@ public final class PlayTimeTopGui
             placePrevious(gui, viewer);
         }
 
-        final var context = RenderContext.defaultContext(viewer);
-        final var item = resolveItemFor(viewer, context);
+        final RenderContext context = RenderContext.defaultContext(viewer);
+        final ItemGui item = resolveItemFor(viewer, context);
 
         for (int i = 0; i < users.size(); i++) {
             final User user = users.get(i);
             final int position = i + 1;
 
-            final var placeholders = createPlaceholders(user, position);
+            final AdventurePlaceholders placeholders = createPlaceholders(user, position);
 
             final Consumer<InventoryClickEvent> onClick = (click) -> {
                 if (click.getClick() != topGuiConfig.resetClickType) {
@@ -131,9 +125,8 @@ public final class PlayTimeTopGui
     }
 
     private ItemGui resolveItemFor(Player viewer, RenderContext context) {
-        final var adminItem = topGuiConfig.playerEntryAdminItem;
-        final var item = topGuiConfig.playerEntryItem;
-
+        final ItemGui adminItem = topGuiConfig.playerEntryAdminItem;
+        final ItemGui item = topGuiConfig.playerEntryItem;
         return ITEM_VARIANT_RESOLVER.resolve(viewer, context, List.of(adminItem), item);
     }
 

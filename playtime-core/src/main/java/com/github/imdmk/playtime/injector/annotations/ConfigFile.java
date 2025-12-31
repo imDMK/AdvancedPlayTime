@@ -11,10 +11,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface ConfigFile {
 
-    Priority priority() default Priority.LOWEST;
-
-    String name();
-
-    Class<?>[] serdes() default {};
+    Priority priority() default Priority.LOW;
 }
 

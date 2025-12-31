@@ -37,7 +37,7 @@ public final class UserEntity {
         this.playtimeMillis = playtimeMillis;
     }
 
-    public @NotNull UUID getUuid() {
+    public UUID getUuid() {
         return this.uuid;
     }
 
@@ -45,7 +45,7 @@ public final class UserEntity {
         this.uuid = uuid;
     }
 
-    public @NotNull String getName() {
+    public String getName() {
         return this.name;
     }
 

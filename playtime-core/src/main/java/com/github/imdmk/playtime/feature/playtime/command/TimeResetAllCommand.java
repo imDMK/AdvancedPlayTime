@@ -1,10 +1,9 @@
 package com.github.imdmk.playtime.feature.playtime.command;
 
-import com.github.imdmk.playtime.PlaytimeService;
+import com.github.imdmk.playtime.PlayTimeService;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
@@ -32,7 +31,7 @@ public final class TimeResetAllCommand {
     private final Server server;
     private final PluginLogger logger;
     private final MessageService messageService;
-    private final PlaytimeService playtimeService;
+    private final PlayTimeService playtimeService;
     private final UserService userService;
     private final UserRepository userRepository;
     private final TaskScheduler taskScheduler;
@@ -42,18 +41,18 @@ public final class TimeResetAllCommand {
             @NotNull Server server,
             @NotNull PluginLogger logger,
             @NotNull MessageService messageService,
-            @NotNull PlaytimeService playtimeService,
+            @NotNull PlayTimeService playtimeService,
             @NotNull UserService userService,
             @NotNull UserRepository userRepository,
             @NotNull TaskScheduler taskScheduler
     ) {
-        this.server = Validator.notNull(server, "server cannot be null");
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.messageService = Validator.notNull(messageService, "messageService cannot be null");
-        this.playtimeService = Validator.notNull(playtimeService, "playtimeService cannot be null");
-        this.userService = Validator.notNull(userService, "userService cannot be null");
-        this.userRepository = Validator.notNull(userRepository, "userRepository cannot be null");
-        this.taskScheduler = Validator.notNull(taskScheduler, "taskScheduler cannot be null");
+        this.server = server;
+        this.logger = logger;
+        this.messageService = messageService;
+        this.playtimeService = playtimeService;
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.taskScheduler = taskScheduler;
     }
 
     @Execute
@@ -83,7 +82,7 @@ public final class TimeResetAllCommand {
                 });
     }
 
-    private CompletableFuture<User> resetUser(@NotNull User user) {
+    private CompletableFuture<User> resetUser(User user) {
         user.setPlaytime(UserTime.ZERO);
         return userService.save(user, SAVE_REASON);
     }

@@ -1,12 +1,14 @@
 package com.github.imdmk.playtime.user.top;
 
 import com.github.imdmk.playtime.config.ConfigSection;
+import com.github.imdmk.playtime.injector.annotations.ConfigFile;
 import eu.okaeri.configs.annotation.Comment;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 
+@ConfigFile
 public final class TopUsersCacheConfig extends ConfigSection {
 
     @Comment({
@@ -53,12 +55,12 @@ public final class TopUsersCacheConfig extends ConfigSection {
     public Duration topUsersQueryTimeout = Duration.ofSeconds(3);
 
     @Override
-    public @NotNull OkaeriSerdesPack getSerdesPack() {
+    public @NotNull OkaeriSerdesPack serdesPack() {
         return registry -> {};
     }
 
     @Override
-    public @NotNull String getFileName() {
-        return "leaderboardConfig.yml";
+    public @NotNull String fileName() {
+        return "leaderboard.yml";
     }
 }

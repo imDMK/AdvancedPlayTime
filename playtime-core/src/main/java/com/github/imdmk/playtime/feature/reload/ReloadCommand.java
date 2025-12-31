@@ -4,7 +4,6 @@ import com.github.imdmk.playtime.config.ConfigService;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.execute.Execute;
@@ -30,10 +29,10 @@ public final class ReloadCommand {
             @NotNull TaskScheduler taskScheduler,
             @NotNull MessageService messageService
     ) {
-        this.logger = Validator.notNull(logger, "logger");
-        this.configService = Validator.notNull(configService, "configManager");
-        this.taskScheduler = Validator.notNull(taskScheduler, "taskScheduler");
-        this.messageService = Validator.notNull(messageService, "messageService");
+        this.logger = logger;
+        this.configService = configService;
+        this.taskScheduler = taskScheduler;
+        this.messageService = messageService;
     }
 
     @Execute

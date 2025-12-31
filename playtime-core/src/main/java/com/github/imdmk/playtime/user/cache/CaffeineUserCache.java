@@ -3,10 +3,14 @@ package com.github.imdmk.playtime.user.cache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.RemovalCause;
-import com.github.imdmk.playtime.shared.validate.Validator;
+import com.github.imdmk.playtime.injector.annotations.Service;
+import com.github.imdmk.playtime.injector.priority.Priority;
+import com.github.imdmk.playtime.injector.subscriber.Subscribe;
+import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;
 import com.github.imdmk.playtime.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.panda_lang.utilities.inject.annotations.Inject;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -16,10 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-/**
- * Caffeine-based implementation of {@link UserCache} with dual indexing by UUID and name.
- * Entries expire after a period of inactivity and after a maximum lifetime.
- */
+@Service(priority = Priority.LOWEST)
 public final class CaffeineUserCache implements UserCache {
 
     private static final Duration DEFAULT_EXPIRE_AFTER_ACCESS = Duration.ofHours(2);
@@ -29,9 +30,6 @@ public final class CaffeineUserCache implements UserCache {
     private final Cache<String, UUID> cacheByName;
 
     public CaffeineUserCache(@NotNull Duration expireAfterAccess, @NotNull Duration expireAfterWrite) {
-        Validator.notNull(expireAfterAccess, "expireAfterAccess");
-        Validator.notNull(expireAfterWrite, "expireAfterWrite");
-
         this.cacheByName = Caffeine.newBuilder()
                 .expireAfterWrite(expireAfterWrite)
                 .expireAfterAccess(expireAfterAccess)
@@ -48,14 +46,13 @@ public final class CaffeineUserCache implements UserCache {
                 .build();
     }
 
+    @Inject
     public CaffeineUserCache() {
         this(DEFAULT_EXPIRE_AFTER_ACCESS, DEFAULT_EXPIRE_AFTER_WRITE);
     }
 
     @Override
     public void cacheUser(@NotNull User user) {
-        Validator.notNull(user, "user");
-
         final UUID uuid = user.getUuid();
         final String name = user.getName();
 
@@ -73,16 +70,12 @@ public final class CaffeineUserCache implements UserCache {
 
     @Override
     public void invalidateUser(@NotNull User user) {
-        Validator.notNull(user, "user");
-
         cacheByUuid.invalidate(user.getUuid());
         cacheByName.invalidate(user.getName());
     }
 
     @Override
     public void invalidateByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid");
-
         final User cached = cacheByUuid.getIfPresent(uuid);
         cacheByUuid.invalidate(uuid);
         if (cached != null) {
@@ -92,8 +85,6 @@ public final class CaffeineUserCache implements UserCache {
 
     @Override
     public void invalidateByName(@NotNull String name) {
-        Validator.notNull(name, "name");
-
         final UUID uuid = cacheByName.getIfPresent(name);
         if (uuid != null) {
             invalidateByUuid(uuid);
@@ -103,24 +94,18 @@ public final class CaffeineUserCache implements UserCache {
     }
 
     @Override
-    public @NotNull Optional<User> getUserByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid");
+    public Optional<User> getUserByUuid(@NotNull UUID uuid) {
         return Optional.ofNullable(cacheByUuid.getIfPresent(uuid));
     }
 
     @Override
-    public @NotNull Optional<User> getUserByName(@NotNull String name) {
-        Validator.notNull(name, "name");
-
+    public Optional<User> getUserByName(@NotNull String name) {
         final UUID uuid = cacheByName.getIfPresent(name);
         return uuid == null ? Optional.empty() : Optional.ofNullable(cacheByUuid.getIfPresent(uuid));
     }
 
     @Override
     public void updateUserNameMapping(@NotNull User user, @NotNull String oldName) {
-        Validator.notNull(user, "user cannot be null");
-        Validator.notNull(oldName, "oldName cannot be null");
-
         final String newName = user.getName();
         if (!oldName.equals(newName)) {
             cacheByName.invalidate(oldName);
@@ -132,8 +117,6 @@ public final class CaffeineUserCache implements UserCache {
 
     @Override
     public void forEachUser(@NotNull Consumer<User> action) {
-        Validator.notNull(action, "action cannot be null");
-
         // Snapshot to avoid iterating over a live view while mutating the cache
         for (final User user : new ArrayList<>(cacheByUuid.asMap().values())) {
             action.accept(user);
@@ -141,13 +124,13 @@ public final class CaffeineUserCache implements UserCache {
     }
 
     @Override
-    @NotNull
     @Unmodifiable
     public Collection<User> getCache() {
         return List.copyOf(cacheByUuid.asMap().values());
     }
 
     @Override
+    @Subscribe(event = PlayTimeShutdownEvent.class)
     public void invalidateAll() {
         cacheByUuid.invalidateAll();
         cacheByName.invalidateAll();

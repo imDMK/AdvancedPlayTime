@@ -1,12 +1,5 @@
 package com.github.imdmk.playtime.platform.gui.view;
 
-/**
- * Provides predefined slot positions for common GUI navigation controls
- * (Next, Previous, Exit) depending on the GUI height (3–6 rows).
- * <p>
- * Each constant represents the index of an inventory slot where
- * navigation buttons should be placed.
- */
 final class GridSlots {
 
     private static final int ROW_3_NEXT = 25;
@@ -29,12 +22,6 @@ final class GridSlots {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated.");
     }
 
-    /**
-     * Returns the inventory slot index for the "Next Page" button.
-     *
-     * @param rows number of GUI rows (3–6)
-     * @return slot index for the next-page control
-     */
     static int next(int rows) {
         return switch (rows) {
             case 3 -> ROW_3_NEXT;
@@ -45,12 +32,6 @@ final class GridSlots {
         };
     }
 
-    /**
-     * Returns the inventory slot index for the "Previous Page" button.
-     *
-     * @param rows number of GUI rows (3–6)
-     * @return slot index for the previous-page control
-     */
     static int previous(int rows) {
         return switch (rows) {
             case 3 -> ROW_3_PREVIOUS;
@@ -61,12 +42,6 @@ final class GridSlots {
         };
     }
 
-    /**
-     * Returns the inventory slot index for the "Exit" button.
-     *
-     * @param rows number of GUI rows (3–6)
-     * @return slot index for the exit control
-     */
     static int exit(int rows) {
         return switch (rows) {
             case 3 -> ROW_3_EXIT;

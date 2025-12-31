@@ -1,6 +1,7 @@
 package com.github.imdmk.playtime.injector.priority;
 
 import com.github.imdmk.playtime.injector.Component;
+import com.github.imdmk.playtime.injector.annotations.NoneAnnotation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -10,6 +11,10 @@ public final class AnnotationPriorityProvider implements PriorityProvider {
     @Override
     public Priority apply(Component component) {
         final Class<?> componentClass = component.type();
+
+        if (component.annotation().annotationType() == NoneAnnotation.class) {
+            return Priority.HIGHEST;
+        }
 
         for (final Annotation annotation : componentClass.getAnnotations()) {
             try {

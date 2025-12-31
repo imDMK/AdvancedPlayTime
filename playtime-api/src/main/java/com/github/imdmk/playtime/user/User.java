@@ -43,10 +43,8 @@ public final class User {
      * @param playtime        initial playtime value (never null)
      */
     public User(@NotNull UUID uuid, @NotNull String name, @NotNull UserTime playtime) {
-        Objects.requireNonNull(playtime, "playtime cannot be null");
-
-        this.uuid = Objects.requireNonNull(uuid, "uuid cannot be null");
-        this.name = Objects.requireNonNull(name, "name cannot be null");
+        this.uuid = uuid;
+        this.name = name;
         this.playtimeMillis = new AtomicLong(playtime.millis());
     }
 
@@ -88,10 +86,6 @@ public final class User {
      * @throws IllegalArgumentException if name is blank
      */
     public void setName(@NotNull String name) {
-        Objects.requireNonNull(name, "name cannot be null");
-        if (name.trim().isEmpty()) {
-            throw new IllegalArgumentException("name cannot be blank");
-        }
         this.name = name;
     }
 
@@ -112,7 +106,6 @@ public final class User {
      * @throws NullPointerException if playtime is null
      */
     public void setPlaytime(@NotNull UserTime playtime) {
-        Objects.requireNonNull(playtime, "playtime cannot be null");
         playtimeMillis.set(playtime.millis());
     }
 

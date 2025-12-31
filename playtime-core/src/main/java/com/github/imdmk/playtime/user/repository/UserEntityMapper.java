@@ -1,19 +1,17 @@
 package com.github.imdmk.playtime.user.repository;
 
 import com.github.imdmk.playtime.database.repository.ormlite.EntityMapper;
-import com.github.imdmk.playtime.shared.validate.Validator;
+import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserTime;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Maps between the persistent {@link UserEntity} and the in-memory {@link User}.
- */
-public final class UserEntityMapper implements EntityMapper<UserEntity, User> {
+@Service
+public final class UserEntityMapper
+        implements EntityMapper<UserEntity, User> {
 
     @Override
-    public @NotNull UserEntity toEntity(@NotNull User user) {
-        Validator.notNull(user, "user");
+    public UserEntity toEntity(@NotNull User user) {
         return new UserEntity(
                 user.getUuid(),
                 user.getName(),
@@ -22,8 +20,7 @@ public final class UserEntityMapper implements EntityMapper<UserEntity, User> {
     }
 
     @Override
-    public @NotNull User toDomain(@NotNull UserEntity entity) {
-        Validator.notNull(entity, "entity");
+    public User toDomain(@NotNull UserEntity entity) {
         return new User(
                 entity.getUuid(),
                 entity.getName(),

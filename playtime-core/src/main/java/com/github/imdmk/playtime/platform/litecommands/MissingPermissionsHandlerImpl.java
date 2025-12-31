@@ -1,7 +1,6 @@
 package com.github.imdmk.playtime.platform.litecommands;
 
 import com.github.imdmk.playtime.message.MessageService;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import dev.rollczi.litecommands.handler.result.ResultHandlerChain;
 import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.permission.MissingPermissions;
@@ -14,7 +13,7 @@ public final class MissingPermissionsHandlerImpl implements MissingPermissionsHa
     private final MessageService messageService;
 
     public MissingPermissionsHandlerImpl(@NotNull MessageService messageService) {
-        this.messageService = Validator.notNull(messageService, "messageService cannot be null");
+        this.messageService = messageService;
     }
 
     @Override

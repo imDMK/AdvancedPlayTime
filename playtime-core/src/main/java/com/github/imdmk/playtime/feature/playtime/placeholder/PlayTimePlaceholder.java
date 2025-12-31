@@ -1,9 +1,9 @@
 package com.github.imdmk.playtime.feature.playtime.placeholder;
 
-import com.github.imdmk.playtime.PlaytimeService;
+import com.github.imdmk.playtime.PlayTimeService;
+import com.github.imdmk.playtime.injector.annotations.Placeholder;
 import com.github.imdmk.playtime.platform.placeholder.PluginPlaceholder;
 import com.github.imdmk.playtime.shared.time.Durations;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -11,13 +11,14 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 
 import java.util.UUID;
 
+@Placeholder
 public final class PlayTimePlaceholder implements PluginPlaceholder {
 
-    private final PlaytimeService playtimeService;
+    private final PlayTimeService playtimeService;
 
     @Inject
-    public PlayTimePlaceholder(@NotNull PlaytimeService playtimeService) {
-        this.playtimeService = Validator.notNull(playtimeService, "playtimeService cannot be null");
+    public PlayTimePlaceholder(@NotNull PlayTimeService playtimeService) {
+        this.playtimeService = playtimeService;
     }
 
     @Override

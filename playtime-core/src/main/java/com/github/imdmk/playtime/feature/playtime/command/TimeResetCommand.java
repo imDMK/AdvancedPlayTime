@@ -2,7 +2,6 @@ package com.github.imdmk.playtime.feature.playtime.command;
 
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
@@ -33,9 +32,9 @@ public final class TimeResetCommand {
             @NotNull MessageService messageService,
             @NotNull UserService userService
     ) {
-        this.logger = Validator.notNull(logger, "logger cannot be null");
-        this.messageService = Validator.notNull(messageService, "messageService cannot be null");
-        this.userService = Validator.notNull(userService, "userService cannot be null");
+        this.logger = logger;
+        this.messageService = messageService;
+        this.userService = userService;
     }
 
     @Execute

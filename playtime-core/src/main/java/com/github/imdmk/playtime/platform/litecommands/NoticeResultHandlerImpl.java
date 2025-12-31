@@ -2,7 +2,6 @@ package com.github.imdmk.playtime.platform.litecommands;
 
 import com.eternalcode.multification.notice.Notice;
 import com.github.imdmk.playtime.message.MessageService;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import dev.rollczi.litecommands.handler.result.ResultHandler;
 import dev.rollczi.litecommands.handler.result.ResultHandlerChain;
 import dev.rollczi.litecommands.invocation.Invocation;
@@ -14,11 +13,14 @@ public final class NoticeResultHandlerImpl implements ResultHandler<CommandSende
     private final MessageService messageService;
 
     public NoticeResultHandlerImpl(@NotNull MessageService messageService) {
-        this.messageService = Validator.notNull(messageService, "messageService cannot be null");
+        this.messageService = messageService;
     }
 
     @Override
     public void handle(Invocation<CommandSender> invocation, Notice notice, ResultHandlerChain<CommandSender> chain) {
-        messageService.send(invocation.sender(), n -> notice);
+        messageService.create()
+                .viewer(invocation.sender())
+                .notice(n -> notice)
+                .send();
     }
 }

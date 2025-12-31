@@ -1,7 +1,6 @@
 package com.github.imdmk.playtime.user.top;
 
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.repository.UserRepository;
 import org.jetbrains.annotations.NotNull;
@@ -26,9 +25,9 @@ public final class MemoryTopUsersCache implements TopUsersCache {
             @NotNull TopUsersCacheConfig config,
             @NotNull UserRepository userRepository
     ) {
-        this.logger = Validator.notNull(logger, "logger");
-        this.config = Validator.notNull(config, "config");
-        this.userRepository = Validator.notNull(userRepository, "userRepository");
+        this.logger = logger;
+        this.config = config;
+        this.userRepository = userRepository;
     }
 
     @Override

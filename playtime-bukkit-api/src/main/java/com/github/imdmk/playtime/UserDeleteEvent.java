@@ -29,7 +29,7 @@ public final class UserDeleteEvent extends Event {
      */
     public UserDeleteEvent(@NotNull UserDeleteResult result) {
         super(ASYNC);
-        this.result = Objects.requireNonNull(result, "result cannot be null");
+        this.result = Objects.requireNonNull(result, "result");
     }
 
     /**

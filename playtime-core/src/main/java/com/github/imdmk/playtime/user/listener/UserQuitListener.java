@@ -1,7 +1,6 @@
 package com.github.imdmk.playtime.user.listener;
 
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
 import org.bukkit.entity.Player;
@@ -12,13 +11,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
-import java.time.Duration;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public final class UserQuitListener implements Listener {
 
-    private static final Duration SAVE_TIMEOUT = Duration.ofSeconds(2);
     private static final UserSaveReason SAVE_REASON = UserSaveReason.PLAYER_LEAVE;
 
     private final PluginLogger logger;
@@ -26,8 +22,8 @@ public final class UserQuitListener implements Listener {
 
     @Inject
     public UserQuitListener(@NotNull PluginLogger logger, @NotNull UserService userService) {
-        this.logger = Validator.notNull(logger, "logger");
-        this.userService = Validator.notNull(userService, "userService");
+        this.logger = logger;
+        this.userService = userService;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -38,7 +34,6 @@ public final class UserQuitListener implements Listener {
         final String name = player.getName();
 
         userService.findCachedByUuid(uuid).ifPresent(user -> userService.save(user, SAVE_REASON)
-                .orTimeout(SAVE_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .whenComplete((u, e) -> {
                     if (e != null) {
                         logger.error(e, "Failed to save user on quit %s (%s)", name, uuid);

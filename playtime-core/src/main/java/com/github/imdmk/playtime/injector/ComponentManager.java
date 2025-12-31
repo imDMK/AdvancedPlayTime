@@ -1,11 +1,11 @@
 package com.github.imdmk.playtime.injector;
 
+import com.github.imdmk.playtime.injector.annotations.NoneAnnotation;
 import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.injector.priority.PriorityProvider;
 import com.github.imdmk.playtime.injector.processor.ComponentProcessor;
 import com.github.imdmk.playtime.injector.processor.ComponentProcessorContext;
 import com.github.imdmk.playtime.injector.processor.FunctionalComponentProcessor;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
 
@@ -19,15 +19,15 @@ public final class ComponentManager {
 
     private final Injector injector;
 
-    private final ComponentContainer container;
+    private final ComponentQueue container;
     private final ComponentScanner scanner;
 
     private final Map<Class<? extends Annotation>, ComponentProcessor<?>> processors = new ConcurrentHashMap<>();
 
     public ComponentManager(@NotNull Injector injector, @NotNull String basePackage) {
-        this.injector = Validator.notNull(injector, "injector");
+        this.injector = injector;
 
-        this.container = new ComponentContainer(DEFAULT_PRIORITY);
+        this.container = new ComponentQueue(DEFAULT_PRIORITY);
         this.scanner = new ComponentScanner(basePackage);
     }
 
@@ -60,6 +60,12 @@ public final class ComponentManager {
         return addProcessor(new FunctionalComponentProcessor<>(annotation, targetType, consumer));
     }
 
+    public ComponentManager onProcess(
+            @NotNull ComponentFunctional<Object, NoneAnnotation> consumer
+    ) {
+        return onProcess(NoneAnnotation.class, Object.class, consumer);
+    }
+
     public void scanAll() {
         for (final Class<? extends Annotation> annotation : processors.keySet()) {
             scanner.scan(annotation).forEach(container::add);
@@ -68,7 +74,7 @@ public final class ComponentManager {
 
     public void processAll() {
         for (final ComponentProcessor<?> processor : processors.values()) {
-            container.consume(processor.annotation())
+            container.drain(processor.annotation())
                     .forEach(component -> process(processor, component));
         }
     }

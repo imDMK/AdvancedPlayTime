@@ -1,18 +1,12 @@
 package com.github.imdmk.playtime.database;
 
 import com.github.imdmk.playtime.config.ConfigSection;
+import com.github.imdmk.playtime.injector.annotations.ConfigFile;
 import eu.okaeri.configs.annotation.Comment;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Configuration for the database connection layer.
- * <p>
- * Supports both embedded (SQLite/H2) and server-based engines (MySQL, MariaDB, PostgreSQL, SQL Server).
- * Depending on {@link DatabaseMode}, only a subset of fields is used.
- * <p>
- * All unused fields for a given mode are safely ignored by the connector.
- */
+@ConfigFile
 public final class DatabaseConfig extends ConfigSection {
 
     @Comment({
@@ -80,12 +74,12 @@ public final class DatabaseConfig extends ConfigSection {
     public int port = 3306;
 
     @Override
-    public @NotNull OkaeriSerdesPack getSerdesPack() {
+    public @NotNull OkaeriSerdesPack serdesPack() {
         return registry -> {};
     }
 
     @Override
-    public @NotNull String getFileName() {
-        return "databaseConfig.yml";
+    public @NotNull String fileName() {
+        return "database.yaml";
     }
 }

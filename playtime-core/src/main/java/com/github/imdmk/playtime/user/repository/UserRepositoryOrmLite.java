@@ -1,9 +1,9 @@
 package com.github.imdmk.playtime.user.repository;
 
-import com.github.imdmk.playtime.database.repository.RepositoryContext;
-import com.github.imdmk.playtime.database.repository.ormlite.BaseDaoRepository;
+import com.github.imdmk.playtime.database.repository.ormlite.OrmLiteRepository;
+import com.github.imdmk.playtime.injector.annotations.Repository;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.validate.Validator;
+import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserDeleteResult;
 import com.github.imdmk.playtime.user.UserDeleteStatus;
@@ -16,22 +16,21 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+@Repository
 public final class UserRepositoryOrmLite
-        extends BaseDaoRepository<UserEntity, UUID>
+        extends OrmLiteRepository<UserEntity, UUID>
         implements UserRepository {
 
-    private final PluginLogger logger;
     private final UserEntityMapper mapper;
 
     @Inject
     public UserRepositoryOrmLite(
             @NotNull PluginLogger logger,
-            @NotNull RepositoryContext context,
+            @NotNull TaskScheduler taskScheduler,
             @NotNull UserEntityMapper mapper
     ) {
-        super(logger, context);
-        this.logger = Validator.notNull(logger, "logger");
-        this.mapper = Validator.notNull(mapper, "mapper");
+        super(logger, taskScheduler);
+        this.mapper = mapper;
     }
 
     @Override
@@ -45,9 +44,8 @@ public final class UserRepositoryOrmLite
     }
 
     @Override
-    public @NotNull CompletableFuture<Optional<User>> findByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid");
-        return executeAsync(() -> {
+    public CompletableFuture<Optional<User>> findByUuid(@NotNull UUID uuid) {
+        return execute(() -> {
             try {
                 return Optional.ofNullable(dao.queryForId(uuid))
                         .map(mapper::toDomain);
@@ -59,11 +57,10 @@ public final class UserRepositoryOrmLite
     }
 
     @Override
-    public @NotNull CompletableFuture<Optional<User>> findByName(@NotNull String name) {
-        Validator.notNull(name, "name");
-        return executeAsync(() -> {
+    public CompletableFuture<Optional<User>> findByName(@NotNull String name) {
+        return execute(() -> {
             try {
-                UserEntity entity = dao.queryBuilder()
+                final UserEntity entity = dao.queryBuilder()
                         .where().eq(UserEntityMeta.Col.NAME, name)
                         .queryForFirst();
                 return Optional.ofNullable(entity).map(mapper::toDomain);
@@ -75,8 +72,8 @@ public final class UserRepositoryOrmLite
     }
 
     @Override
-    public @NotNull CompletableFuture<List<User>> findAll() {
-        return executeAsync(() -> {
+    public CompletableFuture<List<User>> findAll() {
+        return execute(() -> {
             try {
                 return mapper.toDomainList(dao.queryForAll());
             } catch (SQLException e) {
@@ -87,12 +84,12 @@ public final class UserRepositoryOrmLite
     }
 
     @Override
-    public @NotNull CompletableFuture<List<User>> findTopByPlayTime(long limit) {
+    public CompletableFuture<List<User>> findTopByPlayTime(long limit) {
         if (limit <= 0) {
             return CompletableFuture.completedFuture(List.of());
         }
 
-        return executeAsync(() -> {
+        return execute(() -> {
             try {
                 return mapper.toDomainList(
                         dao.queryBuilder()
@@ -109,9 +106,8 @@ public final class UserRepositoryOrmLite
     }
 
     @Override
-    public @NotNull CompletableFuture<User> save(@NotNull User user) {
-        Validator.notNull(user, "user");
-        return executeAsync(() -> {
+    public CompletableFuture<User> save(@NotNull User user) {
+        return execute(() -> {
             try {
                 dao.createOrUpdate(mapper.toEntity(user));
                 return user;
@@ -123,18 +119,16 @@ public final class UserRepositoryOrmLite
     }
 
     @Override
-    public @NotNull CompletableFuture<UserDeleteResult> deleteByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid");
-        return executeAsync(() -> {
+    public CompletableFuture<UserDeleteResult> deleteByUuid(@NotNull UUID uuid) {
+        return execute(() -> {
             try {
-                UserEntity userEntity = dao.queryForId(uuid);
+                final UserEntity userEntity = dao.queryForId(uuid);
                 if (userEntity == null) {
                     return new UserDeleteResult(null, UserDeleteStatus.NOT_FOUND);
                 }
 
-                User user = mapper.toDomain(userEntity);
-
-                int rows = dao.deleteById(uuid);
+                final User user = mapper.toDomain(userEntity);
+                final int rows = dao.deleteById(uuid);
                 return rows > 0
                         ? new UserDeleteResult(user, UserDeleteStatus.DELETED)
                         : new UserDeleteResult(user, UserDeleteStatus.FAILED);
@@ -146,20 +140,18 @@ public final class UserRepositoryOrmLite
     }
 
     @Override
-    public @NotNull CompletableFuture<UserDeleteResult> deleteByName(@NotNull String name) {
-        Validator.notNull(name, "name");
-        return executeAsync(() -> {
+    public CompletableFuture<UserDeleteResult> deleteByName(@NotNull String name) {
+        return execute(() -> {
             try {
-                UserEntity userEntity = dao.queryBuilder()
+                final UserEntity userEntity = dao.queryBuilder()
                         .where().eq(UserEntityMeta.Col.NAME, name)
                         .queryForFirst();
                 if (userEntity == null) {
                     return new UserDeleteResult(null, UserDeleteStatus.NOT_FOUND);
                 }
 
-                User user = mapper.toDomain(userEntity);
-
-                int rows = dao.delete(userEntity);
+                final User user = mapper.toDomain(userEntity);
+                final int rows = dao.delete(userEntity);
                 return rows > 0
                         ? new UserDeleteResult(user, UserDeleteStatus.DELETED)
                         : new UserDeleteResult(user, UserDeleteStatus.FAILED);
@@ -169,4 +161,6 @@ public final class UserRepositoryOrmLite
             }
         });
     }
+
+
 }

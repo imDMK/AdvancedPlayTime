@@ -1,6 +1,5 @@
 package com.github.imdmk.playtime.config;
 
-import com.github.imdmk.playtime.shared.validate.Validator;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import eu.okaeri.configs.serdes.commons.SerdesCommons;
@@ -16,9 +15,6 @@ final class ConfigConfigurer {
             @NotNull File file,
             OkaeriSerdesPack... serdesPacks
     ) {
-        Validator.notNull(config, "config");
-        Validator.notNull(file, "file");
-
         final YamlSnakeYamlConfigurer configurer = new YamlSnakeYamlConfigurer(YamlFactory.create());
 
         config.withConfigurer(configurer, serdesPacks)

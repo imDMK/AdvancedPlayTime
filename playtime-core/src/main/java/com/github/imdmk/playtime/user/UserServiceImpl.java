@@ -1,11 +1,9 @@
 package com.github.imdmk.playtime.user;
 
 import com.github.imdmk.playtime.UserDeleteEvent;
-import com.github.imdmk.playtime.UserPreSaveEvent;
 import com.github.imdmk.playtime.UserSaveEvent;
-import com.github.imdmk.playtime.platform.events.BukkitEventCaller;
+import com.github.imdmk.playtime.platform.event.BukkitEventCaller;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.cache.UserCache;
 import com.github.imdmk.playtime.user.repository.UserRepository;
 import com.github.imdmk.playtime.user.top.TopUsersCache;
@@ -39,36 +37,32 @@ final class UserServiceImpl implements UserService {
             @NotNull UserRepository repository,
             @NotNull BukkitEventCaller eventCaller
     ) {
-        this.logger = Validator.notNull(logger, "logger");
-        this.cache = Validator.notNull(cache, "cache");
-        this.topUsersCache = Validator.notNull(topUsersCache, "topUsersCache");
-        this.repository = Validator.notNull(repository, "repository");
-        this.eventCaller = Validator.notNull(eventCaller, "eventCaller");
+        this.logger = logger;
+        this.cache = cache;
+        this.topUsersCache = topUsersCache;
+        this.repository = repository;
+        this.eventCaller = eventCaller;
     }
 
     @Override
-    public @NotNull Optional<User> findCachedByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid");
+    public Optional<User> findCachedByUuid(@NotNull UUID uuid) {
         return cache.getUserByUuid(uuid);
     }
 
     @Override
-    public @NotNull Optional<User> findCachedByName(@NotNull String name) {
-        Validator.notNull(name, "name");
+    public Optional<User> findCachedByName(@NotNull String name) {
         return cache.getUserByName(name);
     }
 
     @Override
     @Unmodifiable
-    public @NotNull Collection<User> getCachedUsers() {
+    public Collection<User> getCachedUsers() {
         return cache.getCache(); // returns unmodifiable
     }
 
     @Override
-    public @NotNull CompletableFuture<Optional<User>> findByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid");
-
-        Optional<User> cached = cache.getUserByUuid(uuid);
+    public CompletableFuture<Optional<User>> findByUuid(@NotNull UUID uuid) {
+        final Optional<User> cached = cache.getUserByUuid(uuid);
         if (cached.isPresent()) {
             return CompletableFuture.completedFuture(cached);
         }
@@ -86,10 +80,8 @@ final class UserServiceImpl implements UserService {
     }
 
     @Override
-    public @NotNull CompletableFuture<Optional<User>> findByName(@NotNull String name) {
-        Validator.notNull(name, "name");
-
-        Optional<User> cached = cache.getUserByName(name);
+    public CompletableFuture<Optional<User>> findByName(@NotNull String name) {
+        final Optional<User> cached = cache.getUserByName(name);
         if (cached.isPresent()) {
             return CompletableFuture.completedFuture(cached);
         }
@@ -107,17 +99,12 @@ final class UserServiceImpl implements UserService {
     }
 
     @Override
-    public @NotNull CompletableFuture<List<User>> findTopByPlayTime(int limit) {
+    public CompletableFuture<List<User>> findTopByPlayTime(int limit) {
         return topUsersCache.getTopByPlayTime(limit);
     }
 
     @Override
-    public @NotNull CompletableFuture<User> save(@NotNull User user, @NotNull UserSaveReason reason) {
-        Validator.notNull(user, "user");
-        Validator.notNull(reason, "reason");
-
-        eventCaller.callEvent(new UserPreSaveEvent(user, reason));
-
+    public CompletableFuture<User> save(@NotNull User user, @NotNull UserSaveReason reason) {
         return repository.save(user)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .thenApply(saved -> {
@@ -132,8 +119,7 @@ final class UserServiceImpl implements UserService {
     }
 
     @Override
-    public @NotNull CompletableFuture<UserDeleteResult> deleteByUuid(@NotNull UUID uuid) {
-        Validator.notNull(uuid, "uuid");
+    public CompletableFuture<UserDeleteResult> deleteByUuid(@NotNull UUID uuid) {
         return repository.deleteByUuid(uuid)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .thenApply(result -> {
@@ -150,8 +136,7 @@ final class UserServiceImpl implements UserService {
     }
 
     @Override
-    public @NotNull CompletableFuture<UserDeleteResult> deleteByName(@NotNull String name) {
-        Validator.notNull(name, "name");
+    public CompletableFuture<UserDeleteResult> deleteByName(@NotNull String name) {
         return repository.deleteByName(name)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .thenApply(deleteResult -> {

@@ -2,7 +2,6 @@ package com.github.imdmk.playtime.user.listener;
 
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserFactory;
 import com.github.imdmk.playtime.user.UserSaveReason;
@@ -17,15 +16,11 @@ import org.bukkit.event.server.ServerLoadEvent;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
-import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public final class UserJoinListener implements Listener {
 
-    private static final Duration FIND_TIMEOUT = Duration.ofSeconds(2);
-    private static final Duration SAVE_TIMEOUT = Duration.ofSeconds(2);
     private static final UserSaveReason SAVE_REASON = UserSaveReason.PLAYER_JOIN;
 
     private final Server server;
@@ -42,11 +37,11 @@ public final class UserJoinListener implements Listener {
             @NotNull UserFactory userFactory,
             @NotNull TaskScheduler taskScheduler
     ) {
-        this.server = Validator.notNull(server, "server");
-        this.logger = Validator.notNull(logger, "logger");
-        this.userService = Validator.notNull(userService, "userService");
-        this.userFactory = Validator.notNull(userFactory, "userFactory cannot be null");
-        this.taskScheduler = Validator.notNull(taskScheduler, "taskScheduler cannot be null");
+        this.server = server;
+        this.logger = logger;
+        this.userService = userService;
+        this.userFactory = userFactory;
+        this.taskScheduler = taskScheduler;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -63,7 +58,6 @@ public final class UserJoinListener implements Listener {
         final UUID uuid = player.getUniqueId();
 
         userService.findByUuid(uuid)
-                .orTimeout(FIND_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .whenComplete((optional, e) -> {
                     if (e != null) {
                         logger.error(e, "Failed to load user on join uuid=%s", uuid);
@@ -88,7 +82,6 @@ public final class UserJoinListener implements Listener {
 
     private void handleExistingUser(Player player, User user) {
         final String name = player.getName();
-
         if (!updateNameIfChanged(user, name)) {
             return;
         }
@@ -98,7 +91,6 @@ public final class UserJoinListener implements Listener {
 
     private void saveUser(User user, String context) {
         userService.save(user, SAVE_REASON)
-                .orTimeout(SAVE_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .whenComplete((r, e) -> {
                     if (e != null) {
                         logger.error(e, "Failed to save user %s uuid=%s", context, user.getUuid());

@@ -20,7 +20,7 @@ import java.util.Objects;
 public final class UserSaveEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
-    private static final boolean ASYNC = false;
+    private static final boolean ASYNC = true;
 
     private final User user;
     private final UserSaveReason reason;
@@ -33,8 +33,8 @@ public final class UserSaveEvent extends Event {
      */
     public UserSaveEvent(@NotNull User user, @NotNull UserSaveReason reason) {
         super(ASYNC);
-        this.user = Objects.requireNonNull(user, "user cannot be null");
-        this.reason = Objects.requireNonNull(reason, "reason cannot be null");
+        this.user = user;
+        this.reason = reason;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.github.imdmk.playtime.feature.playtime.gui;
 
+import com.github.imdmk.playtime.injector.annotations.ConfigFile;
 import com.github.imdmk.playtime.platform.adventure.AdventureComponents;
 import com.github.imdmk.playtime.platform.gui.GuiType;
 import com.github.imdmk.playtime.platform.gui.config.ConfigurableGui;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
+@ConfigFile
 public final class PlayTimeTopGuiConfig extends OkaeriConfig implements ConfigurableGui {
 
     @Comment({

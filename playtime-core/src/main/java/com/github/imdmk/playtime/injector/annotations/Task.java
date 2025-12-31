@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Task {
 
-    Priority priority() default Priority.NORMAL;
+    Priority priority() default Priority.HIGHEST;
 
 }

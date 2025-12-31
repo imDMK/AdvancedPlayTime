@@ -55,12 +55,12 @@ public enum DurationUnit {
 
     public abstract int extract(@NotNull Duration duration);
 
-    public @NotNull String getAbbreviation() {
+    public String getAbbreviation() {
         return abbreviation;
     }
 
-    public @NotNull String toDisplayName(int value) {
-        String word = (value == 1 ? singular : plural);
+    public String toDisplayName(int value) {
+        final String word = (value == 1 ? singular : plural);
         return DISPLAY_NAME_FORMAT.formatted(value, word);
     }
 }

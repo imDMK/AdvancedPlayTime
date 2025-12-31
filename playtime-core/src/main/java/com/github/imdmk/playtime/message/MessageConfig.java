@@ -6,10 +6,12 @@ import com.eternalcode.multification.okaeri.MultificationSerdesPack;
 import com.github.imdmk.playtime.config.ConfigSection;
 import com.github.imdmk.playtime.feature.playtime.messages.ENPlayTimeMessages;
 import com.github.imdmk.playtime.feature.reload.messages.ENReloadMessages;
+import com.github.imdmk.playtime.injector.annotations.ConfigFile;
 import eu.okaeri.configs.annotation.Comment;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import org.jetbrains.annotations.NotNull;
 
+@ConfigFile
 public final class MessageConfig extends ConfigSection {
 
     @Comment({
@@ -89,14 +91,14 @@ public final class MessageConfig extends ConfigSection {
     public ENReloadMessages reloadMessages = new ENReloadMessages();
 
     @Override
-    public @NotNull OkaeriSerdesPack getSerdesPack() {
+    public @NotNull OkaeriSerdesPack serdesPack() {
         return registry -> registry.register(
                 new MultificationSerdesPack(NoticeResolverDefaults.createRegistry())
         );
     }
 
     @Override
-    public @NotNull String getFileName() {
+    public @NotNull String fileName() {
         return "messageConfig.yml";
     }
 }

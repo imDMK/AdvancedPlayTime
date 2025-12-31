@@ -3,7 +3,6 @@ package com.github.imdmk.playtime.config;
 import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import eu.okaeri.configs.OkaeriConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -29,7 +28,7 @@ public final class ConfigService {
 
     @Inject
     public ConfigService(@NotNull PluginLogger logger, @NotNull File dataFolder) {
-        this.dataFolder = Validator.notNull(dataFolder, "dataFolder");
+        this.dataFolder = dataFolder;
 
         this.factory = new ConfigFactory();
         this.configurer = new ConfigConfigurer();
@@ -75,7 +74,7 @@ public final class ConfigService {
         return Collections.unmodifiableSet(configs);
     }
 
-    public void clearAll() {
+    public void shutdown() {
         configs.clear();
         byType.clear();
     }
