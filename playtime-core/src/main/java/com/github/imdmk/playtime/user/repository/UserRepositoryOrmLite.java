@@ -1,5 +1,6 @@
 package com.github.imdmk.playtime.user.repository;
 
+import com.github.imdmk.playtime.database.DatabaseBootstrap;
 import com.github.imdmk.playtime.database.repository.ormlite.OrmLiteRepository;
 import com.github.imdmk.playtime.injector.annotations.Repository;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
@@ -27,9 +28,10 @@ public final class UserRepositoryOrmLite
     public UserRepositoryOrmLite(
             @NotNull PluginLogger logger,
             @NotNull TaskScheduler taskScheduler,
+            @NotNull DatabaseBootstrap databaseBootstrap,
             @NotNull UserEntityMapper mapper
     ) {
-        super(logger, taskScheduler);
+        super(logger, taskScheduler, databaseBootstrap);
         this.mapper = mapper;
     }
 

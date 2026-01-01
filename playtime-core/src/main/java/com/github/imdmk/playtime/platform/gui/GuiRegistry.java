@@ -1,5 +1,7 @@
 package com.github.imdmk.playtime.platform.gui;
 
+import com.github.imdmk.playtime.injector.annotations.Service;
+import com.github.imdmk.playtime.injector.priority.Priority;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -9,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Service(priority = Priority.LOW)
 public final class GuiRegistry {
 
     private final Map<String, IdentifiableGui> byId = new ConcurrentHashMap<>();
@@ -51,8 +54,7 @@ public final class GuiRegistry {
 
     @Nullable
     public IdentifiableGui getById(@NotNull String id) {
-        final String key = normalize(id);
-        return byId.get(key);
+        return byId.get(normalize(id));
     }
 
     @Nullable
@@ -63,8 +65,7 @@ public final class GuiRegistry {
     }
 
     public boolean isRegistered(@NotNull String id) {
-        final String key = normalize(id);
-        return byId.containsKey(key);
+        return byId.containsKey(normalize(id));
     }
 
     @Unmodifiable

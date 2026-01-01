@@ -5,6 +5,8 @@ import com.github.imdmk.playtime.database.configurer.DataSourceConfigurerFactory
 import com.github.imdmk.playtime.database.library.DriverLibraryLoader;
 import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.injector.priority.Priority;
+import com.github.imdmk.playtime.injector.subscriber.Subscribe;
+import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.j256.ormlite.support.ConnectionSource;
 import org.bukkit.plugin.Plugin;
@@ -58,6 +60,7 @@ public final class DatabaseBootstrap {
         return dataConnector.getConnectionSource();
     }
 
+    @Subscribe(event = PlayTimeShutdownEvent.class)
     public void shutdown() {
         dataConnector.close();
     }

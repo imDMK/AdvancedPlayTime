@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 class DurationUnitTest {
 
     @Test

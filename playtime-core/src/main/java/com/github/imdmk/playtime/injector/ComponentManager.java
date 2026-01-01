@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class ComponentManager {
 
-    private static final PriorityProvider DEFAULT_PRIORITY = (priority -> Priority.NORMAL);
+    private static final PriorityProvider DEFAULT_PRIORITY = priority -> Priority.NORMAL;
 
     private final Injector injector;
 
@@ -26,7 +26,6 @@ public final class ComponentManager {
 
     public ComponentManager(@NotNull Injector injector, @NotNull String basePackage) {
         this.injector = injector;
-
         this.container = new ComponentQueue(DEFAULT_PRIORITY);
         this.scanner = new ComponentScanner(basePackage);
     }

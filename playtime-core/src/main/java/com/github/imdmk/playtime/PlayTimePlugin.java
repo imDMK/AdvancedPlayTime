@@ -2,6 +2,10 @@ package com.github.imdmk.playtime;
 
 import com.github.imdmk.playtime.injector.ComponentManager;
 import com.github.imdmk.playtime.injector.priority.AnnotationPriorityProvider;
+import com.github.imdmk.playtime.injector.processor.ComponentProcessor;
+import com.github.imdmk.playtime.injector.processor.ComponentProcessors;
+import com.github.imdmk.playtime.injector.subscriber.LocalPublisher;
+import com.github.imdmk.playtime.injector.subscriber.Publisher;
 import com.github.imdmk.playtime.platform.logger.BukkitPluginLogger;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import org.bukkit.Server;
@@ -27,9 +31,12 @@ final class PlayTimePlugin {
             resources.on(PluginLogger.class).assignInstance(new BukkitPluginLogger(plugin));
         });
 
+        injector.getResources().on(Publisher.class).assignInstance(new LocalPublisher(injector));
+
         ComponentManager componentManager = new ComponentManager(injector, this.getClass().getPackageName())
-                .setPriorityProvider(new AnnotationPriorityProvider())
-                .addProcessor();
+                .setPriorityProvider(new AnnotationPriorityProvider());
+
+        for (ComponentProcessor<?> processor : injector.invokeMethod(ComponentProcessors.defaults()))
 
         componentManager.scanAll();
         componentManager.processAll();

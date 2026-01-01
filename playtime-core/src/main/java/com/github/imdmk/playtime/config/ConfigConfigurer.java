@@ -1,6 +1,5 @@
 package com.github.imdmk.playtime.config;
 
-import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import eu.okaeri.configs.serdes.commons.SerdesCommons;
 import eu.okaeri.configs.yaml.snakeyaml.YamlSnakeYamlConfigurer;
@@ -11,7 +10,7 @@ import java.io.File;
 final class ConfigConfigurer {
 
     void configure(
-            @NotNull OkaeriConfig config,
+            @NotNull ConfigSection config,
             @NotNull File file,
             OkaeriSerdesPack... serdesPacks
     ) {

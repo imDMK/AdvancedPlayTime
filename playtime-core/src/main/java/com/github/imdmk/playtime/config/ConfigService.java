@@ -17,8 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service(priority = Priority.LOWEST)
 public final class ConfigService {
 
-    private final Set<OkaeriConfig> configs = ConcurrentHashMap.newKeySet();
-    private final Map<Class<?>, OkaeriConfig> byType = new ConcurrentHashMap<>();
+    private final Set<ConfigSection> configs = ConcurrentHashMap.newKeySet();
+    private final Map<Class<?>, ConfigSection> byType = new ConcurrentHashMap<>();
 
     private final File dataFolder;
 
@@ -35,9 +35,9 @@ public final class ConfigService {
         this.lifecycle = new ConfigLifecycle(logger);
     }
 
-    public <T extends OkaeriConfig> @NotNull T create(@NotNull Class<T> type, @NotNull String fileName) {
+    public <T extends ConfigSection> @NotNull T create(@NotNull Class<T> type) {
         final T config = factory.instantiate(type);
-        final File file = new File(dataFolder, fileName);
+        final File file = new File(dataFolder, config.fileName());
 
         configurer.configure(config, file);
         lifecycle.initialize(config);
@@ -47,11 +47,11 @@ public final class ConfigService {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends OkaeriConfig> T get(@NotNull Class<T> type) {
+    public <T extends ConfigSection> T get(@NotNull Class<T> type) {
         return (T) byType.get(type);
     }
 
-    public <T extends OkaeriConfig> @NotNull T require(@NotNull Class<T> type) {
+    public <T extends ConfigSection> @NotNull T require(@NotNull Class<T> type) {
         final T config = get(type);
         if (config == null) {
             throw new IllegalStateException("Config not created: " + type.getName());
@@ -70,7 +70,7 @@ public final class ConfigService {
 
     @NotNull
     @Unmodifiable
-    public Set<OkaeriConfig> getConfigs() {
+    public Set<ConfigSection> getConfigs() {
         return Collections.unmodifiableSet(configs);
     }
 
@@ -79,7 +79,7 @@ public final class ConfigService {
         byType.clear();
     }
 
-    private void register(Class<?> type, OkaeriConfig config) {
+    private void register(Class<?> type, ConfigSection config) {
         configs.add(config);
         byType.put(type, config);
     }

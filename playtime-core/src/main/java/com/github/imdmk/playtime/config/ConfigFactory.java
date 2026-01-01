@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 final class ConfigFactory {
 
-    <T extends OkaeriConfig> @NotNull T instantiate(@NotNull Class<T> type) {
+    <T extends ConfigSection> @NotNull T instantiate(@NotNull Class<T> type) {
         try {
             return ConfigManager.create(type);
         } catch (OkaeriException e) {

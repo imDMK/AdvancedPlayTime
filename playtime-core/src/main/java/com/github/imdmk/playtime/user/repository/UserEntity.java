@@ -7,28 +7,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
-/**
- * Persistent representation of a user stored in the database.
- * <p>
- * This entity is managed by ORMLite and maps directly to the "spent_time_users" table.
- * It mirrors the in-memory {@code User} object used in runtime logic.
- */
 @DatabaseTable(tableName = UserEntityMeta.TABLE)
 public final class UserEntity {
 
-    /** Primary key — unique player UUID. */
     @DatabaseField(id = true, canBeNull = false, columnName = UserEntityMeta.Col.UUID)
     private UUID uuid;
 
-    /** Last known player name. */
     @DatabaseField(canBeNull = false, index = true, columnName = UserEntityMeta.Col.NAME)
     private String name;
 
-    /** Total spent time in milliseconds. */
     @DatabaseField(canBeNull = false, columnName = UserEntityMeta.Col.PLAYTIME_MILLIS)
     private long playtimeMillis;
 
-    /** No-arg constructor required by ORMLite. */
     public UserEntity() {}
 
     public UserEntity(@NotNull UUID uuid, @NotNull String name, long playtimeMillis) {

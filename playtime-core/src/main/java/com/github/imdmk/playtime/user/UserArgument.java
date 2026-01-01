@@ -16,12 +16,6 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Argument resolver for {@link User} objects.
- * <p>
- * Performs a cache-only lookup on the primary server thread to avoid blocking,
- * and a full asynchronous lookup (cache → database) off the main thread.
- */
 final class UserArgument extends ArgumentResolver<CommandSender, User> {
 
     private static final Duration LOOKUP_TIMEOUT = Duration.ofSeconds(2);

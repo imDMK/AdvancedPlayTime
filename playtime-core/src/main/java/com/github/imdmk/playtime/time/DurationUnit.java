@@ -1,14 +1,9 @@
-package com.github.imdmk.playtime.shared.time;
+package com.github.imdmk.playtime.time;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 
-/**
- * Supported duration units and their metadata.
- * <p>
- * This enum centralizes singular/plural names, abbreviations, and extraction logic.
- */
 public enum DurationUnit {
 
     DAY("day", "days", "d") {
@@ -36,8 +31,7 @@ public enum DurationUnit {
         }
     };
 
-    /** Ordered for consistent output. */
-    public static final DurationUnit[] ORDERED = {
+    protected static final DurationUnit[] ORDERED = {
             DAY, HOUR, MINUTE, SECOND
     };
 
@@ -59,7 +53,7 @@ public enum DurationUnit {
         return abbreviation;
     }
 
-    public String toDisplayName(int value) {
+    protected String toDisplayName(int value) {
         final String word = (value == 1 ? singular : plural);
         return DISPLAY_NAME_FORMAT.formatted(value, word);
     }

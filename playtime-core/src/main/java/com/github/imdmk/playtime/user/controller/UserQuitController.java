@@ -1,5 +1,6 @@
-package com.github.imdmk.playtime.user.listener;
+package com.github.imdmk.playtime.user.controller;
 
+import com.github.imdmk.playtime.injector.annotations.Controller;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
@@ -13,7 +14,8 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 
 import java.util.UUID;
 
-public final class UserQuitListener implements Listener {
+@Controller
+public final class UserQuitController implements Listener {
 
     private static final UserSaveReason SAVE_REASON = UserSaveReason.PLAYER_LEAVE;
 
@@ -21,7 +23,7 @@ public final class UserQuitListener implements Listener {
     private final UserService userService;
 
     @Inject
-    public UserQuitListener(@NotNull PluginLogger logger, @NotNull UserService userService) {
+    public UserQuitController(@NotNull PluginLogger logger, @NotNull UserService userService) {
         this.logger = logger;
         this.userService = userService;
     }

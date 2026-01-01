@@ -18,7 +18,7 @@ class RepositoryManagerTest {
     @Test
     void registerShouldStoreRepository() {
         PluginLogger logger = mock(PluginLogger.class);
-        Repository repo = mock(Repository.class);
+        RepositoryBootstrap repo = mock(RepositoryBootstrap.class);
 
         RepositoryManager manager = new RepositoryManager(logger);
 
@@ -36,8 +36,8 @@ class RepositoryManagerTest {
     @Test
     void startAllShouldInvokeStartOnEachRepository() throws Exception {
         PluginLogger logger = mock(PluginLogger.class);
-        Repository repo1 = mock(Repository.class);
-        Repository repo2 = mock(Repository.class);
+        RepositoryBootstrap repo1 = mock(RepositoryBootstrap.class);
+        RepositoryBootstrap repo2 = mock(RepositoryBootstrap.class);
         ConnectionSource source = mock(ConnectionSource.class);
 
         RepositoryManager manager = new RepositoryManager(logger);
@@ -52,7 +52,7 @@ class RepositoryManagerTest {
     @Test
     void startAllShouldLogAndRethrowSQLException() throws Exception {
         PluginLogger logger = mock(PluginLogger.class);
-        Repository faulty = mock(Repository.class);
+        RepositoryBootstrap faulty = mock(RepositoryBootstrap.class);
         ConnectionSource source = mock(ConnectionSource.class);
 
         doThrow(new SQLException("boom")).when(faulty).start(source);
@@ -71,8 +71,8 @@ class RepositoryManagerTest {
     @Test
     void closeShouldInvokeCloseOnEachRepository() {
         PluginLogger logger = mock(PluginLogger.class);
-        Repository repo1 = mock(Repository.class);
-        Repository repo2 = mock(Repository.class);
+        RepositoryBootstrap repo1 = mock(RepositoryBootstrap.class);
+        RepositoryBootstrap repo2 = mock(RepositoryBootstrap.class);
 
         RepositoryManager manager = new RepositoryManager(logger);
         manager.register(repo1, repo2);
@@ -86,7 +86,7 @@ class RepositoryManagerTest {
     @Test
     void closeShouldLogWarningWhenRepositoryThrows() {
         PluginLogger logger = mock(PluginLogger.class);
-        Repository repo = mock(Repository.class);
+        RepositoryBootstrap repo = mock(RepositoryBootstrap.class);
 
         doThrow(new RuntimeException("err")).when(repo).close();
 

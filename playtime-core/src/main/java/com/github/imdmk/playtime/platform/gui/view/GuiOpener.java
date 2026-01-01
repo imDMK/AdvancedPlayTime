@@ -1,5 +1,6 @@
 package com.github.imdmk.playtime.platform.gui.view;
 
+import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.platform.gui.GuiRegistry;
 import com.github.imdmk.playtime.platform.gui.IdentifiableGui;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
@@ -8,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
+@Service
 public final class GuiOpener {
 
     private final GuiRegistry registry;

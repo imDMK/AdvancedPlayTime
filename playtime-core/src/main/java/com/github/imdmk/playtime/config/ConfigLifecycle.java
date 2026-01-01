@@ -13,12 +13,12 @@ final class ConfigLifecycle {
         this.logger = logger;
     }
 
-    void initialize(@NotNull OkaeriConfig config) {
+    void initialize(@NotNull ConfigSection config) {
         config.saveDefaults();
         load(config);
     }
 
-    void load(@NotNull OkaeriConfig config) {
+    void load(@NotNull ConfigSection config) {
         try {
             config.load(true);
         } catch (OkaeriException e) {
@@ -27,7 +27,7 @@ final class ConfigLifecycle {
         }
     }
 
-    void save(@NotNull OkaeriConfig config) {
+    void save(@NotNull ConfigSection config) {
         try {
             config.save();
         } catch (OkaeriException e) {

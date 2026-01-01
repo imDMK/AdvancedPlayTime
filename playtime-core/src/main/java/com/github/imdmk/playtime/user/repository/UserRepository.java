@@ -12,15 +12,12 @@ import java.util.concurrent.CompletableFuture;
 public interface UserRepository {
 
     CompletableFuture<Optional<User>> findByUuid(@NotNull UUID uuid);
-
     CompletableFuture<Optional<User>> findByName(@NotNull String name);
-
     CompletableFuture<List<User>> findAll();
 
     CompletableFuture<List<User>> findTopByPlayTime(long limit);
 
     CompletableFuture<UserDeleteResult> deleteByUuid(@NotNull UUID uuid);
-
     CompletableFuture<UserDeleteResult> deleteByName(@NotNull String name);
 
     CompletableFuture<User> save(@NotNull User user);

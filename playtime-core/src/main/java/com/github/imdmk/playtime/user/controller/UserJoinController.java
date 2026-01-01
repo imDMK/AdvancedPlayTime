@@ -1,5 +1,6 @@
-package com.github.imdmk.playtime.user.listener;
+package com.github.imdmk.playtime.user.controller;
 
+import com.github.imdmk.playtime.injector.annotations.Controller;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.playtime.user.User;
@@ -19,7 +20,8 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
-public final class UserJoinListener implements Listener {
+@Controller
+public final class UserJoinController implements Listener {
 
     private static final UserSaveReason SAVE_REASON = UserSaveReason.PLAYER_JOIN;
 
@@ -30,7 +32,7 @@ public final class UserJoinListener implements Listener {
     private final TaskScheduler taskScheduler;
 
     @Inject
-    public UserJoinListener(
+    public UserJoinController(
             @NotNull Server server,
             @NotNull PluginLogger logger,
             @NotNull UserService userService,
