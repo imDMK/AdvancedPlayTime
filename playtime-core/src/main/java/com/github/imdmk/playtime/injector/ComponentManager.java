@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -44,6 +45,11 @@ public final class ComponentManager {
         return addProcessor(injector.newInstance(processorClass));
     }
 
+    public ComponentManager addProcessors(@NotNull List<ComponentProcessor<?>> processors) {
+        processors.forEach(this::addProcessor);
+        return this;
+    }
+
     public <A extends Annotation> ComponentManager onProcess(
             @NotNull Class<A> annotation,
             @NotNull ComponentFunctional<Object, A> consumer
@@ -72,9 +78,11 @@ public final class ComponentManager {
     }
 
     public void processAll() {
-        for (final ComponentProcessor<?> processor : processors.values()) {
-            container.drain(processor.annotation())
-                    .forEach(component -> process(processor, component));
+        for (final Priority priority : Priority.values()) {
+            for (final ComponentProcessor<?> processor : processors.values()) {
+                container.drain(priority, processor.annotation())
+                        .forEach(component -> process(processor, component));
+            }
         }
     }
 

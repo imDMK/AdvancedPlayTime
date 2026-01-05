@@ -2,6 +2,7 @@ package com.github.imdmk.playtime.database.repository.ormlite;
 
 import com.github.imdmk.playtime.database.DatabaseBootstrap;
 import com.github.imdmk.playtime.database.repository.RepositoryBootstrap;
+import com.github.imdmk.playtime.database.repository.RepositoryInitializationException;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import com.j256.ormlite.dao.Dao;
@@ -48,18 +49,26 @@ public abstract class OrmLiteRepository<T, ID>
     protected abstract List<Class<?>> entitySubClasses();
 
     @Override
-    public void start() throws SQLException {
+    public void start() throws RepositoryInitializationException {
         final ConnectionSource connection = databaseBootstrap.getConnection();
         if (connection == null) {
             throw new IllegalStateException("DatabaseBootstrap not started before repository initialization");
         }
 
-        for (final Class<?> subClass : this.entitySubClasses()) {
-            TableUtils.createTableIfNotExists(connection, subClass);
+        for (final Class<?> subClass : entitySubClasses()) {
+            try {
+                TableUtils.createTableIfNotExists(connection, subClass);
+            } catch (SQLException e) {
+                throw new RepositoryInitializationException(subClass, e);
+            }
         }
 
-        TableUtils.createTableIfNotExists(connection, this.entityClass());
-        dao = DaoManager.createDao(connection, this.entityClass());
+        try {
+            TableUtils.createTableIfNotExists(connection, entityClass());
+            dao = DaoManager.createDao(connection, entityClass());
+        } catch (SQLException e) {
+            throw new RepositoryInitializationException(entityClass(), e);
+        }
     }
 
     @Override

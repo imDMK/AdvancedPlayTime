@@ -3,7 +3,6 @@ package com.github.imdmk.playtime.config;
 import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import eu.okaeri.configs.OkaeriConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.panda_lang.utilities.inject.annotations.Inject;

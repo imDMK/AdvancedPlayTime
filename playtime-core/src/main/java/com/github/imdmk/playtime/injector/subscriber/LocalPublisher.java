@@ -1,5 +1,7 @@
 package com.github.imdmk.playtime.injector.subscriber;
 
+import com.github.imdmk.playtime.injector.annotations.Service;
+import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.injector.subscriber.event.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Injector;
@@ -10,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service(priority = Priority.LOWEST)
 public final class LocalPublisher implements Publisher {
 
     private final Map<Class<? extends SubscribeEvent>, List<SubscriberMethod>> subscribers = new HashMap<>();

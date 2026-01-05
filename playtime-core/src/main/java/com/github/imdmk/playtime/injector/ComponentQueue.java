@@ -47,19 +47,20 @@ final class ComponentQueue {
         }
     }
 
-    List<Component<?>> drain(@NotNull Class<? extends Annotation> annotation) {
+    List<Component<?>> drain(
+            @NotNull Priority priority,
+            @NotNull Class<? extends Annotation> annotation
+    ) {
         final List<Component<?>> result = new ArrayList<>();
 
         synchronized (this.lock) {
-            for (final Priority priority : Priority.values()) { // Iteration order is defined by Priority enum declaration order
-                final Deque<Component<?>> queue = this.componentsByPriority.get(priority).get(annotation);
-                if (queue == null) {
-                    continue;
-                }
+            final Deque<Component<?>> queue = this.componentsByPriority.get(priority).get(annotation);
+            if (queue == null) {
+                return result;
+            }
 
-                while (!queue.isEmpty()) {
-                    result.add(queue.pollFirst());
-                }
+            while (!queue.isEmpty()) {
+                result.add(queue.pollFirst());
             }
         }
 

@@ -1,7 +1,6 @@
 package com.github.imdmk.playtime.config;
 
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.exception.OkaeriException;
 import org.jetbrains.annotations.NotNull;
 

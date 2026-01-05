@@ -43,7 +43,7 @@ public final class TimeTopCommand {
                 .thenAccept(topUsers -> guiOpener.open(PlayTimeTopGui.class, viewer, topUsers))
                 .exceptionally(e -> {
                     logger.error(e, "Failed to open PlaytimeTopGui for viewer=%s", viewer.getName());
-                    this.messageService.send(viewer, n -> n.actionExecutionError);
+                    messageService.send(viewer, n -> n.actionExecutionError);
                     return null;
                 });
     }

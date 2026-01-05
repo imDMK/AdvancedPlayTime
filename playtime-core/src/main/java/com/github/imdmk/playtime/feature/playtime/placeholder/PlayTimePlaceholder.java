@@ -3,7 +3,7 @@ package com.github.imdmk.playtime.feature.playtime.placeholder;
 import com.github.imdmk.playtime.PlayTimeService;
 import com.github.imdmk.playtime.injector.annotations.Placeholder;
 import com.github.imdmk.playtime.platform.placeholder.PluginPlaceholder;
-import com.github.imdmk.playtime.shared.time.Durations;
+import com.github.imdmk.playtime.time.Durations;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

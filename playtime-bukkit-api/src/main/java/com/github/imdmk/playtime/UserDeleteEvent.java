@@ -5,8 +5,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public final class UserDeleteEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();

@@ -2,6 +2,7 @@ package com.github.imdmk.playtime.message;
 
 import com.eternalcode.multification.adventure.AudienceConverter;
 import com.eternalcode.multification.bukkit.BukkitMultification;
+import com.eternalcode.multification.notice.provider.NoticeProvider;
 import com.eternalcode.multification.translation.TranslationProvider;
 import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.injector.priority.Priority;
@@ -48,6 +49,10 @@ public final class MessageService extends BukkitMultification<MessageConfig> {
             }
             return audienceProvider.console();
         };
+    }
+
+    public void send(CommandSender sender, NoticeProvider<MessageConfig> notice) {
+        create().viewer(sender).notice(notice).send();
     }
 
     @Subscribe(event = PlayTimeShutdownEvent.class)

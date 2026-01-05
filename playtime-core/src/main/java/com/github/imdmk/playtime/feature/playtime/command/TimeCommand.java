@@ -2,7 +2,7 @@ package com.github.imdmk.playtime.feature.playtime.command;
 
 import com.github.imdmk.playtime.PlayTimeService;
 import com.github.imdmk.playtime.message.MessageService;
-import com.github.imdmk.playtime.shared.time.Durations;
+import com.github.imdmk.playtime.time.Durations;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserTime;
 import dev.rollczi.litecommands.annotations.argument.Arg;

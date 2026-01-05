@@ -17,7 +17,7 @@ import com.github.imdmk.playtime.platform.gui.render.TriumphGuiRenderer;
 import com.github.imdmk.playtime.platform.gui.view.AbstractGui;
 import com.github.imdmk.playtime.platform.gui.view.ParameterizedGui;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
-import com.github.imdmk.playtime.shared.time.Durations;
+import com.github.imdmk.playtime.time.Durations;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;

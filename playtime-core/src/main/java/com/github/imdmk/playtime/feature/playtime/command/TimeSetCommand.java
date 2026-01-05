@@ -3,7 +3,7 @@ package com.github.imdmk.playtime.feature.playtime.command;
 import com.github.imdmk.playtime.PlayTimeService;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.time.Durations;
+import com.github.imdmk.playtime.time.Durations;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
@@ -60,7 +60,7 @@ public final class TimeSetCommand {
                 )
                 .exceptionally(e -> {
                     logger.error(e, "Failed to save user on playtime set command (target=%s)", target.getName());
-                    messageService.send(sender, n -> n.actionExecutionError);
+                    //messageService.send(sender, n -> n.actionExecutionError);
                     return null;
                 });
     }
