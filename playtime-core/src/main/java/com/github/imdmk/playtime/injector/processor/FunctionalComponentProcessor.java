@@ -14,9 +14,9 @@ public final class FunctionalComponentProcessor<T, A extends Annotation>
     private final ComponentFunctional<T, A> consumer;
 
     public FunctionalComponentProcessor(
-            @NotNull Class<A> annotationType,
-            @NotNull Class<T> targetType,
-            @NotNull ComponentFunctional<T, A> consumer
+            Class<A> annotationType,
+            Class<T> targetType,
+            ComponentFunctional<T, A> consumer
     ) {
         this.annotationType = annotationType;
         this.targetType = targetType;
@@ -25,22 +25,18 @@ public final class FunctionalComponentProcessor<T, A extends Annotation>
 
     @Override
     public @NotNull Class<A> annotation() {
-        return this.annotationType;
+        return annotationType;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void process(@NotNull Component<A> component, @NotNull ComponentProcessorContext context) {
-        final Object instance = context.injector().newInstance(component.type());
+    public void process(@NotNull Object instance, @NotNull A annotation, @NotNull ComponentProcessorContext context) {
         if (!targetType.isInstance(instance)) {
             return;
         }
 
-        consumer.accept(
-                (T) instance,
-                component.annotation(),
-                context
-        );
+        consumer.accept((T) instance, annotation, context);
     }
 }
+
 

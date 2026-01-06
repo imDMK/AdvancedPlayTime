@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public final class GuiConfig extends ConfigSection {
 
     @Comment({"#", "# Playtime top GUI", "#"})
-    public PlayTimeTopGuiConfig playtimeTopGui = new PlayTimeTopGuiConfig();
+    public PlayTimeTopGuiConfig playTimeTopGui = new PlayTimeTopGuiConfig();
 
     @Comment({"#", "# Navigation Bar", "#"})
     public NavigationBarConfig navigationBar = new NavigationBarConfig();

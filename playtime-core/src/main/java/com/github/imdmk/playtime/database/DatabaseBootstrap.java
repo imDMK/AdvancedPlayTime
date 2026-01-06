@@ -3,6 +3,7 @@ package com.github.imdmk.playtime.database;
 import com.github.imdmk.playtime.database.configurer.DataSourceConfigurer;
 import com.github.imdmk.playtime.database.configurer.DataSourceConfigurerFactory;
 import com.github.imdmk.playtime.database.library.DriverLibraryLoader;
+import com.github.imdmk.playtime.injector.annotations.Database;
 import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.injector.subscriber.Subscribe;
@@ -18,7 +19,7 @@ import org.panda_lang.utilities.inject.annotations.PostConstruct;
 import java.io.File;
 import java.sql.SQLException;
 
-@Service(priority = Priority.NORMAL)
+@Database(priority = Priority.NORMAL)
 public final class DatabaseBootstrap {
 
     private final File dataFolder;
@@ -44,7 +45,6 @@ public final class DatabaseBootstrap {
         this.dataConnector = new DataSourceConnector(logger, factory, configurer);
     }
 
-    @PostConstruct
     public void start() {
         libraryLoader.loadFor(config.databaseMode);
 

@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-@Service(priority = Priority.HIGH)
+@Service(priority = Priority.HIGHEST)
 final class UserServiceImpl implements UserService {
 
     private static final Duration TIMEOUT = Duration.ofSeconds(2L);

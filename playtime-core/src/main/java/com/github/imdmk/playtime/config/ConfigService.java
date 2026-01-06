@@ -2,6 +2,8 @@ package com.github.imdmk.playtime.config;
 
 import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.injector.priority.Priority;
+import com.github.imdmk.playtime.injector.subscriber.Subscribe;
+import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -38,7 +40,7 @@ public final class ConfigService {
         final T config = factory.instantiate(type);
         final File file = new File(dataFolder, config.fileName());
 
-        configurer.configure(config, file);
+        configurer.configure(config, file, config.serdesPack());
         lifecycle.initialize(config);
 
         register(type, config);
@@ -73,6 +75,7 @@ public final class ConfigService {
         return Collections.unmodifiableSet(configs);
     }
 
+    @Subscribe(event = PlayTimeShutdownEvent.class)
     public void shutdown() {
         configs.clear();
         byType.clear();

@@ -28,33 +28,33 @@ tasks.withType<ShadowJar> {
         "org/jetbrains/annotations/**"
     )
 
-    val relocationPrefix = "com.github.imdmk.playtime.lib"
-    listOf(
-        "com.alessiodp.libby",
-        "com.eternalcode.multification",
-        "com.github.benmanes.caffeine",
-        "com.google.errorprone",
-        "com.google.gson",
-        "com.j256.ormlite",
-        "com.zaxxer.hikari",
-        "dev.rollczi.litecommands",
-        "dev.triumphteam.gui",
-        "eu.okaeri.configs",
-        "javassist",
-        "net.kyori",
-        "org.bstats",
-        "org.jspecify.annotations",
-        "org.panda_lang.utilities",
-        "org.yaml.snakeyaml",
-        "panda.std",
-        "panda.utilities"
-    ).forEach { pkg ->
-        relocate(pkg, "$relocationPrefix.$pkg")
-    }
-
-    minimize {
-        exclude(dependency("com.github.ben-manes.caffeine:caffeine"))
-    }
+//    val relocationPrefix = "com.github.imdmk.playtime.lib"
+//    listOf(
+//        "com.alessiodp.libby",
+//        "com.eternalcode.multification",
+//        "com.github.benmanes.caffeine",
+//        "com.google.errorprone",
+//        "com.google.gson",
+//        "com.j256.ormlite",
+//        "com.zaxxer.hikari",
+//        "dev.rollczi.litecommands",
+//        "dev.triumphteam.gui",
+//        "eu.okaeri.configs",
+//        "javassist",
+//        "net.kyori",
+//        "org.bstats",
+//        "org.jspecify.annotations",
+//        "org.panda_lang.utilities",
+//        "org.yaml.snakeyaml",
+//        "panda.std",
+//        "panda.utilities"
+//    ).forEach { pkg ->
+//        relocate(pkg, "$relocationPrefix.$pkg")
+//    }
+//
+//    minimize {
+//        exclude(dependency("com.github.ben-manes.caffeine:caffeine"))
+//    }
 }
 
 bukkit {

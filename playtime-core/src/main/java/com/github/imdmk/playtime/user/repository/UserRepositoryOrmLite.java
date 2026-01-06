@@ -3,6 +3,7 @@ package com.github.imdmk.playtime.user.repository;
 import com.github.imdmk.playtime.database.DatabaseBootstrap;
 import com.github.imdmk.playtime.database.repository.ormlite.OrmLiteRepository;
 import com.github.imdmk.playtime.injector.annotations.Repository;
+import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.playtime.user.User;
@@ -17,7 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-@Repository
+@Repository(priority = Priority.NORMAL)
 public final class UserRepositoryOrmLite
         extends OrmLiteRepository<UserEntity, UUID>
         implements UserRepository {

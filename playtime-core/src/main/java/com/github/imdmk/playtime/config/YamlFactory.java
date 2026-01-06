@@ -19,7 +19,6 @@ final class YamlFactory {
         loader.setMaxAliasesForCollections(50);
 
         final Constructor constructor = new Constructor(loader);
-
         final DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setIndent(2);

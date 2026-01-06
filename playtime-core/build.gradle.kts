@@ -14,7 +14,7 @@ dependencies {
     implementation("com.alessiodp.libby:libby-bukkit:2.0.0-SNAPSHOT")
 
     // Reflections
-    implementation("org.reflections:reflections:0.10.2")
+    implementation("io.github.classgraph:classgraph:4.8.184")
 
     // Multification
     implementation("com.eternalcode:multification-bukkit:1.2.3")
