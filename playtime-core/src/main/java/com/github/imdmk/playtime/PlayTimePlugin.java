@@ -1,7 +1,6 @@
 package com.github.imdmk.playtime;
 
 import com.github.imdmk.playtime.injector.ComponentManager;
-import com.github.imdmk.playtime.injector.priority.AnnotationPriorityProvider;
 import com.github.imdmk.playtime.injector.processor.ComponentProcessors;
 import com.github.imdmk.playtime.injector.subscriber.LocalPublisher;
 import com.github.imdmk.playtime.injector.subscriber.Publisher;
@@ -41,7 +40,6 @@ final class PlayTimePlugin {
         this.publisher = new LocalPublisher(injector);
 
         final ComponentManager componentManager = new ComponentManager(injector, plugin.getClass().getPackageName())
-                .setPriorityProvider(new AnnotationPriorityProvider())
                 .addProcessors(ComponentProcessors.defaults(plugin))
                 .addPostProcessor(((instance, context) -> this.publisher.subscribe(instance)));
 
@@ -59,6 +57,6 @@ final class PlayTimePlugin {
 
     void disable() {
         this.publisher.publish(new PlayTimeShutdownEvent());
-        PlayTimeApiProvider.unregister();
+        //PlayTimeApiProvider.unregister();
     }
 }

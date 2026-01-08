@@ -2,8 +2,8 @@ package com.github.imdmk.playtime.user;
 
 import com.github.imdmk.playtime.UserDeleteEvent;
 import com.github.imdmk.playtime.UserSaveEvent;
+import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.platform.event.BukkitEventCaller;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.user.cache.UserCache;
@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-@Service(priority = Priority.HIGHEST)
+@Service(priority = ComponentPriority.HIGH)
 final class UserServiceImpl implements UserService {
 
     private static final Duration TIMEOUT = Duration.ofSeconds(2L);

@@ -7,41 +7,40 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 final class ComponentScanner {
 
     private static final String SHADED_LIBS = "com.github.imdmk.playtime.lib";
 
     private final String basePackage;
+    private final ComponentFactory componentFactory;
 
     ComponentScanner(@NotNull String basePackage) {
         this.basePackage = basePackage;
+        this.componentFactory = new ComponentFactory();
     }
 
-    Set<Component<?>> scan(@NotNull Class<? extends Annotation> annotation) {
+    <A extends Annotation> List<Component<A>> scan(@NotNull Class<A> annotationType) {
         try (final ScanResult scan = new ClassGraph()
                 .enableAllInfo()
                 .acceptPackages(basePackage)
                 .rejectPackages(SHADED_LIBS)
                 .scan()) {
 
-            return scan.getClassesWithAnnotation(annotation.getName())
+            return scan.getClassesWithAnnotation(annotationType.getName())
                     .stream()
                     .map(ClassInfo::loadClass)
-                    .filter(this::isValidComponent)
-                    .map(type -> new Component<>(
-                            type,
-                            type.getAnnotation(annotation)
-                    ))
-                    .collect(Collectors.toSet());
+                    .filter(ComponentScanner::isValidComponent)
+                    .map(type -> componentFactory.create(type, annotationType))
+                    .toList();
         }
     }
 
-    private boolean isValidComponent(@NotNull Class<?> type) {
+    private static boolean isValidComponent(Class<?> type) {
         return !type.isInterface() && !Modifier.isAbstract(type.getModifiers());
     }
 }
+
 
 

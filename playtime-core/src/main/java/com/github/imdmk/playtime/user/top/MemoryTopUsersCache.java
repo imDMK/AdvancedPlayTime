@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.user.top;
 
+import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.repository.UserRepository;
@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-@Service(priority = Priority.NORMAL)
+@Service(priority = ComponentPriority.NORMAL)
 public final class MemoryTopUsersCache implements TopUsersCache {
 
     private final PluginLogger logger;

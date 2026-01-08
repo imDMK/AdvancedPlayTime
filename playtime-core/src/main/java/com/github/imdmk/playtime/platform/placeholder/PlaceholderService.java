@@ -1,7 +1,9 @@
-package com.github.imdmk.playtime.platform.placeholder.adapter;
+package com.github.imdmk.playtime.platform.placeholder;
 
+import com.github.imdmk.playtime.injector.annotations.Service;
+import com.github.imdmk.playtime.injector.subscriber.Subscribe;
+import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.platform.placeholder.PluginPlaceholder;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -12,25 +14,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-final class PlaceholderAdapterImpl implements PlaceholderAdapter {
+@Service
+public class PlaceholderService {
 
     private final Plugin plugin;
     private final PluginLogger logger;
+    private final boolean supports;
 
     private final Map<PluginPlaceholder, PlaceholderExpansion> expansions = new HashMap<>();
 
-    PlaceholderAdapterImpl(@NotNull Plugin plugin, @NotNull PluginLogger logger) {
+    public PlaceholderService(@NotNull Plugin plugin, @NotNull PluginLogger logger) {
         this.plugin = plugin;
         this.logger = logger;
+        this.supports = checkSupport();
     }
 
-    @Override
-    public boolean isAvailable() {
-        return true;
-    }
-
-    @Override
     public void register(@NotNull PluginPlaceholder placeholder) {
+        if (!supports) {
+            return;
+        }
+
         if (expansions.containsKey(placeholder)) {
             logger.warn("Placeholder with name %s is already registered!", placeholder.identifier());
             return;
@@ -42,21 +45,28 @@ final class PlaceholderAdapterImpl implements PlaceholderAdapter {
         }
     }
 
-    @Override
     public void unregister(@NotNull PluginPlaceholder placeholder) {
+        if (!supports) {
+            return;
+        }
+
         final PlaceholderExpansion expansion = expansions.remove(placeholder);
         if (expansion != null) {
             expansion.unregister();
         }
     }
 
-    @Override
+    @Subscribe(event = PlayTimeShutdownEvent.class)
     public void unregisterAll() {
         for (final PlaceholderExpansion expansion : expansions.values()) {
             expansion.unregister();
         }
 
         expansions.clear();
+    }
+
+    private boolean checkSupport() {
+        return plugin.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
     }
 
     private static final class DelegatingExpansion extends PlaceholderExpansion {
@@ -103,4 +113,3 @@ final class PlaceholderAdapterImpl implements PlaceholderAdapter {
         }
     }
 }
-

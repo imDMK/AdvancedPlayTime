@@ -1,8 +1,8 @@
 package com.github.imdmk.playtime.feature.playtime;
 
 import com.github.imdmk.playtime.PlayTimeService;
+import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.user.UserTime;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -12,7 +12,7 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 
 import java.util.UUID;
 
-@Service(priority = Priority.LOWEST)
+@Service(priority = ComponentPriority.LOWEST)
 final class BukkitPlayTimeService implements PlayTimeService {
 
     private static final Statistic PLAYTIME_STATISTIC = Statistic.PLAY_ONE_MINUTE;

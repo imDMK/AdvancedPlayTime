@@ -1,5 +1,6 @@
 package com.github.imdmk.playtime.user;
 
+import com.github.imdmk.playtime.injector.annotations.lite.LiteArgument;
 import com.github.imdmk.playtime.message.MessageConfig;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import dev.rollczi.litecommands.argument.Argument;
@@ -16,6 +17,7 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+@LiteArgument(type = User.class, name = "user")
 final class UserArgument extends ArgumentResolver<CommandSender, User> {
 
     private static final Duration LOOKUP_TIMEOUT = Duration.ofSeconds(2);

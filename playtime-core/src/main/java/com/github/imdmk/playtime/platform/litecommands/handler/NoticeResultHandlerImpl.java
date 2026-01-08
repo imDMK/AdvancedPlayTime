@@ -1,6 +1,7 @@
-package com.github.imdmk.playtime.platform.litecommands;
+package com.github.imdmk.playtime.platform.litecommands.handler;
 
 import com.eternalcode.multification.notice.Notice;
+import com.github.imdmk.playtime.injector.annotations.lite.LiteHandler;
 import com.github.imdmk.playtime.message.MessageService;
 import dev.rollczi.litecommands.handler.result.ResultHandler;
 import dev.rollczi.litecommands.handler.result.ResultHandlerChain;
@@ -8,6 +9,7 @@ import dev.rollczi.litecommands.invocation.Invocation;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@LiteHandler(value = Notice.class)
 public final class NoticeResultHandlerImpl implements ResultHandler<CommandSender, Notice> {
 
     private final MessageService messageService;

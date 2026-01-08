@@ -3,8 +3,8 @@ package com.github.imdmk.playtime.user.cache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.RemovalCause;
+import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.injector.subscriber.Subscribe;
 import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;
 import com.github.imdmk.playtime.user.User;
@@ -20,11 +20,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-@Service(priority = Priority.LOWEST)
+@Service(priority = ComponentPriority.LOWEST)
 public final class CaffeineUserCache implements UserCache {
 
-    private static final Duration EXPIRE_AFTER_ACCESS = Duration.ofHours(2);
-    private static final Duration EXPIRE_AFTER_WRITE = Duration.ofHours(12);
+    private static final Duration DEFAULT_EXPIRE_AFTER_ACCESS = Duration.ofHours(2);
+    private static final Duration DEFAULT_EXPIRE_AFTER_WRITE = Duration.ofHours(12);
 
     private final Cache<UUID, User> cacheByUuid;
     private final Cache<String, UUID> cacheByName;
@@ -32,13 +32,13 @@ public final class CaffeineUserCache implements UserCache {
     @Inject
     public CaffeineUserCache() {
         this.cacheByName = Caffeine.newBuilder()
-                .expireAfterWrite(EXPIRE_AFTER_WRITE)
-                .expireAfterAccess(EXPIRE_AFTER_ACCESS)
+                .expireAfterWrite(DEFAULT_EXPIRE_AFTER_WRITE)
+                .expireAfterAccess(DEFAULT_EXPIRE_AFTER_ACCESS)
                 .build();
 
         this.cacheByUuid = Caffeine.newBuilder()
-                .expireAfterWrite(EXPIRE_AFTER_WRITE)
-                .expireAfterAccess(EXPIRE_AFTER_ACCESS)
+                .expireAfterWrite(DEFAULT_EXPIRE_AFTER_WRITE)
+                .expireAfterAccess(DEFAULT_EXPIRE_AFTER_ACCESS)
                 .removalListener((UUID key, User user, RemovalCause cause) -> {
                     if (key != null && user != null) {
                         this.cacheByName.invalidate(user.getName());

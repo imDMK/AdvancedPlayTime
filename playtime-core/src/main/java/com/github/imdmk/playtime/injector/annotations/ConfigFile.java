@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.injector.annotations;
 
-import com.github.imdmk.playtime.injector.priority.Priority;
+import com.github.imdmk.playtime.injector.ComponentPriority;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,6 +11,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface ConfigFile {
 
-    Priority priority() default Priority.LOW;
+    ComponentPriority priority() default ComponentPriority.LOWEST;
+
+    int order() default 0;
+
 }
 

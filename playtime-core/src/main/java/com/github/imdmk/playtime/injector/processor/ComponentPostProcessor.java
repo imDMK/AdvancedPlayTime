@@ -1,6 +1,5 @@
-package com.github.imdmk.playtime.injector.postprocessor;
+package com.github.imdmk.playtime.injector.processor;
 
-import com.github.imdmk.playtime.injector.processor.ComponentProcessorContext;
 import org.jetbrains.annotations.NotNull;
 
 @FunctionalInterface

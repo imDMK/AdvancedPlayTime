@@ -10,7 +10,7 @@ final class ConfigFactory {
         try {
             return ConfigManager.create(type);
         } catch (OkaeriException e) {
-            throw new IllegalStateException(
+            throw new ConfigCreateException(
                     "Failed to instantiate config: " + type.getName(), e
             );
         }

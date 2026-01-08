@@ -1,13 +1,13 @@
 package com.github.imdmk.playtime.user.repository;
 
 import com.github.imdmk.playtime.database.repository.ormlite.EntityMapper;
+import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserTime;
 import org.jetbrains.annotations.NotNull;
 
-@Service(priority = Priority.LOW)
+@Service(priority = ComponentPriority.LOWEST)
 public final class UserEntityMapper
         implements EntityMapper<UserEntity, User> {
 

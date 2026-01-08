@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.platform.gui;
 
+import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.injector.priority.Priority;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service(priority = Priority.LOW)
+@Service(priority = ComponentPriority.LOW)
 public final class GuiRegistry {
 
     private final Map<String, IdentifiableGui> byId = new ConcurrentHashMap<>();

@@ -1,14 +1,14 @@
 package com.github.imdmk.playtime.platform.event;
 
+import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import org.bukkit.Server;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
-@Service(priority = Priority.LOW)
+@Service(priority = ComponentPriority.LOW)
 public final class BukkitEventCaller implements EventCaller {
 
     private final Server server;

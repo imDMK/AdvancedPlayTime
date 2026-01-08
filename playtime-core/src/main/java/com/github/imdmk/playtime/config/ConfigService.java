@@ -1,10 +1,9 @@
 package com.github.imdmk.playtime.config;
 
+import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.injector.subscriber.Subscribe;
 import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;
-import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.panda_lang.utilities.inject.annotations.Inject;
@@ -15,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service(priority = Priority.LOWEST)
+@Service(priority = ComponentPriority.LOWEST, order = 0)
 public final class ConfigService {
 
     private final Set<ConfigSection> configs = ConcurrentHashMap.newKeySet();
@@ -28,16 +27,16 @@ public final class ConfigService {
     private final ConfigLifecycle lifecycle;
 
     @Inject
-    public ConfigService(@NotNull PluginLogger logger, @NotNull File dataFolder) {
+    public ConfigService(@NotNull File dataFolder) {
         this.dataFolder = dataFolder;
 
         this.factory = new ConfigFactory();
         this.configurer = new ConfigConfigurer();
-        this.lifecycle = new ConfigLifecycle(logger);
+        this.lifecycle = new ConfigLifecycle();
     }
 
-    public <T extends ConfigSection> @NotNull T create(@NotNull Class<T> type) {
-        final T config = factory.instantiate(type);
+    public <C extends ConfigSection> C create(@NotNull Class<C> type) {
+        final C config = factory.instantiate(type);
         final File file = new File(dataFolder, config.fileName());
 
         configurer.configure(config, file, config.serdesPack());
@@ -48,14 +47,14 @@ public final class ConfigService {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends ConfigSection> T get(@NotNull Class<T> type) {
-        return (T) byType.get(type);
+    public <C extends ConfigSection> C get(@NotNull Class<C> type) {
+        return (C) byType.get(type);
     }
 
-    public <T extends ConfigSection> @NotNull T require(@NotNull Class<T> type) {
-        final T config = get(type);
+    public <C extends ConfigSection> C require(@NotNull Class<C> type) {
+        final C config = get(type);
         if (config == null) {
-            throw new IllegalStateException("Config not created: " + type.getName());
+            throw new ConfigAccessException("Config not created: " + type.getName());
         }
 
         return config;

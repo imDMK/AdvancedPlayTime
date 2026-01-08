@@ -4,8 +4,6 @@ import com.github.imdmk.playtime.database.configurer.DataSourceConfigurer;
 import com.github.imdmk.playtime.database.configurer.DataSourceConfigurerFactory;
 import com.github.imdmk.playtime.database.library.DriverLibraryLoader;
 import com.github.imdmk.playtime.injector.annotations.Database;
-import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.injector.subscriber.Subscribe;
 import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
@@ -14,12 +12,11 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.panda_lang.utilities.inject.annotations.Inject;
-import org.panda_lang.utilities.inject.annotations.PostConstruct;
 
 import java.io.File;
 import java.sql.SQLException;
 
-@Database(priority = Priority.NORMAL)
+@Database
 public final class DatabaseBootstrap {
 
     private final File dataFolder;

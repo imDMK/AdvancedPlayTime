@@ -9,11 +9,21 @@ public final class Component<A extends Annotation> {
 
     private final Class<?> type;
     private final A annotation;
+    private final ComponentPriority componentPriority;
+    private final int order;
+
     private Object instance;
 
-    public Component(@NotNull Class<?> type, @NotNull A annotation) {
+    public Component(
+            @NotNull Class<?> type,
+            @NotNull A annotation,
+            @NotNull ComponentPriority componentPriority,
+            int order
+    ) {
         this.type = type;
         this.annotation = annotation;
+        this.componentPriority = componentPriority;
+        this.order = order;
     }
 
     public Class<?> type() {
@@ -24,16 +34,25 @@ public final class Component<A extends Annotation> {
         return annotation;
     }
 
+    public ComponentPriority priority() {
+        return componentPriority;
+    }
+
+    public int order() {
+        return order;
+    }
+
     public Object instance() {
         return instance;
     }
 
-    public void create(@NotNull Injector injector) {
-        if (this.instance == null) {
-            this.instance = injector.newInstance(type);
+    public void createInstance(@NotNull Injector injector) {
+        if (instance == null) {
+            instance = injector.newInstance(type);
         }
     }
 }
+
 
 
 

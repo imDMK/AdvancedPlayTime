@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.injector.annotations;
 
-import com.github.imdmk.playtime.injector.priority.Priority;
+import com.github.imdmk.playtime.injector.ComponentPriority;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Database {
 
-    Priority priority() default Priority.NORMAL;
+    ComponentPriority priority() default ComponentPriority.LOW;
+
+    int order() default 0;
 
 }

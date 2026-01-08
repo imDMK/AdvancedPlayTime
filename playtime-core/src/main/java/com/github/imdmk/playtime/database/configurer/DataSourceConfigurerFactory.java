@@ -16,7 +16,7 @@ public final class DataSourceConfigurerFactory {
             DatabaseMode.SQL,        new SQLConfigurer()
     );
 
-    public static @NotNull DataSourceConfigurer getFor(@NotNull DatabaseMode mode) {
+    public static DataSourceConfigurer getFor(@NotNull DatabaseMode mode) {
         final DataSourceConfigurer configurer = CONFIGURER_BY_MODE.get(mode);
         if (configurer == null) {
             throw new IllegalArgumentException("Unsupported database mode: " + mode);

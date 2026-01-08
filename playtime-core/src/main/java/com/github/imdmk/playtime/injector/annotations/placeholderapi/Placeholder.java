@@ -1,6 +1,6 @@
-package com.github.imdmk.playtime.injector.annotations;
+package com.github.imdmk.playtime.injector.annotations.placeholderapi;
 
-import com.github.imdmk.playtime.injector.priority.Priority;
+import com.github.imdmk.playtime.injector.ComponentPriority;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Placeholder {
 
-    Priority priority() default Priority.HIGHEST;
+    ComponentPriority priority() default ComponentPriority.HIGHEST;
 
 }

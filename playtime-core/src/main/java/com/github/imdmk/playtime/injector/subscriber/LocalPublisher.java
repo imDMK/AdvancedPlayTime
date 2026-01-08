@@ -12,9 +12,9 @@ import java.util.Map;
 
 public final class LocalPublisher implements Publisher {
 
-    private final Map<Class<? extends SubscribeEvent>, List<SubscriberMethod>> subscribers = new HashMap<>();
-
     private final Injector injector;
+
+    private final Map<Class<? extends SubscribeEvent>, List<SubscriberMethod>> subscribers = new HashMap<>();
 
     public LocalPublisher(@NotNull Injector injector) {
         this.injector = injector;

@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.platform.scheduler;
 
+import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.injector.priority.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -10,7 +10,7 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 
 import java.time.Duration;
 
-@Service(priority = Priority.LOWEST)
+@Service(priority = ComponentPriority.LOWEST)
 public final class BukkitTaskScheduler implements TaskScheduler {
 
     private static final long MILLIS_PER_TICK = 50L;

@@ -1,6 +1,7 @@
 package com.github.imdmk.playtime.time;
 
 import org.jetbrains.annotations.NotNull;
+import org.panda_lang.utilities.inject.annotations.PostConstruct;
 
 import java.time.Duration;
 

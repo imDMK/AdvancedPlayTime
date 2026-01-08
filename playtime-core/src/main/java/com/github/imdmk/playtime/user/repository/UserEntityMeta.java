@@ -13,5 +13,6 @@ interface UserEntityMeta extends EntityMeta {
         String NAME = "name";
 
         String PLAYTIME_MILLIS = "playtimeMillis";
+
     }
 }

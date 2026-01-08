@@ -60,7 +60,7 @@ public final class TimeSetCommand {
                 )
                 .exceptionally(e -> {
                     logger.error(e, "Failed to save user on playtime set command (target=%s)", target.getName());
-                    //messageService.send(sender, n -> n.actionExecutionError);
+                    messageService.send(sender, n -> n.actionExecutionError);
                     return null;
                 });
     }

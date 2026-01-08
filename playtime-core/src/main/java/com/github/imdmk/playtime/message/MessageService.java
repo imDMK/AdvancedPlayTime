@@ -4,8 +4,8 @@ import com.eternalcode.multification.adventure.AudienceConverter;
 import com.eternalcode.multification.bukkit.BukkitMultification;
 import com.eternalcode.multification.notice.provider.NoticeProvider;
 import com.eternalcode.multification.translation.TranslationProvider;
+import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.injector.priority.Priority;
 import com.github.imdmk.playtime.injector.subscriber.Subscribe;
 import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;
 import com.github.imdmk.playtime.platform.adventure.AdventureComponents;
@@ -19,7 +19,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
-@Service(priority = Priority.NORMAL)
+@Service(priority = ComponentPriority.NORMAL)
 public final class MessageService extends BukkitMultification<MessageConfig> {
 
     private final MessageConfig messageConfig;
