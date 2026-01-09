@@ -13,12 +13,12 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 public final class GuiOpener {
 
     private final GuiRegistry registry;
-    private final TaskScheduler taskScheduler;
+    private final TaskScheduler scheduler;
 
     @Inject
-    public GuiOpener(@NotNull GuiRegistry registry, @NotNull TaskScheduler taskScheduler) {
+    public GuiOpener(@NotNull GuiRegistry registry, @NotNull TaskScheduler scheduler) {
         this.registry = registry;
-        this.taskScheduler = taskScheduler;
+        this.scheduler = scheduler;
     }
 
     public void open(
@@ -32,7 +32,7 @@ public final class GuiOpener {
 
         final BaseGui baseGui = simpleGui.createGui();
         simpleGui.prepareItems(baseGui, viewer);
-        taskScheduler.runSync(() -> baseGui.open(viewer));
+        scheduler.runSync(() -> baseGui.open(viewer));
     }
 
     @SuppressWarnings("unchecked")
@@ -50,7 +50,7 @@ public final class GuiOpener {
         final BaseGui baseGui = typed.createGui(viewer, parameter);
 
         typed.prepareItems(baseGui, viewer, parameter);
-        taskScheduler.runSync(() -> baseGui.open(viewer));
+        scheduler.runSync(() -> baseGui.open(viewer));
     }
 
     public void open(
@@ -65,7 +65,7 @@ public final class GuiOpener {
         final BaseGui baseGui = simpleGui.createGui();
 
         simpleGui.prepareItems(baseGui, viewer);
-        taskScheduler.runSync(() -> baseGui.open(viewer));
+        scheduler.runSync(() -> baseGui.open(viewer));
     }
 
     @SuppressWarnings("unchecked")
@@ -83,7 +83,7 @@ public final class GuiOpener {
         final BaseGui baseGui = typed.createGui(viewer, parameter);
 
         typed.prepareItems(baseGui, viewer, parameter);
-        taskScheduler.runSync(() -> baseGui.open(viewer));
+        scheduler.runSync(() -> baseGui.open(viewer));
     }
 
     private IdentifiableGui require(String id) {

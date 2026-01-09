@@ -13,6 +13,10 @@ import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.injector.annotations.lite.LiteArgument;
 import com.github.imdmk.playtime.injector.annotations.lite.LiteHandler;
 import com.github.imdmk.playtime.injector.annotations.placeholderapi.Placeholder;
+import com.github.imdmk.playtime.platform.gui.GuiRegistry;
+import com.github.imdmk.playtime.platform.gui.IdentifiableGui;
+import com.github.imdmk.playtime.platform.placeholder.PlaceholderService;
+import com.github.imdmk.playtime.platform.placeholder.PluginPlaceholder;
 import dev.rollczi.litecommands.LiteCommandsBuilder;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.argument.ArgumentKey;
@@ -55,12 +59,9 @@ public final class ComponentProcessors {
 
                 ProcessorBuilder.forAnnotation(Database.class)
                         .handle((instance, annotation, ctx) -> {
-                            if (!(instance instanceof DatabaseBootstrap databaseBootstrap)) {
-                                throw new IllegalStateException("@Database can only be used on with DatabaseBootstrap class");
-                            }
+                            final DatabaseBootstrap databaseBootstrap = requireInstance(instance, DatabaseBootstrap.class, Database.class);
 
                             databaseBootstrap.start();
-
                             ctx.injector().getResources()
                                     .on(DatabaseBootstrap.class)
                                     .assignInstance(databaseBootstrap);
@@ -69,12 +70,9 @@ public final class ComponentProcessors {
 
                 ProcessorBuilder.forAnnotation(Repository.class)
                         .handle((instance, annotation, ctx) -> {
-                            if (!(instance instanceof OrmLiteRepository<?,?> repository)) {
-                                return;
-                            }
+                            final OrmLiteRepository<?, ?> repository = requireInstance(instance, OrmLiteRepository.class, OrmLiteRepository.class);
 
                             repository.start();
-
                             ctx.injector().getResources()
                                     .on(repository.getClass())
                                     .assignInstance(repository);
@@ -83,13 +81,8 @@ public final class ComponentProcessors {
 
                 ProcessorBuilder.forAnnotation(Controller.class)
                         .handle((instance, annotation, ctx) -> {
-                            if (!(instance instanceof Listener listener)) {
-                                throw new IllegalStateException(
-                                        "@Controller must implement Listener: "
-                                                + instance.getClass().getName()
-                                );
-                            }
-
+                            final Listener listener = requireInstance(instance, Listener.class, Controller.class);
+                            System.out.println("registered listener: " + listener.getClass().getName());
                             plugin.getServer()
                                     .getPluginManager()
                                     .registerEvents(listener, plugin);
@@ -97,11 +90,11 @@ public final class ComponentProcessors {
                         .build(),
 
                 ProcessorBuilder.forAnnotation(Gui.class)
-                        .handle()
+                        .handle((instance, annotation, ctx) -> ctx.injector().newInstance(GuiProcessor.class).process(instance, annotation, ctx))
                         .build(),
 
                 ProcessorBuilder.forAnnotation(Placeholder.class)
-                        .handle()
+                        .handle((instance, annotation, ctx) -> ctx.injector().newInstance(PlaceholderProcessor.class).process(instance, annotation, ctx))
                         .build(),
 
                 ProcessorBuilder.forAnnotation(Command.class)
@@ -119,9 +112,44 @@ public final class ComponentProcessors {
         );
     }
 
+    static <T> T requireInstance(
+            Object instance,
+            Class<T> expectedType,
+            Class<?> annotation
+    ) {
+        if (!expectedType.isInstance(instance)) {
+            throw new IllegalStateException(
+                    "@" + annotation.getSimpleName()
+                            + " can only be used on "
+                            + expectedType.getSimpleName()
+                            + ": " + instance.getClass().getName()
+            );
+        }
+
+        return expectedType.cast(instance);
+    }
+
+    @Inject
+    private record GuiProcessor(@NotNull GuiRegistry guiRegistry)
+            implements ComponentProcessor<Gui> {
+
+        @Override
+        public void process(@NotNull Object instance, @NotNull Gui annotation, @NotNull ComponentProcessorContext context) {
+            final IdentifiableGui identifiableGui = requireInstance(instance, IdentifiableGui.class, Gui.class);
+            System.out.println("registering gui: " +  identifiableGui.getClass().getName());
+            guiRegistry.register(identifiableGui);
+        }
+
+        @NotNull
+        @Override
+        public Class<Gui> annotation() {
+            return Gui.class;
+        }
+    }
+
     @Inject
     private record ConfigFileProcessor(@NotNull ConfigService configService)
-                implements ComponentProcessor<ConfigFile> {
+            implements ComponentProcessor<ConfigFile> {
 
             @Override
             public void process(
@@ -129,12 +157,7 @@ public final class ComponentProcessors {
                     @NotNull ConfigFile annotation,
                     @NotNull ComponentProcessorContext context
             ) {
-                if (!(instance instanceof ConfigSection configSection)) {
-                    throw new IllegalStateException(
-                            "@ConfigFile can only be used on ConfigSection: "
-                                    + instance.getClass().getName()
-                    );
-                }
+                final ConfigSection configSection = requireInstance(instance, ConfigSection.class, ConfigFile.class);
 
                 configService.create(configSection.getClass());
                 context.injector().getResources()
@@ -149,16 +172,26 @@ public final class ComponentProcessors {
             }
     }
 
-    private record
+    @Inject
+    private record PlaceholderProcessor(@NotNull PlaceholderService placeholderService)
+            implements ComponentProcessor<Placeholder> {
+
+        @Override
+        public void process(@NotNull Object instance, @NotNull Placeholder annotation, @NotNull ComponentProcessorContext context) {
+            final PluginPlaceholder pluginPlaceholder = requireInstance(instance, PluginPlaceholder.class, Placeholder.class);
+            placeholderService.register(pluginPlaceholder);
+        }
+
+        @NotNull
+        @Override
+        public Class<Placeholder> annotation() {
+            return Placeholder.class;
+        }
+    }
 
     @Inject
     private record LiteHandlerProcessor(@NotNull LiteCommandsBuilder<?, ?, ?> liteBuilder)
             implements ComponentProcessor<LiteHandler> {
-
-        @Override
-        public @NotNull Class<LiteHandler> annotation() {
-            return LiteHandler.class;
-        }
 
         @Override
         @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -167,25 +200,21 @@ public final class ComponentProcessors {
                 @NotNull LiteHandler annotation,
                 @NotNull ComponentProcessorContext context
         ) {
-            if (!(instance instanceof ResultHandler handler)) {
-                throw new IllegalStateException(
-                        "@LiteHandler can only be used on ResultHandler: "
-                                + instance.getClass().getName()
-                );
-            }
+            final ResultHandler resultHandler = requireInstance(instance, ResultHandler.class, LiteHandler.class);
+            System.out.println("registering result handler: " +  resultHandler.getClass().getName());
+            liteBuilder.result(annotation.value(), resultHandler);
+        }
 
-            liteBuilder.result(annotation.value(), handler);
+        @NotNull
+        @Override
+        public Class<LiteHandler> annotation() {
+            return LiteHandler.class;
         }
     }
 
     @Inject
     private record LiteCommandProcessor(@NotNull LiteCommandsBuilder<?, ?, ?> liteBuilder)
             implements ComponentProcessor<Command> {
-
-        @Override
-        public @NotNull Class<Command> annotation() {
-            return Command.class;
-        }
 
         @Override
         public void process(
@@ -195,16 +224,17 @@ public final class ComponentProcessors {
         ) {
             liteBuilder.commands(instance);
         }
+
+        @NotNull
+        @Override
+        public Class<Command> annotation() {
+            return Command.class;
+        }
     }
 
     @Inject
     private record LiteArgumentProcessor(@NotNull LiteCommandsBuilder<?, ?, ?> liteBuilder)
             implements ComponentProcessor<LiteArgument> {
-
-        @Override
-        public @NotNull Class<LiteArgument> annotation() {
-            return LiteArgument.class;
-        }
 
         @Override
         @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -213,14 +243,14 @@ public final class ComponentProcessors {
                 @NotNull LiteArgument annotation,
                 @NotNull ComponentProcessorContext context
         ) {
-            if (!(instance instanceof ArgumentResolver argumentResolver)) {
-                throw new IllegalStateException(
-                        "@LiteArgument can only be used on ArgumentResolver: "
-                                + instance.getClass().getName()
-                );
-            }
-
+            final ArgumentResolver argumentResolver = requireInstance(instance, ArgumentResolver.class, LiteArgument.class);
             liteBuilder.argument(annotation.type(), ArgumentKey.of(annotation.name()), argumentResolver);
+        }
+
+        @NotNull
+        @Override
+        public Class<LiteArgument> annotation() {
+            return LiteArgument.class;
         }
     }
 

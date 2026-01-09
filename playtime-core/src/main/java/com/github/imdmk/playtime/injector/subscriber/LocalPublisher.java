@@ -31,8 +31,6 @@ public final class LocalPublisher implements Publisher {
             final Class<? extends SubscribeEvent> eventType = subscribe.event();
             method.setAccessible(true);
 
-            System.out.println("published class: " + instance.getClass().getName() + "method: " + method.getName() + "event: " + eventType.getName());
-
             subscribers
                     .computeIfAbsent(eventType, k -> new ArrayList<>())
                     .add(new SubscriberMethod(instance, method));

@@ -28,7 +28,7 @@ final class BukkitPlayTimeService implements PlayTimeService {
     public @NotNull UserTime getTime(@NotNull UUID uuid) {
         checkPrimaryThread();
 
-        int timeTicks = getOffline(uuid).getStatistic(PLAYTIME_STATISTIC);
+        final int timeTicks = getOffline(uuid).getStatistic(PLAYTIME_STATISTIC);
         if (timeTicks <= 0) {
             return UserTime.ZERO;
         }

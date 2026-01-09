@@ -44,7 +44,7 @@ public enum DurationFormatStyle {
 
     public abstract String format(@NotNull Duration duration);
 
-    protected static String formatWith(
+    static String formatWith(
             @NotNull Duration duration,
             @NotNull BiFunction<DurationUnit, Integer, String> valueFormatter,
             @NotNull Separator separator
@@ -56,7 +56,7 @@ public enum DurationFormatStyle {
                 .collect(Collectors.joining(separator.value()));
     }
 
-    protected enum Separator {
+    enum Separator {
 
         SPACE(" "),
         AND(" and "),
@@ -68,7 +68,7 @@ public enum DurationFormatStyle {
             this.value = value;
         }
 
-        public String value() {
+        String value() {
             return value;
         }
     }

@@ -9,10 +9,11 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
-@Service(priority = ComponentPriority.LOW)
+@Service
 public class BMetricsService {
 
     private static final int METRICS_ID = 19362;
+
     private final Metrics metrics;
 
     @Inject

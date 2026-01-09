@@ -4,12 +4,10 @@ import com.github.imdmk.playtime.PlayTimeService;
 import com.github.imdmk.playtime.injector.annotations.placeholderapi.Placeholder;
 import com.github.imdmk.playtime.platform.placeholder.PluginPlaceholder;
 import com.github.imdmk.playtime.time.Durations;
-import org.bukkit.OfflinePlayer;
+import com.github.imdmk.playtime.user.UserTime;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
-
-import java.util.UUID;
 
 @Placeholder
 public final class PlayTimePlaceholder implements PluginPlaceholder {
@@ -27,16 +25,8 @@ public final class PlayTimePlaceholder implements PluginPlaceholder {
     }
 
     @Override
-    public @NotNull String onRequest(@NotNull Player player, @NotNull String params) {
-        return formatUserTime(player.getUniqueId());
-    }
-
-    @Override
-    public @NotNull String onRequest(@NotNull OfflinePlayer player, @NotNull String params) {
-        return formatUserTime(player.getUniqueId());
-    }
-
-    private @NotNull String formatUserTime(@NotNull UUID uuid) {
-        return Durations.format(playtimeService.getTime(uuid).toDuration());
+    public @NotNull String request(@NotNull Player player, @NotNull String params) {
+        final UserTime time = playtimeService.getTime(player.getUniqueId());
+        return Durations.format(time.toDuration());
     }
 }

@@ -2,6 +2,7 @@ package com.github.imdmk.playtime.platform.scheduler;
 
 import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
+import com.github.imdmk.playtime.time.Durations;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -12,8 +13,6 @@ import java.time.Duration;
 
 @Service(priority = ComponentPriority.LOWEST)
 public final class BukkitTaskScheduler implements TaskScheduler {
-
-    private static final long MILLIS_PER_TICK = 50L;
 
     private final Plugin plugin;
     private final BukkitScheduler scheduler;
@@ -39,7 +38,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
             @NotNull Runnable runnable,
             @NotNull Duration delay
     ) {
-        return scheduler.runTaskLaterAsynchronously(plugin, runnable, toTicks(delay));
+        return scheduler.runTaskLaterAsynchronously(plugin, runnable, Durations.convertToTicks(delay));
     }
 
     @Override
@@ -47,7 +46,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
             @NotNull Runnable runnable,
             @NotNull Duration delay
     ) {
-        return scheduler.runTaskLater(plugin, runnable, toTicks(delay));
+        return scheduler.runTaskLater(plugin, runnable, Durations.convertToTicks(delay));
     }
 
     @Override
@@ -56,7 +55,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
             @NotNull Duration delay,
             @NotNull Duration period
     ) {
-        return scheduler.runTaskTimer(plugin, runnable, toTicks(delay), toTicks(period));
+        return scheduler.runTaskTimer(plugin, runnable, Durations.convertToTicks(delay), Durations.convertToTicks(period));
     }
 
     @Override
@@ -65,7 +64,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
             @NotNull Duration delay,
             @NotNull Duration period
     ) {
-        return scheduler.runTaskTimerAsynchronously(plugin, runnable, toTicks(delay), toTicks(period));
+        return scheduler.runTaskTimerAsynchronously(plugin, runnable, Durations.convertToTicks(delay), Durations.convertToTicks(period));
     }
 
     @Override
@@ -76,10 +75,5 @@ public final class BukkitTaskScheduler implements TaskScheduler {
     @Override
     public void cancelAllTasks() {
         scheduler.cancelTasks(plugin);
-    }
-
-    private static int toTicks(Duration duration) {
-        long ticks = duration.toMillis() / MILLIS_PER_TICK;
-        return ticks <= 0 ? 0 : (int) ticks;
     }
 }

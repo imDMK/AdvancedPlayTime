@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 
-public enum DurationUnit {
+enum DurationUnit {
 
     DAY("day", "days", "d") {
         @Override
@@ -31,7 +31,7 @@ public enum DurationUnit {
         }
     };
 
-    protected static final DurationUnit[] ORDERED = {
+    static final DurationUnit[] ORDERED = {
             DAY, HOUR, MINUTE, SECOND
     };
 
@@ -47,13 +47,13 @@ public enum DurationUnit {
         this.abbreviation = abbreviation;
     }
 
-    public abstract int extract(@NotNull Duration duration);
+    abstract int extract(@NotNull Duration duration);
 
-    public String getAbbreviation() {
+    String getAbbreviation() {
         return abbreviation;
     }
 
-    protected String toDisplayName(int value) {
+    String toDisplayName(int value) {
         final String word = (value == 1 ? singular : plural);
         return DISPLAY_NAME_FORMAT.formatted(value, word);
     }
