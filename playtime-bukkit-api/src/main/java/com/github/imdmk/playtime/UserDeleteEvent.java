@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime;
 
-import com.github.imdmk.playtime.user.UserDeleteResult;
+import com.github.imdmk.playtime.user.User;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -10,23 +10,26 @@ public final class UserDeleteEvent extends Event {
     private static final HandlerList HANDLERS = new HandlerList();
     private static final boolean ASYNC = true;
 
-    private final UserDeleteResult result;
+    private final User user;
 
-    public UserDeleteEvent(@NotNull UserDeleteResult result) {
+    public UserDeleteEvent(@NotNull User user) {
         super(ASYNC);
-        this.result = result;
+        this.user = user;
     }
 
-    public @NotNull UserDeleteResult getResult() {
-        return this.result;
+    @NotNull
+    public User getUser() {
+        return user;
     }
 
+    @NotNull
     @Override
-    public @NotNull HandlerList getHandlers() {
+    public HandlerList getHandlers() {
         return HANDLERS;
     }
 
-    public static @NotNull HandlerList getHandlerList() {
+    @NotNull
+    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 

@@ -23,8 +23,8 @@ import java.util.function.Consumer;
 @Service(priority = ComponentPriority.LOWEST)
 public final class CaffeineUserCache implements UserCache {
 
-    private static final Duration DEFAULT_EXPIRE_AFTER_ACCESS = Duration.ofHours(2);
-    private static final Duration DEFAULT_EXPIRE_AFTER_WRITE = Duration.ofHours(12);
+    private static final Duration EXPIRE_AFTER_ACCESS = Duration.ofHours(2);
+    private static final Duration EXPIRE_AFTER_WRITE = Duration.ofHours(12);
 
     private final Cache<UUID, User> cacheByUuid;
     private final Cache<String, UUID> cacheByName;
@@ -32,13 +32,13 @@ public final class CaffeineUserCache implements UserCache {
     @Inject
     public CaffeineUserCache() {
         this.cacheByName = Caffeine.newBuilder()
-                .expireAfterWrite(DEFAULT_EXPIRE_AFTER_WRITE)
-                .expireAfterAccess(DEFAULT_EXPIRE_AFTER_ACCESS)
+                .expireAfterWrite(EXPIRE_AFTER_WRITE)
+                .expireAfterAccess(EXPIRE_AFTER_ACCESS)
                 .build();
 
         this.cacheByUuid = Caffeine.newBuilder()
-                .expireAfterWrite(DEFAULT_EXPIRE_AFTER_WRITE)
-                .expireAfterAccess(DEFAULT_EXPIRE_AFTER_ACCESS)
+                .expireAfterWrite(EXPIRE_AFTER_WRITE)
+                .expireAfterAccess(EXPIRE_AFTER_ACCESS)
                 .removalListener((UUID key, User user, RemovalCause cause) -> {
                     if (key != null && user != null) {
                         this.cacheByName.invalidate(user.getName());
@@ -90,6 +90,13 @@ public final class CaffeineUserCache implements UserCache {
     }
 
     @Override
+    @Subscribe(event = PlayTimeShutdownEvent.class)
+    public void invalidateAll() {
+        cacheByUuid.invalidateAll();
+        cacheByName.invalidateAll();
+    }
+
+    @Override
     public Optional<User> getUserByUuid(@NotNull UUID uuid) {
         return Optional.ofNullable(cacheByUuid.getIfPresent(uuid));
     }
@@ -123,12 +130,5 @@ public final class CaffeineUserCache implements UserCache {
     @Unmodifiable
     public Collection<User> getCache() {
         return List.copyOf(cacheByUuid.asMap().values());
-    }
-
-    @Override
-    @Subscribe(event = PlayTimeShutdownEvent.class)
-    public void invalidateAll() {
-        cacheByUuid.invalidateAll();
-        cacheByName.invalidateAll();
     }
 }

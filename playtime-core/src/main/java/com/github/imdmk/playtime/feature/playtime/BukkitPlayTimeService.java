@@ -3,7 +3,7 @@ package com.github.imdmk.playtime.feature.playtime;
 import com.github.imdmk.playtime.PlayTimeService;
 import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.user.UserTime;
+import com.github.imdmk.playtime.PlayTime;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.Statistic;
@@ -25,26 +25,26 @@ final class BukkitPlayTimeService implements PlayTimeService {
     }
 
     @Override
-    public @NotNull UserTime getTime(@NotNull UUID uuid) {
+    public @NotNull PlayTime getTime(@NotNull UUID uuid) {
         checkPrimaryThread();
 
         final int timeTicks = getOffline(uuid).getStatistic(PLAYTIME_STATISTIC);
         if (timeTicks <= 0) {
-            return UserTime.ZERO;
+            return PlayTime.ZERO;
         }
 
-        return UserTime.ofTicks(timeTicks);
+        return PlayTime.ofTicks(timeTicks);
     }
 
     @Override
-    public void setTime(@NotNull UUID uuid, @NotNull UserTime time) {
+    public void setTime(@NotNull UUID uuid, @NotNull PlayTime time) {
         checkPrimaryThread();
         getOffline(uuid).setStatistic(PLAYTIME_STATISTIC, time.toTicks());
     }
 
     @Override
     public void resetTime(@NotNull UUID uuid) {
-        setTime(uuid, UserTime.ZERO);
+        setTime(uuid, PlayTime.ZERO);
     }
 
     private OfflinePlayer getOffline(UUID uuid) {

@@ -48,8 +48,8 @@ final class PlayTimePlugin {
 
         this.publisher.publish(new PlayTimeInitializeEvent());
 
-        //final PlayTimeApi api = injector.newInstance(PlayTimeApiAdapter.class);
-        //PlayTimeApiProvider.register(api);
+        final PlayTimeApi api = injector.newInstance(PlayTimeApiAdapter.class);
+        PlayTimeApiProvider.register(api);
 
         final long elapsedMillis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
         logger.info("Successfully loaded plugin in " + elapsedMillis + "ms!");
@@ -57,6 +57,6 @@ final class PlayTimePlugin {
 
     void disable() {
         this.publisher.publish(new PlayTimeShutdownEvent());
-        //PlayTimeApiProvider.unregister();
+        PlayTimeApiProvider.unregister();
     }
 }

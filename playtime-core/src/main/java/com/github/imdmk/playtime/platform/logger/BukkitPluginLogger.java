@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 public final class BukkitPluginLogger implements PluginLogger {
 
-    /** Backing {@link java.util.logging.Logger} provided by Bukkit. */
     private final Logger logger;
 
     @Inject

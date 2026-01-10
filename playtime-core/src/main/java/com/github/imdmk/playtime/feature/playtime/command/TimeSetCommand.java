@@ -8,7 +8,7 @@ import com.github.imdmk.playtime.time.Durations;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
-import com.github.imdmk.playtime.user.UserTime;
+import com.github.imdmk.playtime.PlayTime;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.async.Async;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -47,7 +47,7 @@ public final class TimeSetCommand {
     @Execute
     void setPlaytime(@Context CommandSender sender, @Arg @Async User target, @Arg Duration time) {
         final Duration normalizedTime = Durations.clamp(time);
-        final UserTime newTime = UserTime.ofDuration(normalizedTime);
+        final PlayTime newTime = PlayTime.ofDuration(normalizedTime);
 
         target.setPlaytime(newTime);
         playTimeService.setTime(target.getUuid(), newTime);

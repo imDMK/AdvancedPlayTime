@@ -4,7 +4,7 @@ import com.github.imdmk.playtime.PlayTimeService;
 import com.github.imdmk.playtime.injector.annotations.placeholderapi.Placeholder;
 import com.github.imdmk.playtime.platform.placeholder.PluginPlaceholder;
 import com.github.imdmk.playtime.time.Durations;
-import com.github.imdmk.playtime.user.UserTime;
+import com.github.imdmk.playtime.PlayTime;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
@@ -26,7 +26,7 @@ public final class PlayTimePlaceholder implements PluginPlaceholder {
 
     @Override
     public @NotNull String request(@NotNull Player player, @NotNull String params) {
-        final UserTime time = playtimeService.getTime(player.getUniqueId());
+        final PlayTime time = playtimeService.getTime(player.getUniqueId());
         return Durations.format(time.toDuration());
     }
 }

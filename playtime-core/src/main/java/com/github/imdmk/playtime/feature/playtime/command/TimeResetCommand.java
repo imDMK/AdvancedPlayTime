@@ -6,7 +6,7 @@ import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
-import com.github.imdmk.playtime.user.UserTime;
+import com.github.imdmk.playtime.PlayTime;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.async.Async;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -41,7 +41,7 @@ public final class TimeResetCommand {
 
     @Execute
     void reset(@Context CommandSender sender, @Arg @Async User target) {
-        target.setPlaytime(UserTime.ZERO);
+        target.setPlaytime(PlayTime.ZERO);
 
         userService.save(target, SAVE_REASON)
                 .thenAccept(user -> messageService.create()

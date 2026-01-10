@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.user.repository;
 
 import com.github.imdmk.playtime.user.User;
-import com.github.imdmk.playtime.user.UserTime;
+import com.github.imdmk.playtime.PlayTime;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -16,7 +16,7 @@ class UserEntityMapperTest {
     @Test
     void toEntityShouldMapFieldsCorrectly() {
         var uuid = UUID.randomUUID();
-        var user = new User(uuid, "DMK", UserTime.ofMillis(3000));
+        var user = new User(uuid, "DMK", PlayTime.ofMillis(3000));
 
         var entity = mapper.toEntity(user);
 

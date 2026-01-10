@@ -23,8 +23,6 @@ import java.util.UUID;
 @Controller
 public final class UserJoinController implements Listener {
 
-    private static final UserSaveReason SAVE_REASON = UserSaveReason.PLAYER_JOIN;
-
     private final Server server;
     private final PluginLogger logger;
     private final UserService userService;

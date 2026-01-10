@@ -28,11 +28,10 @@ public final class UserRepositoryOrmLite
     public UserRepositoryOrmLite(
             @NotNull PluginLogger logger,
             @NotNull TaskScheduler taskScheduler,
-            @NotNull DatabaseBootstrap databaseBootstrap,
-            @NotNull UserEntityMapper mapper
+            @NotNull DatabaseBootstrap databaseBootstrap
     ) {
         super(logger, taskScheduler, databaseBootstrap);
-        this.mapper = mapper;
+        this.mapper = new UserEntityMapper();
     }
 
     @Override

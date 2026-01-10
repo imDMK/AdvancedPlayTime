@@ -7,6 +7,6 @@ import org.jetbrains.annotations.NotNull;
 public interface UserFactory {
 
     User createFrom(@NotNull Player player);
-
     User createFrom(@NotNull OfflinePlayer offlinePlayer);
+
 }

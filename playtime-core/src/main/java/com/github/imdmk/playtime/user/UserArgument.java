@@ -41,13 +41,14 @@ final class UserArgument extends ArgumentResolver<CommandSender, User> {
     }
 
     @Override
-    protected ParseResult<User> parse(Invocation<CommandSender> invocation,
-                                      Argument<User> context,
-                                      String argument) {
-
+    protected ParseResult<User> parse(
+            Invocation<CommandSender> invocation,
+            Argument<User> context,
+            String argument
+    ) {
         // Main thread -> cache-only (never block the tick)
         if (server.isPrimaryThread()) {
-            logger.warn("UserArgument lookup for '%s' on main thread – using cache only.", argument);
+            logger.warn("UserArgument lookup for '%s' on main thread - using cache only.", argument);
             return userService.findCachedByName(argument)
                     .map(ParseResult::success)
                     .orElse(ParseResult.failure(messageConfig.playerNotFound));
@@ -62,9 +63,11 @@ final class UserArgument extends ArgumentResolver<CommandSender, User> {
     }
 
     @Override
-    public SuggestionResult suggest(Invocation<CommandSender> invocation,
-                                    Argument<User> argument,
-                                    SuggestionContext context) {
+    public SuggestionResult suggest(
+            Invocation<CommandSender> invocation,
+            Argument<User> argument,
+            SuggestionContext context
+    ) {
         return userService.getCachedUsers()
                 .stream()
                 .map(User::getName)

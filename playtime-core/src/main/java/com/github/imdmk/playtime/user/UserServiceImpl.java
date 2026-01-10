@@ -139,14 +139,12 @@ final class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CompletableFuture<UserDeleteResult> deleteByName(@NotNull String name) {
+    public CompletableFuture<Void> deleteByName(@NotNull String name) {
         return repository.deleteByName(name)
                 .orTimeout(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS)
                 .thenApply(deleteResult -> {
-                    eventCaller.callEvent(new UserDeleteEvent(deleteResult));
-                    if (deleteResult.isSuccess()) {
-                        cache.invalidateByName(name);
-                    }
+                    eventCaller.callEvent(new UserDeleteEvent(user));
+                    cache.invalidateByName(name);
                     return deleteResult;
                 })
                 .exceptionally(e -> {

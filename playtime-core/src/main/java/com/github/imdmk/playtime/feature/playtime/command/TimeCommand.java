@@ -5,7 +5,7 @@ import com.github.imdmk.playtime.injector.annotations.lite.LiteCommand;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.time.Durations;
 import com.github.imdmk.playtime.user.User;
-import com.github.imdmk.playtime.user.UserTime;
+import com.github.imdmk.playtime.PlayTime;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.async.Async;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -35,7 +35,7 @@ public final class TimeCommand {
     @Execute
     @Permission("command.playtime")
     void selfPlaytime(@Context Player viewer) {
-        final UserTime time = playtimeService.getTime(viewer.getUniqueId());
+        final PlayTime time = playtimeService.getTime(viewer.getUniqueId());
 
         messageService.create()
                 .notice(n -> n.playtimeMessages.playerPlaytimeSelf())
@@ -47,7 +47,7 @@ public final class TimeCommand {
     @Execute
     @Permission("command.playtime.target")
     void targetPlaytime(@Context Player viewer, @Arg @Async User target) {
-        final UserTime time = playtimeService.getTime(target.getUuid());
+        final PlayTime time = playtimeService.getTime(target.getUuid());
 
         messageService.create()
                 .notice(n -> n.playtimeMessages.playerPlaytimeTarget())

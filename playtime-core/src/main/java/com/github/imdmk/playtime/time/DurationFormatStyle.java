@@ -11,7 +11,7 @@ public enum DurationFormatStyle {
 
     COMPACT {
         @Override
-        public String format(@NotNull Duration duration) {
+        String format(@NotNull Duration duration) {
             return formatWith(duration,
                     (unit, value) -> value + unit.getAbbreviation(),
                     Separator.SPACE);
@@ -19,7 +19,7 @@ public enum DurationFormatStyle {
     },
     LONG {
         @Override
-        public String format(@NotNull Duration duration) {
+        String format(@NotNull Duration duration) {
             return formatWith(duration,
                     DurationUnit::toDisplayName,
                     Separator.SPACE);
@@ -27,7 +27,7 @@ public enum DurationFormatStyle {
     },
     LONG_WITH_AND {
         @Override
-        public String format(@NotNull Duration duration) {
+        String format(@NotNull Duration duration) {
             return formatWith(duration,
                     DurationUnit::toDisplayName,
                     Separator.AND);
@@ -35,14 +35,14 @@ public enum DurationFormatStyle {
     },
     NATURAL {
         @Override
-        public String format(@NotNull Duration duration) {
+        String format(@NotNull Duration duration) {
             return formatWith(duration,
                     DurationUnit::toDisplayName,
                     Separator.COMMA);
         }
     };
 
-    public abstract String format(@NotNull Duration duration);
+    abstract String format(@NotNull Duration duration);
 
     static String formatWith(
             @NotNull Duration duration,

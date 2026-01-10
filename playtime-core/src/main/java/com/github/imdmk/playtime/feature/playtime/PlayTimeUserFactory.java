@@ -5,7 +5,7 @@ import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserFactory;
-import com.github.imdmk.playtime.user.UserTime;
+import com.github.imdmk.playtime.PlayTime;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ public final class PlayTimeUserFactory implements UserFactory {
     public @NotNull User createFrom(@NotNull Player player) {
         final UUID uuid = player.getUniqueId();
         final String name = player.getName();
-        final UserTime time = playtimeService.getTime(uuid);
+        final PlayTime time = playtimeService.getTime(uuid);
 
         return new User(uuid, name, time);
     }
@@ -39,7 +39,7 @@ public final class PlayTimeUserFactory implements UserFactory {
     public @NotNull User createFrom(@NotNull OfflinePlayer player) {
         final UUID uuid = player.getUniqueId();
         final String name = Optional.ofNullable(player.getName()).orElse(UNKNOWN_PLAYER_NAME_FORMAT.formatted(uuid));
-        final UserTime time = playtimeService.getTime(uuid);
+        final PlayTime time = playtimeService.getTime(uuid);
 
         return new User(uuid, name, time);
     }

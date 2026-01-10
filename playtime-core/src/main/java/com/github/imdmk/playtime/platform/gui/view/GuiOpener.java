@@ -16,95 +16,40 @@ public final class GuiOpener {
     private final TaskScheduler scheduler;
 
     @Inject
-    public GuiOpener(@NotNull GuiRegistry registry, @NotNull TaskScheduler scheduler) {
+    public GuiOpener(
+            GuiRegistry registry,
+            TaskScheduler scheduler
+    ) {
         this.registry = registry;
         this.scheduler = scheduler;
     }
 
     public void open(
-            @NotNull Class<? extends SimpleGui> type,
+            @NotNull Class<? extends OpenableGui<Void>> type,
             @NotNull Player viewer
     ) {
-        final IdentifiableGui gui = require(type);
-        if (!(gui instanceof SimpleGui simpleGui)) {
-            throw wrongType(type.getName(), gui, "SimpleGui");
-        }
-
-        final BaseGui baseGui = simpleGui.createGui();
-        simpleGui.prepareItems(baseGui, viewer);
-        scheduler.runSync(() -> baseGui.open(viewer));
+        final OpenableGui<Void> gui = require(type);
+        gui.open(viewer, scheduler, null);
     }
 
-    @SuppressWarnings("unchecked")
     public <T> void open(
-            @NotNull Class<? extends ParameterizedGui<T>> type,
+            @NotNull Class<? extends OpenableGui<T>> type,
             @NotNull Player viewer,
             @NotNull T parameter
     ) {
-        final IdentifiableGui gui = require(type);
-        if (!(gui instanceof ParameterizedGui<?> paramGui)) {
-            throw wrongType(type.getName(), gui, "ParameterizedGui");
-        }
-
-        final ParameterizedGui<T> typed = (ParameterizedGui<T>) paramGui;
-        final BaseGui baseGui = typed.createGui(viewer, parameter);
-
-        typed.prepareItems(baseGui, viewer, parameter);
-        scheduler.runSync(() -> baseGui.open(viewer));
+        final OpenableGui<T> gui = require(type);
+        gui.open(viewer, scheduler, parameter);
     }
 
-    public void open(
-            @NotNull String id,
-            @NotNull Player viewer
-    ) {
-        final IdentifiableGui gui = require(id);
-        if (!(gui instanceof SimpleGui simpleGui)) {
-            throw wrongType(id, gui, "SimpleGui");
-        }
-
-        final BaseGui baseGui = simpleGui.createGui();
-
-        simpleGui.prepareItems(baseGui, viewer);
-        scheduler.runSync(() -> baseGui.open(viewer));
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> void open(
-            @NotNull String id,
-            @NotNull Player viewer,
-            @NotNull T parameter
-    ) {
-        final IdentifiableGui gui = require(id);
-        if (!(gui instanceof ParameterizedGui<?> paramGui)) {
-            throw wrongType(id, gui, "ParameterizedGui");
-        }
-
-        final ParameterizedGui<T> typed = (ParameterizedGui<T>) paramGui;
-        final BaseGui baseGui = typed.createGui(viewer, parameter);
-
-        typed.prepareItems(baseGui, viewer, parameter);
-        scheduler.runSync(() -> baseGui.open(viewer));
-    }
-
-    private IdentifiableGui require(String id) {
-        final IdentifiableGui gui = registry.getById(id);
+    private <P> OpenableGui<P> require(Class<? extends OpenableGui<P>> type) {
+        final OpenableGui<P> gui = registry.getByClass(type);
         if (gui == null) {
-            throw new IllegalArgumentException("No GUI registered under id '" + id + "'");
+            throw new IllegalArgumentException(
+                    "No GUI registered for class '" + type.getName() + "'"
+            );
         }
+
         return gui;
     }
 
-    private IdentifiableGui require(Class<? extends IdentifiableGui> type) {
-        final IdentifiableGui gui = registry.getByClass(type);
-        if (gui == null) {
-            throw new IllegalArgumentException("No GUI registered for class '" + type.getName() + "'");
-        }
-        return gui;
-    }
-
-    private static IllegalArgumentException wrongType(String key, IdentifiableGui gui, String expected) {
-        return new IllegalArgumentException(
-                "GUI '" + key + "' is not a " + expected + " (actual=" + gui.getClass().getSimpleName() + ")"
-        );
-    }
 }

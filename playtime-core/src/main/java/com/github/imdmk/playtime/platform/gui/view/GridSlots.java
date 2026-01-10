@@ -18,10 +18,6 @@ final class GridSlots {
     private static final int ROW_6_PREVIOUS = 46;
     private static final int ROW_6_EXIT = 49;
 
-    private GridSlots() {
-        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated.");
-    }
-
     static int next(int rows) {
         return switch (rows) {
             case 3 -> ROW_3_NEXT;
@@ -50,5 +46,9 @@ final class GridSlots {
             case 6 -> ROW_6_EXIT;
             default -> throw new IllegalArgumentException("Unsupported rows for EXIT: " + rows);
         };
+    }
+
+    GridSlots() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated.");
     }
 }

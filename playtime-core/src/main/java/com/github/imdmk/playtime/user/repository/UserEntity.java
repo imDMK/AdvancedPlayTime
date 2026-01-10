@@ -13,7 +13,7 @@ public final class UserEntity {
     @DatabaseField(id = true, canBeNull = false, columnName = UserEntityMeta.Col.UUID)
     private UUID uuid;
 
-    @DatabaseField(canBeNull = false, index = true, columnName = UserEntityMeta.Col.NAME)
+    @DatabaseField(index = true, canBeNull = false, columnName = UserEntityMeta.Col.NAME)
     private String name;
 
     @DatabaseField(canBeNull = false, columnName = UserEntityMeta.Col.PLAYTIME_MILLIS)
@@ -21,7 +21,11 @@ public final class UserEntity {
 
     public UserEntity() {}
 
-    public UserEntity(@NotNull UUID uuid, @NotNull String name, long playtimeMillis) {
+    public UserEntity(
+            @NotNull UUID uuid,
+            @NotNull String name,
+            long playtimeMillis
+    ) {
         this.uuid = uuid;
         this.name = name;
         this.playtimeMillis = playtimeMillis;

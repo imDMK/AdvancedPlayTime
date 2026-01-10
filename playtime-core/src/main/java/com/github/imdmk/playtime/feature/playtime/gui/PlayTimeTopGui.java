@@ -22,7 +22,7 @@ import com.github.imdmk.playtime.time.Durations;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
-import com.github.imdmk.playtime.user.UserTime;
+import com.github.imdmk.playtime.PlayTime;
 import dev.triumphteam.gui.builder.item.BaseItemBuilder;
 import dev.triumphteam.gui.builder.item.SkullBuilder;
 import dev.triumphteam.gui.guis.BaseGui;
@@ -103,7 +103,7 @@ public final class PlayTimeTopGui
 
                 gui.close(viewer);
 
-                user.setPlaytime(UserTime.ZERO);
+                user.setPlaytime(PlayTime.ZERO);
                 userService.save(user, UserSaveReason.GUI_RESET_CLICK)
                         .thenAccept(result -> messageService.send(viewer, n -> n.playtimeMessages.playerPlaytimeReset()))
                         .exceptionally(e -> {

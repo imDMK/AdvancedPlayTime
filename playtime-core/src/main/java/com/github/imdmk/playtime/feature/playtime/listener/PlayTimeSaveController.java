@@ -5,7 +5,7 @@ import com.github.imdmk.playtime.injector.annotations.Controller;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
-import com.github.imdmk.playtime.user.UserTime;
+import com.github.imdmk.playtime.PlayTime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -34,7 +34,7 @@ public final class PlayTimeSaveController implements Listener {
         final UUID uuid = event.getPlayer().getUniqueId();
 
         final User user = userService.findCachedByUuid(uuid).orElseThrow();
-        final UserTime time = playtimeService.getTime(uuid);
+        final PlayTime time = playtimeService.getTime(uuid);
 
         user.setPlaytime(time);
         userService.save(user, UserSaveReason.PLAYER_LEAVE);

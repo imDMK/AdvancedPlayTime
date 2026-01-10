@@ -2,6 +2,8 @@ package com.github.imdmk.playtime.user.top;
 
 import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
+import com.github.imdmk.playtime.injector.subscriber.Subscribe;
+import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.repository.UserRepository;
@@ -54,7 +56,7 @@ public final class MemoryTopUsersCache implements TopUsersCache {
 
         return loadTop(limit)
                 .thenApply(users -> {
-                    CachedLeaderboard updated = new CachedLeaderboard(users, limit, Instant.now());
+                    final CachedLeaderboard updated = new CachedLeaderboard(users, limit, Instant.now());
                     cachedLeaderboard.set(updated);
                     return slice(updated.users(), limit);
                 })
@@ -66,6 +68,7 @@ public final class MemoryTopUsersCache implements TopUsersCache {
 
 
     @Override
+    @Subscribe(event = PlayTimeShutdownEvent.class)
     public void invalidateAll() {
         cachedLeaderboard.set(null);
     }

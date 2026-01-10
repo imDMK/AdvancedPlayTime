@@ -1,7 +1,6 @@
 package com.github.imdmk.playtime;
 
 import com.github.imdmk.playtime.user.User;
-import com.github.imdmk.playtime.user.UserTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ class UserTest {
         @Test
         void shouldInitializeFieldsCorrectly() {
             UUID uuid = UUID.randomUUID();
-            UserTime time = UserTime.ofMillis(5000);
+            PlayTime time = PlayTime.ofMillis(5000);
 
             User user = new User(uuid, "Player", time);
 
@@ -34,7 +33,7 @@ class UserTest {
         void shouldCreateUserWithZeroPlaytime() {
             User user = new User(UUID.randomUUID(), "Player");
 
-            assertThat(user.getPlaytime()).isEqualTo(UserTime.ZERO);
+            assertThat(user.getPlaytime()).isEqualTo(PlayTime.ZERO);
         }
 
         @Test
@@ -42,7 +41,7 @@ class UserTest {
             UUID uuid = UUID.randomUUID();
 
             assertThatNullPointerException()
-                    .isThrownBy(() -> new User(uuid, null, UserTime.ZERO))
+                    .isThrownBy(() -> new User(uuid, null, PlayTime.ZERO))
                     .withMessageContaining("name");
         }
 
@@ -94,7 +93,7 @@ class UserTest {
 
         @Test
         void shouldReturnCurrentPlaytimeAsUserTime() {
-            User user = new User(UUID.randomUUID(), "Player", UserTime.ofMillis(1000));
+            User user = new User(UUID.randomUUID(), "Player", PlayTime.ofMillis(1000));
 
             assertThat(user.getPlaytime().millis()).isEqualTo(1000);
         }
@@ -103,7 +102,7 @@ class UserTest {
         void shouldSetNewPlaytime() {
             User user = new User(UUID.randomUUID(), "Player");
 
-            user.setPlaytime(UserTime.ofMillis(12345));
+            user.setPlaytime(PlayTime.ofMillis(12345));
 
             assertThat(user.getPlaytime().millis()).isEqualTo(12345);
         }
@@ -144,7 +143,7 @@ class UserTest {
 
     @Test
     void toStringShouldContainKeyInformation() {
-        User user = new User(UUID.randomUUID(), "Player", UserTime.ofMillis(100));
+        User user = new User(UUID.randomUUID(), "Player", PlayTime.ofMillis(100));
 
         String str = user.toString();
 

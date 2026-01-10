@@ -31,18 +31,21 @@ public final class MessageService extends BukkitMultification<MessageConfig> {
         this.audienceProvider = BukkitAudiences.create(plugin);
     }
 
+    @NotNull
     @Override
-    protected @NotNull TranslationProvider<MessageConfig> translationProvider() {
+    protected TranslationProvider<MessageConfig> translationProvider() {
         return provider -> messageConfig;
     }
 
+    @NotNull
     @Override
-    protected @NotNull ComponentSerializer<Component, Component, String> serializer() {
+    protected ComponentSerializer<Component, Component, String> serializer() {
         return AdventureComponents.miniMessage();
     }
 
+    @NotNull
     @Override
-    protected @NotNull AudienceConverter<CommandSender> audienceConverter() {
+    protected AudienceConverter<CommandSender> audienceConverter() {
         return sender -> {
             if (sender instanceof Player player) {
                 return audienceProvider.player(player.getUniqueId());

@@ -47,7 +47,7 @@ public abstract class AbstractGui {
         navigationBar.setPrevious(gui, viewer);
     }
 
-    protected void placeExit(@NotNull BaseGui gui, @NotNull Player viewer, @NotNull Consumer<InventoryClickEvent> exit) {
-        navigationBar.setExit(gui, viewer, exit);
+    protected void placeExit(@NotNull BaseGui gui, @NotNull Player viewer, @NotNull Consumer<InventoryClickEvent> exitAction) {
+        navigationBar.setExit(gui, viewer, exitAction);
     }
 }

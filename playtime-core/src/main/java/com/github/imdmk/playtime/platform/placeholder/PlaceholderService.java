@@ -1,6 +1,5 @@
 package com.github.imdmk.playtime.platform.placeholder;
 
-import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.injector.subscriber.Subscribe;
 import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;

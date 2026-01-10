@@ -17,10 +17,10 @@ public interface UserService {
     CompletableFuture<Optional<User>> findByUuid(@NotNull UUID uuid);
     CompletableFuture<Optional<User>> findByName(@NotNull String name);
 
-    CompletableFuture<UserDeleteResult> deleteByUuid(@NotNull UUID uuid);
-    CompletableFuture<UserDeleteResult> deleteByName(@NotNull String name);
+    CompletableFuture<Void> deleteByUuid(@NotNull UUID uuid);
+    CompletableFuture<Void> deleteByName(@NotNull String name);
 
-    CompletableFuture<User> save(@NotNull User user, @NotNull UserSaveReason reason);
+    CompletableFuture<Void> save(@NotNull User user);
 
     CompletableFuture<List<User>> findTopByPlayTime(int limit);
 }

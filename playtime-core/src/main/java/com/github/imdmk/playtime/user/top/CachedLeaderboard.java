@@ -31,9 +31,10 @@ record CachedLeaderboard(
         return expiresAt.isAfter(now);
     }
 
+    @NotNull
     @Override
     @Unmodifiable
-    public @NotNull List<User> users() {
+    public List<User> users() {
         return users;
     }
 }

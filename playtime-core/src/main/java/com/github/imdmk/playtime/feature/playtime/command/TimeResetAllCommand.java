@@ -8,7 +8,7 @@ import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import com.github.imdmk.playtime.user.User;
 import com.github.imdmk.playtime.user.UserSaveReason;
 import com.github.imdmk.playtime.user.UserService;
-import com.github.imdmk.playtime.user.UserTime;
+import com.github.imdmk.playtime.PlayTime;
 import com.github.imdmk.playtime.user.repository.UserRepository;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
@@ -85,7 +85,7 @@ public final class TimeResetAllCommand {
     }
 
     private CompletableFuture<User> resetUser(User user) {
-        user.setPlaytime(UserTime.ZERO);
+        user.setPlaytime(PlayTime.ZERO);
         return userService.save(user, SAVE_REASON);
     }
 

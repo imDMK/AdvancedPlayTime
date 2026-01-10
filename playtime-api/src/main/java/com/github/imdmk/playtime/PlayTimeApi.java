@@ -7,4 +7,5 @@ public interface PlayTimeApi {
     UserService getUserService();
 
     PlayTimeService getPlayTimeService();
+
 }
