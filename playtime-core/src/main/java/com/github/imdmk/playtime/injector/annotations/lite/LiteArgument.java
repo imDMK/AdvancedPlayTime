@@ -1,5 +1,7 @@
 package com.github.imdmk.playtime.injector.annotations.lite;
 
+import com.github.imdmk.playtime.injector.ComponentPriority;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,6 +13,7 @@ public @interface LiteArgument {
 
     Class<?> type();
 
-    String name();
+    String key() default "";
 
+    ComponentPriority priority() default ComponentPriority.HIGHEST;
 }

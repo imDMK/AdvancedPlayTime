@@ -1,5 +1,6 @@
 package com.github.imdmk.playtime.feature.playtime.command;
 
+import com.github.imdmk.playtime.injector.annotations.lite.LiteCommand;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.user.top.TopUsersCache;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -10,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
+@LiteCommand
 @Command(name = "playtime top invalidate")
 @Permission("command.playtime.top.invalidate")
 public final class TimeTopInvalidateCommand {

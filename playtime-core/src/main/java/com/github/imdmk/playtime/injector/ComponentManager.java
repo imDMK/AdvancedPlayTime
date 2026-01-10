@@ -49,7 +49,7 @@ public final class ComponentManager {
 
     public void scanAll() {
         for (final ProcessorContainer<?> container : processors) {
-            components.addAll(scanner.scan(container.processor().annotation()));
+            components.addAll(scanner.scan(container.annotationType()));
         }
     }
 

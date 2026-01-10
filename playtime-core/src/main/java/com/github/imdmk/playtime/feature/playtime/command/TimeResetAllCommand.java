@@ -1,6 +1,7 @@
 package com.github.imdmk.playtime.feature.playtime.command;
 
 import com.github.imdmk.playtime.PlayTimeService;
+import com.github.imdmk.playtime.injector.annotations.lite.LiteCommand;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
@@ -22,6 +23,7 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
+@LiteCommand
 @Command(name = "playtime reset-all")
 @Permission("command.playtime.reset.all")
 public final class TimeResetAllCommand {

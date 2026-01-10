@@ -17,7 +17,7 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-@LiteArgument(type = User.class, name = "user")
+@LiteArgument(type = User.class)
 final class UserArgument extends ArgumentResolver<CommandSender, User> {
 
     private static final Duration LOOKUP_TIMEOUT = Duration.ofSeconds(2);

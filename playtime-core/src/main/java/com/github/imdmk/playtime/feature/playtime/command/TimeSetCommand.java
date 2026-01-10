@@ -1,6 +1,7 @@
 package com.github.imdmk.playtime.feature.playtime.command;
 
 import com.github.imdmk.playtime.PlayTimeService;
+import com.github.imdmk.playtime.injector.annotations.lite.LiteCommand;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.time.Durations;
@@ -20,6 +21,7 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 
 import java.time.Duration;
 
+@LiteCommand
 @Command(name = "playtime set")
 @Permission("command.playtime.set")
 public final class TimeSetCommand {

@@ -11,26 +11,34 @@ import com.github.imdmk.playtime.injector.annotations.Gui;
 import com.github.imdmk.playtime.injector.annotations.Repository;
 import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.injector.annotations.lite.LiteArgument;
+import com.github.imdmk.playtime.injector.annotations.lite.LiteCommand;
 import com.github.imdmk.playtime.injector.annotations.lite.LiteHandler;
 import com.github.imdmk.playtime.injector.annotations.placeholderapi.Placeholder;
 import com.github.imdmk.playtime.platform.gui.GuiRegistry;
 import com.github.imdmk.playtime.platform.gui.IdentifiableGui;
+import com.github.imdmk.playtime.platform.litecommands.LiteCommandsConfigurer;
 import com.github.imdmk.playtime.platform.placeholder.PlaceholderService;
 import com.github.imdmk.playtime.platform.placeholder.PluginPlaceholder;
 import dev.rollczi.litecommands.LiteCommandsBuilder;
-import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.argument.ArgumentKey;
 import dev.rollczi.litecommands.argument.resolver.ArgumentResolver;
 import dev.rollczi.litecommands.handler.result.ResultHandler;
+import dev.rollczi.litecommands.invalidusage.InvalidUsageHandler;
+import dev.rollczi.litecommands.permission.MissingPermissionsHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Resources;
 import org.panda_lang.utilities.inject.annotations.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 public final class ComponentProcessors {
+
+    private static final Logger log = LoggerFactory.getLogger(ComponentProcessors.class);
 
     private ComponentProcessors() {
         throw new UnsupportedOperationException("This is utility class and cannot be instantiated.");
@@ -82,7 +90,6 @@ public final class ComponentProcessors {
                 ProcessorBuilder.forAnnotation(Controller.class)
                         .handle((instance, annotation, ctx) -> {
                             final Listener listener = requireInstance(instance, Listener.class, Controller.class);
-                            System.out.println("registered listener: " + listener.getClass().getName());
                             plugin.getServer()
                                     .getPluginManager()
                                     .registerEvents(listener, plugin);
@@ -97,7 +104,7 @@ public final class ComponentProcessors {
                         .handle((instance, annotation, ctx) -> ctx.injector().newInstance(PlaceholderProcessor.class).process(instance, annotation, ctx))
                         .build(),
 
-                ProcessorBuilder.forAnnotation(Command.class)
+                ProcessorBuilder.forAnnotation(LiteCommand.class)
                         .handle((instance, annotation, ctx) -> ctx.injector().newInstance(LiteCommandProcessor.class).process(instance, annotation, ctx))
                         .build(),
 
@@ -136,7 +143,6 @@ public final class ComponentProcessors {
         @Override
         public void process(@NotNull Object instance, @NotNull Gui annotation, @NotNull ComponentProcessorContext context) {
             final IdentifiableGui identifiableGui = requireInstance(instance, IdentifiableGui.class, Gui.class);
-            System.out.println("registering gui: " +  identifiableGui.getClass().getName());
             guiRegistry.register(identifiableGui);
         }
 
@@ -157,12 +163,23 @@ public final class ComponentProcessors {
                     @NotNull ConfigFile annotation,
                     @NotNull ComponentProcessorContext context
             ) {
-                final ConfigSection configSection = requireInstance(instance, ConfigSection.class, ConfigFile.class);
+                final Resources resources = context.injector().getResources();
+                final ConfigSection config = requireInstance(instance, ConfigSection.class, ConfigFile.class);
 
-                configService.create(configSection.getClass());
-                context.injector().getResources()
-                        .on(instance.getClass())
+                configService.create(config.getClass());
+                resources.on(instance.getClass())
                         .assignInstance(instance);
+
+                for (final Field field : config.getClass().getFields()) {
+                    try {
+                        final Object value = field.get(config);
+                        if (value != null) {
+                            resources.on(field.getType())
+                                    .assignInstance(value);
+                        }
+                    }
+                    catch (IllegalAccessException ignored) {}
+                }
             }
 
             @Override
@@ -190,7 +207,7 @@ public final class ComponentProcessors {
     }
 
     @Inject
-    private record LiteHandlerProcessor(@NotNull LiteCommandsBuilder<?, ?, ?> liteBuilder)
+    private record LiteHandlerProcessor(@NotNull LiteCommandsConfigurer liteCommandsConfigurer)
             implements ComponentProcessor<LiteHandler> {
 
         @Override
@@ -200,9 +217,21 @@ public final class ComponentProcessors {
                 @NotNull LiteHandler annotation,
                 @NotNull ComponentProcessorContext context
         ) {
+
+            final LiteCommandsBuilder<?, ?, ?> builder = liteCommandsConfigurer.builder();
             final ResultHandler resultHandler = requireInstance(instance, ResultHandler.class, LiteHandler.class);
-            System.out.println("registering result handler: " +  resultHandler.getClass().getName());
-            liteBuilder.result(annotation.value(), resultHandler);
+
+            if (resultHandler instanceof InvalidUsageHandler invalidUsageHandler) {
+                builder.invalidUsage(invalidUsageHandler);
+                return;
+            }
+
+            if (resultHandler instanceof MissingPermissionsHandler missingPermissionsHandler) {
+                builder.missingPermission(missingPermissionsHandler);
+                return;
+            }
+
+            builder.result(annotation.value(), resultHandler);
         }
 
         @NotNull
@@ -213,27 +242,27 @@ public final class ComponentProcessors {
     }
 
     @Inject
-    private record LiteCommandProcessor(@NotNull LiteCommandsBuilder<?, ?, ?> liteBuilder)
-            implements ComponentProcessor<Command> {
+    private record LiteCommandProcessor(@NotNull LiteCommandsConfigurer liteCommandsConfigurer)
+            implements ComponentProcessor<LiteCommand> {
 
         @Override
         public void process(
                 @NotNull Object instance,
-                @NotNull Command annotation,
+                @NotNull LiteCommand annotation,
                 @NotNull ComponentProcessorContext context
         ) {
-            liteBuilder.commands(instance);
+            liteCommandsConfigurer.builder().commands(instance);
         }
 
         @NotNull
         @Override
-        public Class<Command> annotation() {
-            return Command.class;
+        public Class<LiteCommand> annotation() {
+            return LiteCommand.class;
         }
     }
 
     @Inject
-    private record LiteArgumentProcessor(@NotNull LiteCommandsBuilder<?, ?, ?> liteBuilder)
+    private record LiteArgumentProcessor(@NotNull LiteCommandsConfigurer liteCommandsConfigurer)
             implements ComponentProcessor<LiteArgument> {
 
         @Override
@@ -244,7 +273,12 @@ public final class ComponentProcessors {
                 @NotNull ComponentProcessorContext context
         ) {
             final ArgumentResolver argumentResolver = requireInstance(instance, ArgumentResolver.class, LiteArgument.class);
-            liteBuilder.argument(annotation.type(), ArgumentKey.of(annotation.name()), argumentResolver);
+
+            final LiteCommandsBuilder<?, ?, ?> builder = liteCommandsConfigurer.builder();
+            final Class<?> argumentClass = annotation.type();
+            final String argumentKey = annotation.key();
+
+            builder.argument(argumentClass, ArgumentKey.of(argumentKey), argumentResolver);
         }
 
         @NotNull

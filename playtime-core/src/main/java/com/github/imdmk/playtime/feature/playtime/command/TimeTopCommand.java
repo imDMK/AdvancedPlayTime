@@ -1,6 +1,7 @@
 package com.github.imdmk.playtime.feature.playtime.command;
 
 import com.github.imdmk.playtime.feature.playtime.gui.PlayTimeTopGui;
+import com.github.imdmk.playtime.injector.annotations.lite.LiteCommand;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.gui.view.GuiOpener;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
+@LiteCommand
 @Command(name = "playtime top")
 @Permission("command.playtime.top")
 public final class TimeTopCommand {

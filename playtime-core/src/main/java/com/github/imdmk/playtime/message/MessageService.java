@@ -19,7 +19,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
-@Service(priority = ComponentPriority.NORMAL)
+@Service(priority = ComponentPriority.LOW)
 public final class MessageService extends BukkitMultification<MessageConfig> {
 
     private final MessageConfig messageConfig;

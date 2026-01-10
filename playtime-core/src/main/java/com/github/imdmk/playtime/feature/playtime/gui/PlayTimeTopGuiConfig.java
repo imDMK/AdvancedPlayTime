@@ -14,7 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
-public final class PlayTimeTopGuiConfig extends OkaeriConfig implements ConfigurableGui {
+public final class PlayTimeTopGuiConfig
+        extends OkaeriConfig
+        implements ConfigurableGui {
 
     @Comment({
             "#",

@@ -1,5 +1,6 @@
 package com.github.imdmk.playtime.feature.playtime.gui;
 
+import com.github.imdmk.playtime.injector.annotations.Gui;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.platform.adventure.AdventureFormatter;
 import com.github.imdmk.playtime.platform.adventure.AdventurePlaceholders;
@@ -35,12 +36,12 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Gui
 public final class PlayTimeTopGui
         extends AbstractGui
         implements ParameterizedGui<List<User>> {
 
     private static final String GUI_IDENTIFIER = "playtime-top";
-    private static final UserSaveReason SAVE_REASON = UserSaveReason.GUI_RESET_CLICK;
 
     private static final GuiRenderer GUI_RENDERER = TriumphGuiRenderer.newRenderer();
     private static final RenderOptions RENDER_OPTIONS = RenderOptions.defaultHide();
@@ -103,7 +104,7 @@ public final class PlayTimeTopGui
                 gui.close(viewer);
 
                 user.setPlaytime(UserTime.ZERO);
-                userService.save(user, SAVE_REASON)
+                userService.save(user, UserSaveReason.GUI_RESET_CLICK)
                         .thenAccept(result -> messageService.send(viewer, n -> n.playtimeMessages.playerPlaytimeReset()))
                         .exceptionally(e -> {
                             messageService.send(viewer, n -> n.actionExecutionError);

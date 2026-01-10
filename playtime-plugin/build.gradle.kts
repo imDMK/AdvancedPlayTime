@@ -52,10 +52,10 @@ tasks.withType<ShadowJar> {
         relocate(pkg, "$relocationPrefix.$pkg")
     }
 
-    minimize {
-        exclude { dependency -> dependency.moduleGroup == "com.github.imdmk.playtime" }
-        exclude(dependency("com.github.ben-manes.caffeine:caffeine"))
-    }
+//    minimize {
+//        exclude { dependency -> dependency.moduleGroup == "com.github.imdmk.playtime" }
+//        exclude(dependency("com.github.ben-manes.caffeine:caffeine"))
+//    }
 }
 
 bukkit {

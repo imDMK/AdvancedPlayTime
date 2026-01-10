@@ -1,6 +1,7 @@
 package com.github.imdmk.playtime.feature.playtime.command;
 
 import com.github.imdmk.playtime.PlayTimeService;
+import com.github.imdmk.playtime.injector.annotations.lite.LiteCommand;
 import com.github.imdmk.playtime.message.MessageService;
 import com.github.imdmk.playtime.time.Durations;
 import com.github.imdmk.playtime.user.User;
@@ -15,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
+@LiteCommand
 @Command(name = "playtime")
 public final class TimeCommand {
 
