@@ -21,7 +21,7 @@ public final class LiteCommandsConfigurer {
     private LiteCommands<?> liteCommands;
 
     @Inject
-    public LiteCommandsConfigurer(@NotNull Plugin plugin, @NotNull Server server) {
+    LiteCommandsConfigurer(@NotNull Plugin plugin, @NotNull Server server) {
         this.builder = LiteBukkitFactory.builder(FALLBACK_PREFIX, plugin, server);
     }
 

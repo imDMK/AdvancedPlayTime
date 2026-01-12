@@ -30,15 +30,11 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.Resources;
 import org.panda_lang.utilities.inject.annotations.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 public final class ComponentProcessors {
-
-    private static final Logger log = LoggerFactory.getLogger(ComponentProcessors.class);
 
     private ComponentProcessors() {
         throw new UnsupportedOperationException("This is utility class and cannot be instantiated.");

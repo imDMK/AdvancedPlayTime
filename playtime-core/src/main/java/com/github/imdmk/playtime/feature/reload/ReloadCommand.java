@@ -1,21 +1,23 @@
 package com.github.imdmk.playtime.feature.reload;
 
+import com.github.imdmk.playtime.config.ConfigAccessException;
 import com.github.imdmk.playtime.config.ConfigService;
-import com.github.imdmk.playtime.message.MessageService;
+import com.github.imdmk.playtime.injector.annotations.lite.LiteCommand;
 import com.github.imdmk.playtime.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
+import com.github.imdmk.playtime.shared.message.MessageService;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
-import eu.okaeri.configs.exception.OkaeriException;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
+@LiteCommand
 @Command(name = "playtime reload")
 @Permission("command.playtime.reload")
-public final class ReloadCommand {
+final class ReloadCommand {
 
     private final PluginLogger logger;
     private final ConfigService configService;
@@ -23,7 +25,7 @@ public final class ReloadCommand {
     private final MessageService messageService;
 
     @Inject
-    public ReloadCommand(
+    ReloadCommand(
             @NotNull PluginLogger logger,
             @NotNull ConfigService configService,
             @NotNull TaskScheduler taskScheduler,
@@ -41,7 +43,7 @@ public final class ReloadCommand {
             try {
                 configService.loadAll();
                 messageService.send(sender, n -> n.reloadMessages.configReloadedSuccess());
-            } catch (OkaeriException e) {
+            } catch (ConfigAccessException e) {
                 logger.error(e, "Failed to reload plugin configuration files");
                 messageService.send(sender, n -> n.reloadMessages.configReloadFailed());
             }

@@ -2,7 +2,7 @@ package com.github.imdmk.playtime.platform.scheduler;
 
 import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
-import com.github.imdmk.playtime.time.Durations;
+import com.github.imdmk.playtime.shared.time.Durations;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -12,29 +12,29 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 import java.time.Duration;
 
 @Service(priority = ComponentPriority.LOWEST)
-public final class BukkitTaskScheduler implements TaskScheduler {
+final class BukkitTaskScheduler implements TaskScheduler {
 
     private final Plugin plugin;
     private final BukkitScheduler scheduler;
 
     @Inject
-    public BukkitTaskScheduler(@NotNull Plugin plugin, @NotNull BukkitScheduler scheduler) {
+    BukkitTaskScheduler(@NotNull Plugin plugin, @NotNull BukkitScheduler scheduler) {
         this.plugin = plugin;
         this.scheduler = scheduler;
     }
 
     @Override
-    public @NotNull BukkitTask runSync(@NotNull Runnable runnable) {
+    public  BukkitTask runSync(@NotNull Runnable runnable) {
         return scheduler.runTask(plugin, runnable);
     }
 
     @Override
-    public @NotNull BukkitTask runAsync(@NotNull Runnable runnable) {
+    public BukkitTask runAsync(@NotNull Runnable runnable) {
         return scheduler.runTaskAsynchronously(plugin, runnable);
     }
 
     @Override
-    public @NotNull BukkitTask runLaterAsync(
+    public BukkitTask runLaterAsync(
             @NotNull Runnable runnable,
             @NotNull Duration delay
     ) {
@@ -42,7 +42,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
     }
 
     @Override
-    public @NotNull BukkitTask runLaterSync(
+    public BukkitTask runLaterSync(
             @NotNull Runnable runnable,
             @NotNull Duration delay
     ) {
@@ -50,7 +50,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
     }
 
     @Override
-    public @NotNull BukkitTask runTimerSync(
+    public BukkitTask runTimerSync(
             @NotNull Runnable runnable,
             @NotNull Duration delay,
             @NotNull Duration period
@@ -59,7 +59,7 @@ public final class BukkitTaskScheduler implements TaskScheduler {
     }
 
     @Override
-    public @NotNull BukkitTask runTimerAsync(
+    public BukkitTask runTimerAsync(
             @NotNull Runnable runnable,
             @NotNull Duration delay,
             @NotNull Duration period

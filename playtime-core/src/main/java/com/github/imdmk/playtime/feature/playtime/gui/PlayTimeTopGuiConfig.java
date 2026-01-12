@@ -8,9 +8,7 @@ import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemFlag;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
@@ -84,51 +82,13 @@ public final class PlayTimeTopGuiConfig
             .addFlags(ItemFlag.HIDE_ATTRIBUTES)
             .build();
 
-    @Comment({
-            "#",
-            "# Base item for a single player entry in the top playtime list (admin view).",
-            "# Used when the viewer has management permission and can reset playtime.",
-            "#",
-            "# Placeholders:",
-            "#   {PLAYER_POSITION}  - numeric position on the leaderboard (1, 2, 3, ...).",
-            "#   {PLAYER_NAME}      - player nickname.",
-            "#   {PLAYER_PLAYTIME}  - formatted playtime (e.g. 5h 32m).",
-            "#   {CLICK_RESET}      - name/description of the click used to reset (e.g. SHIFT + Right Click).",
-            "#",
-            "# requiredPermission in item defines to see the admin version of the item.",
-            "#"
-    })
-    public ItemGui playerEntryAdminItem = ItemGui.builder()
-            .material(Material.PLAYER_HEAD)
-            .name(AdventureComponents.withoutItalics(
-                    "<dark_gray>• <yellow>#{PLAYER_POSITION} <gray>- <red>{PLAYER_NAME}"
-            ))
-            .lore(AdventureComponents.withoutItalics(
-                    " ",
-                    "<dark_gray>▸ <gray>Playtime: <red>{PLAYER_PLAYTIME}",
-                    " ",
-                    "<dark_gray>▸ <gray>Click <red>{CLICK_RESET} <gray>to reset <red>{PLAYER_NAME}<gray>'s playtime."
-            ))
-            .addFlags(ItemFlag.HIDE_ATTRIBUTES)
-            .requiredPermission("playtime.user.manage")
-            .build();
-
-    @Comment({
-            "#",
-            "# Click type used to trigger playtime reset in the admin view.",
-            "# Must match how {CLICK_RESET} is described in messages/lore.",
-            "# Example: SHIFT_RIGHT, SHIFT_LEFT, RIGHT, LEFT, etc.",
-            "#"
-    })
-    public ClickType resetClickType = ClickType.SHIFT_RIGHT;
-
     @Override
-    public @NotNull Component title() {
+    public Component title() {
         return title;
     }
 
     @Override
-    public @NotNull GuiType type() {
+    public GuiType type() {
         return type;
     }
 

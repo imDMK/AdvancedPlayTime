@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 @ConfigFile
 public final class GuiConfig extends ConfigSection {
 
-    @Comment({"#", "# Playtime top GUI", "#"})
+    @Comment({"#", "# PlayTime top GUI", "#"})
     public PlayTimeTopGuiConfig playTimeTopGui = new PlayTimeTopGuiConfig();
 
     @Comment({"#", "# Navigation Bar", "#"})
@@ -32,6 +32,6 @@ public final class GuiConfig extends ConfigSection {
 
     @Override
     public @NotNull String fileName() {
-        return "guiConfig.yml";
+        return "gui.yml";
     }
 }

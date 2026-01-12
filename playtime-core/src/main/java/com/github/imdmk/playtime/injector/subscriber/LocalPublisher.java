@@ -53,7 +53,6 @@ public final class LocalPublisher implements Publisher {
         return event;
     }
 
-    private record SubscriberMethod(@NotNull Object instance, @NotNull Method method) {
-    }
+    private record SubscriberMethod(@NotNull Object instance, @NotNull Method method) { }
 }
 

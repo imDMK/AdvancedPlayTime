@@ -29,10 +29,6 @@ public final class PlayTimeApiProvider {
         API = api;
     }
 
-    static synchronized void forceRegister(@NotNull PlayTimeApi api) {
-        API = api;
-    }
-
     static synchronized void unregister() {
         if (API == null) {
             throw new IllegalStateException("PlayTimeAPI is not registered.");

@@ -1,5 +1,6 @@
 package com.github.imdmk.playtime;
 
+import com.github.imdmk.playtime.feature.playtime.PlayTimeApiAdapter;
 import com.github.imdmk.playtime.injector.ComponentManager;
 import com.github.imdmk.playtime.injector.processor.ComponentProcessors;
 import com.github.imdmk.playtime.injector.subscriber.LocalPublisher;
@@ -46,10 +47,10 @@ final class PlayTimePlugin {
         componentManager.scanAll();
         componentManager.processAll();
 
-        this.publisher.publish(new PlayTimeInitializeEvent());
-
         final PlayTimeApi api = injector.newInstance(PlayTimeApiAdapter.class);
         PlayTimeApiProvider.register(api);
+
+        this.publisher.publish(new PlayTimeInitializeEvent());
 
         final long elapsedMillis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
         logger.info("Successfully loaded plugin in " + elapsedMillis + "ms!");

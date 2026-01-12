@@ -28,9 +28,9 @@ public abstract class OrmLiteRepository<T, ID>
 
     protected final PluginLogger logger;
     protected final TaskScheduler scheduler;
-    private final DatabaseBootstrap databaseBootstrap;
-
     protected volatile Dao<T, ID> dao;
+
+    private final DatabaseBootstrap databaseBootstrap;
 
     @Inject
     protected OrmLiteRepository(
@@ -46,7 +46,9 @@ public abstract class OrmLiteRepository<T, ID>
 
     protected abstract Class<T> entityClass();
 
-    protected abstract List<Class<?>> entitySubClasses();
+    protected List<Class<?>> entitySubClasses() {
+        return List.of();
+    }
 
     @Override
     public void start() throws RepositoryInitializationException {
@@ -86,6 +88,10 @@ public abstract class OrmLiteRepository<T, ID>
     }
 
     protected <R> CompletableFuture<R> execute(@NotNull Supplier<R> supplier) {
+        if (dao == null) {
+            throw new IllegalStateException("Repository not initialized or already closed");
+        }
+
         final CompletableFuture<R> future = new CompletableFuture<>();
         scheduler.runAsync(() -> {
             try {
@@ -97,7 +103,7 @@ public abstract class OrmLiteRepository<T, ID>
         return future.orTimeout(EXECUTE_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS);
     }
 
-    private void configureOrmLiteLogger() {
+    private static void configureOrmLiteLogger() {
         Logger.setGlobalLogLevel(Level.ERROR); // only errors
     }
 }

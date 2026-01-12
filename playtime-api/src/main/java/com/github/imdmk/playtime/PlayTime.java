@@ -13,7 +13,7 @@ public record PlayTime(long millis) implements Comparable<PlayTime> {
 
     public PlayTime {
         if (millis < 0L) {
-            throw new IllegalArgumentException("UserTime millis cannot be negative");
+            throw new IllegalArgumentException("PlayTime millis cannot be negative");
         }
     }
 

@@ -26,14 +26,14 @@ class UserTest {
 
             assertThat(user.getUuid()).isEqualTo(uuid);
             assertThat(user.getName()).isEqualTo("Player");
-            assertThat(user.getPlaytime()).isEqualTo(time);
+            assertThat(user.getPlayTime()).isEqualTo(time);
         }
 
         @Test
-        void shouldCreateUserWithZeroPlaytime() {
+        void shouldCreateUserWithZeroPlayTime() {
             User user = new User(UUID.randomUUID(), "Player");
 
-            assertThat(user.getPlaytime()).isEqualTo(PlayTime.ZERO);
+            assertThat(user.getPlayTime()).isEqualTo(PlayTime.ZERO);
         }
 
         @Test
@@ -46,7 +46,7 @@ class UserTest {
         }
 
         @Test
-        void shouldThrowWhenPlaytimeIsNull() {
+        void shouldThrowWhenPlayTimeIsNull() {
             UUID uuid = UUID.randomUUID();
 
             assertThatNullPointerException()
@@ -88,31 +88,31 @@ class UserTest {
     }
 
     @Nested
-    @DisplayName("Playtime mutation")
-    class PlaytimeTests {
+    @DisplayName("PlayTime mutation")
+    class PlayTimeTests {
 
         @Test
-        void shouldReturnCurrentPlaytimeAsUserTime() {
+        void shouldReturnCurrentPlayTimeAsUserTime() {
             User user = new User(UUID.randomUUID(), "Player", PlayTime.ofMillis(1000));
 
-            assertThat(user.getPlaytime().millis()).isEqualTo(1000);
+            assertThat(user.getPlayTime().millis()).isEqualTo(1000);
         }
 
         @Test
-        void shouldSetNewPlaytime() {
+        void shouldSetNewPlayTime() {
             User user = new User(UUID.randomUUID(), "Player");
 
-            user.setPlaytime(PlayTime.ofMillis(12345));
+            user.setPlayTime(PlayTime.ofMillis(12345));
 
-            assertThat(user.getPlaytime().millis()).isEqualTo(12345);
+            assertThat(user.getPlayTime().millis()).isEqualTo(12345);
         }
 
         @Test
-        void shouldRejectNullPlaytime() {
+        void shouldRejectNullPlayTime() {
             User user = new User(UUID.randomUUID(), "Player");
 
             assertThatNullPointerException()
-                    .isThrownBy(() -> user.setPlaytime(null))
+                    .isThrownBy(() -> user.setPlayTime(null))
                     .withMessageContaining("playtime");
         }
     }

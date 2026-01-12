@@ -1,11 +1,16 @@
 package com.github.imdmk.playtime;
 
-import com.github.imdmk.playtime.user.UserService;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface PlayTimeApi {
 
-    UserService getUserService();
+    CompletableFuture<PlayTime> getTime(@NotNull UUID uuid);
 
-    PlayTimeService getPlayTimeService();
+    CompletableFuture<Void> setTime(@NotNull UUID uuid, @NotNull PlayTime time);
+
+    CompletableFuture<Void> resetTime(@NotNull UUID uuid);
 
 }

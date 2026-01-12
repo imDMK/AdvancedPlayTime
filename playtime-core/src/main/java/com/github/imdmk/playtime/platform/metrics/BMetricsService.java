@@ -9,14 +9,13 @@ import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
 @Service
-public class BMetricsService {
+class BMetricsService {
 
     private static final int METRICS_ID = 19362;
-
     private final Metrics metrics;
 
     @Inject
-    public BMetricsService(@NotNull Plugin plugin) {
+    BMetricsService(@NotNull Plugin plugin) {
         this.metrics = new Metrics(plugin, METRICS_ID);
     }
 

@@ -9,13 +9,13 @@ import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
 @Service(priority = ComponentPriority.LOW)
-public final class BukkitEventCaller implements EventCaller {
+final class BukkitEventCaller implements EventCaller {
 
     private final Server server;
     private final TaskScheduler scheduler;
 
     @Inject
-    public BukkitEventCaller(@NotNull Server server, @NotNull TaskScheduler scheduler) {
+    BukkitEventCaller(@NotNull Server server, @NotNull TaskScheduler scheduler) {
         this.server = server;
         this.scheduler = scheduler;
     }

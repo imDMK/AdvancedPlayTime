@@ -12,10 +12,10 @@ public interface EntityMapper<E, D> {
     D toDomain(@NotNull E entity);
 
     default List<D> toDomainList(@NotNull List<E> entities) {
-        return entities.stream().map(this::toDomain).collect(Collectors.toList());
+        return entities.stream().map(this::toDomain).toList();
     }
 
     default List<E> toEntityList(@NotNull List<D> domains) {
-        return domains.stream().map(this::toEntity).collect(Collectors.toList());
+        return domains.stream().map(this::toEntity).toList();
     }
 }
