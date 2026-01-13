@@ -32,7 +32,7 @@ class PlayTimeTest {
 
         @Test
         void shouldCreateFromSeconds() {
-            PlayTime t = PlayTime.ofSeconds(2);
+            PlayTime t = PlayTime.of(Duration.ofSeconds(2));
             assertThat(t.millis()).isEqualTo(2000);
         }
 
@@ -45,14 +45,14 @@ class PlayTimeTest {
         @Test
         void shouldCreateFromDuration() {
             Duration d = Duration.ofMillis(1234);
-            PlayTime t = PlayTime.from(d);
+            PlayTime t = PlayTime.of(d);
             assertThat(t.millis()).isEqualTo(1234);
         }
 
         @Test
         void shouldRejectNullDuration() {
             assertThatNullPointerException()
-                    .isThrownBy(() -> PlayTime.from(null))
+                    .isThrownBy(() -> PlayTime.of(null))
                     .withMessageContaining("duration");
         }
     }
@@ -121,45 +121,6 @@ class PlayTimeTest {
 
             assertThatNullPointerException()
                     .isThrownBy(() -> t.minus(null));
-        }
-    }
-
-    @Nested
-    @DisplayName("Min/Max")
-    class MinMaxTests {
-
-        @Test
-        void shouldReturnMin() {
-            PlayTime a = PlayTime.ofMillis(500);
-            PlayTime b = PlayTime.ofMillis(1000);
-
-            assertThat(a.min(b)).isEqualTo(a);
-            assertThat(b.min(a)).isEqualTo(a);
-        }
-
-        @Test
-        void shouldReturnMax() {
-            PlayTime a = PlayTime.ofMillis(500);
-            PlayTime b = PlayTime.ofMillis(1000);
-
-            assertThat(a.max(b)).isEqualTo(b);
-            assertThat(b.max(a)).isEqualTo(b);
-        }
-
-        @Test
-        void shouldRejectNullInMin() {
-            PlayTime a = PlayTime.ZERO;
-
-            assertThatNullPointerException()
-                    .isThrownBy(() -> a.min(null));
-        }
-
-        @Test
-        void shouldRejectNullInMax() {
-            PlayTime a = PlayTime.ZERO;
-
-            assertThatNullPointerException()
-                    .isThrownBy(() -> a.max(null));
         }
     }
 
