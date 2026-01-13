@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
-    id("com.gradleup.shadow") version "9.2.1"
+    id("com.gradleup.shadow") version "9.3.0"
 }
 
 dependencies {
@@ -15,7 +15,7 @@ tasks.build {
 }
 
 tasks.withType<ShadowJar> {
-    archiveFileName.set("AdvancedPlaytime v${project.version} (MC 1.21).jar")
+    archiveFileName.set("AdvancedPlayTime v${project.version} (MC 1.21).jar")
 
     mergeServiceFiles()
 
@@ -50,10 +50,6 @@ tasks.withType<ShadowJar> {
         "panda.utilities"
     ).forEach { pkg ->
         relocate(pkg, "$relocationPrefix.$pkg")
-    }
-
-    minimize {
-        exclude(dependency("com.github.ben-manes.caffeine:caffeine"))
     }
 }
 
