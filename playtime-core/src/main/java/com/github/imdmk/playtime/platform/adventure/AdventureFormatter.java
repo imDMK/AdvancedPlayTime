@@ -32,7 +32,7 @@ public final class AdventureFormatter {
         }
 
         // Sort keys by descending length to avoid substring overlap
-        var ordered = placeholders.asMap().entrySet().stream()
+        final var ordered = placeholders.asMap().entrySet().stream()
                 .sorted(Comparator.<Map.Entry<String, Component>>comparingInt(e -> e.getKey().length()).reversed())
                 .toList();
 
