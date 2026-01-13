@@ -9,7 +9,10 @@ import org.panda_lang.utilities.inject.Injector;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class ComponentManager {
 
@@ -17,9 +20,12 @@ public final class ComponentManager {
     private final ComponentScanner scanner;
     private final ComponentSorter sorter;
 
-    private final List<ProcessorContainer<?>> processors = new ArrayList<>();
+    // annotation -> processor container
+    private final Map<Class<? extends Annotation>, ProcessorContainer<?>> processors = new HashMap<>();
     private final List<ComponentPostProcessor> postProcessors = new ArrayList<>();
     private final List<Component<?>> components = new ArrayList<>();
+
+    private boolean scanned = false;
 
     public ComponentManager(@NotNull Injector injector, @NotNull String basePackage) {
         this.injector = injector;
@@ -28,11 +34,22 @@ public final class ComponentManager {
     }
 
     public ComponentManager addProcessor(@NotNull ProcessorContainer<?> container) {
-        processors.add(container);
+        if (scanned) {
+            throw new IllegalStateException("Cannot add processors after scanAll()");
+        }
+
+        final Class<? extends Annotation> type = container.annotationType();
+        if (processors.containsKey(type)) {
+            throw new IllegalStateException(
+                    "Processor already registered for annotation: " + type.getName()
+            );
+        }
+
+        processors.put(type, container);
         return this;
     }
 
-    public ComponentManager addProcessors(@NotNull List<ProcessorContainer<?>> containers) {
+    public ComponentManager addProcessors(@NotNull Collection<ProcessorContainer<?>> containers) {
         containers.forEach(this::addProcessor);
         return this;
     }
@@ -42,18 +59,23 @@ public final class ComponentManager {
         return this;
     }
 
-    public ComponentManager addPostProcessors(@NotNull List<ComponentPostProcessor> postProcessors) {
-        postProcessors.forEach(this::addPostProcessor);
-        return this;
-    }
-
     public void scanAll() {
-        for (final ProcessorContainer<?> container : processors) {
+        if (scanned) {
+            throw new IllegalStateException("scanAll() already called");
+        }
+
+        for (final ProcessorContainer<?> container : processors.values()) {
             components.addAll(scanner.scan(container.annotationType()));
         }
+
+        scanned = true;
     }
 
     public void processAll() {
+        if (!scanned) {
+            throw new IllegalStateException("scanAll() must be called before processAll()");
+        }
+
         final ComponentProcessorContext context = new ComponentProcessorContext(injector);
 
         sorter.sort(components);
@@ -70,12 +92,10 @@ public final class ComponentManager {
     ) {
         component.createInstance(injector);
 
-        for (final ProcessorContainer<?> container : processors) {
-            if (container.annotationType() != component.annotation().annotationType()) {
-                continue;
-            }
-
-            final ComponentProcessor<A> processor = (ComponentProcessor<A>) container.processor();
+        final ProcessorContainer<?> raw = processors.get(component.annotation().annotationType());
+        if (raw != null) {
+            final ProcessorContainer<A> container = (ProcessorContainer<A>) raw;
+            final ComponentProcessor<A> processor = container.processor();
 
             processor.process(
                     component.instance(),
@@ -89,5 +109,3 @@ public final class ComponentManager {
         }
     }
 }
-
-
