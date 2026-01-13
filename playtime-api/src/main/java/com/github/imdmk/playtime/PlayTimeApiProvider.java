@@ -10,6 +10,7 @@ public final class PlayTimeApiProvider {
         throw new UnsupportedOperationException("This class cannot be instantiated.");
     }
 
+    @NotNull
     public static PlayTimeApi get() {
         final PlayTimeApi api = API;
         if (api == null) {
