@@ -13,6 +13,9 @@ dependencies {
     // Dynamic dependency loader
     implementation("com.alessiodp.libby:libby-bukkit:2.0.0-SNAPSHOT")
 
+    // Reflections
+    implementation("io.github.classgraph:classgraph:4.8.184")
+
     // Multification
     implementation("com.eternalcode:multification-bukkit:1.2.3")
     implementation("com.eternalcode:multification-okaeri:1.2.3")

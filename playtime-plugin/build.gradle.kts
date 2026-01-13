@@ -15,7 +15,7 @@ tasks.build {
 }
 
 tasks.withType<ShadowJar> {
-    archiveFileName.set("AdvancedPlaytime v${project.version} (MC 1.21).jar")
+    archiveFileName.set("AdvancedPlayTime v${project.version} (MC 1.21).jar")
 
     mergeServiceFiles()
 
@@ -50,10 +50,6 @@ tasks.withType<ShadowJar> {
         "panda.utilities"
     ).forEach { pkg ->
         relocate(pkg, "$relocationPrefix.$pkg")
-    }
-
-    minimize {
-        exclude(dependency("com.github.ben-manes.caffeine:caffeine"))
     }
 }
 

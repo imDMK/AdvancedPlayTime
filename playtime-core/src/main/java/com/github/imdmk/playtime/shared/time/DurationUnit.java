@@ -4,12 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 
-/**
- * Supported duration units and their metadata.
- * <p>
- * This enum centralizes singular/plural names, abbreviations, and extraction logic.
- */
-public enum DurationUnit {
+enum DurationUnit {
 
     DAY("day", "days", "d") {
         @Override
@@ -36,8 +31,7 @@ public enum DurationUnit {
         }
     };
 
-    /** Ordered for consistent output. */
-    public static final DurationUnit[] ORDERED = {
+    static final DurationUnit[] ORDERED = {
             DAY, HOUR, MINUTE, SECOND
     };
 
@@ -53,14 +47,14 @@ public enum DurationUnit {
         this.abbreviation = abbreviation;
     }
 
-    public abstract int extract(@NotNull Duration duration);
+    abstract int extract(@NotNull Duration duration);
 
-    public @NotNull String getAbbreviation() {
+    String getAbbreviation() {
         return abbreviation;
     }
 
-    public @NotNull String toDisplayName(int value) {
-        String word = (value == 1 ? singular : plural);
+    String toDisplayName(int value) {
+        final String word = (value == 1 ? singular : plural);
         return DISPLAY_NAME_FORMAT.formatted(value, word);
     }
 }

@@ -1,6 +1,5 @@
 package com.github.imdmk.playtime.platform.gui.item;
 
-import com.github.imdmk.playtime.shared.validate.Validator;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -16,12 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Immutable data model representing a GUI item definition.
- * <p>
- * Pure data – no logic, no rendering.
- * Used to describe items in configuration and GUI assembly layers.
- */
 public record ItemGui(
         @NotNull Material material,
         @NotNull Component name,
@@ -34,10 +27,6 @@ public record ItemGui(
 ) {
 
     public ItemGui {
-        Validator.notNull(material, "material cannot be null");
-        Validator.notNull(name, "name cannot be null");
-        Validator.notNull(lore, "lore cannot be null");
-
         lore = List.copyOf(lore);
 
         if (enchantments != null) {
@@ -67,21 +56,20 @@ public record ItemGui(
         @CheckReturnValue
         @Contract(value = "_ -> this", mutates = "this")
         public Builder material(@NotNull Material material) {
-            this.material = Validator.notNull(material, "material cannot be null");
+            this.material = material;
             return this;
         }
 
         @CheckReturnValue
         @Contract(value = "_ -> this", mutates = "this")
         public Builder name(@NotNull Component name) {
-            this.name = Validator.notNull(name, "name cannot be null");
+            this.name = name;
             return this;
         }
 
         @CheckReturnValue
         @Contract(value = "_ -> this", mutates = "this")
         public Builder lore(@NotNull List<Component> lore) {
-            Validator.notNull(lore, "lore cannot be null");
             this.lore = List.copyOf(lore);
             return this;
         }
@@ -117,9 +105,6 @@ public record ItemGui(
         @CheckReturnValue
         @Contract(value = "_, _ -> this", mutates = "this")
         public Builder addEnchantment(@NotNull Enchantment enchantment, @NotNull Integer level) {
-            Validator.notNull(enchantment, "enchantment cannot be null");
-            Validator.notNull(level, "level cannot be null");
-
             Map<Enchantment, Integer> newEnchantments = new HashMap<>(this.enchantments);
             newEnchantments.put(enchantment, level);
             this.enchantments = Map.copyOf(newEnchantments);
@@ -129,8 +114,6 @@ public record ItemGui(
         @CheckReturnValue
         @Contract(value = "_ -> this", mutates = "this")
         public Builder addFlags(@NotNull ItemFlag... toAdd) {
-            Validator.notNull(toAdd, "flags cannot be null");
-
             List<ItemFlag> newFlags = new ArrayList<>(this.flags);
             Collections.addAll(newFlags, toAdd);
             this.flags = List.copyOf(newFlags);
@@ -140,15 +123,12 @@ public record ItemGui(
         @CheckReturnValue
         @Contract(value = "_ -> this", mutates = "this")
         public Builder appendLore(@NotNull Component... lines) {
-            Validator.notNull(lines, "lines cannot be null");
-
             List<Component> newLore = new ArrayList<>(this.lore);
             Collections.addAll(newLore, lines);
             this.lore = List.copyOf(newLore);
             return this;
         }
 
-        @NotNull
         public ItemGui build() {
             return new ItemGui(
                     this.material,
