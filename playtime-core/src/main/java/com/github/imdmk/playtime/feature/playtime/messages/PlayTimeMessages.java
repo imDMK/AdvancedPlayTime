@@ -4,15 +4,8 @@ import com.eternalcode.multification.notice.Notice;
 
 public interface PlayTimeMessages {
 
-    Notice playerPlaytimeSelf();
-    Notice playerPlaytimeTarget();
+    Notice playerPlayTimeSelf();
+    Notice playerPlayTimeTarget();
+    Notice playerPlayTimeUpdated();
 
-    Notice playerPlaytimeUpdated();
-    Notice playerPlaytimeReset();
-
-    Notice playerPlaytimeResetAllStarted();
-    Notice playerPlaytimeResetAllFailed();
-    Notice playerPlaytimeResetAllFinished();
-
-    Notice topUsersCacheInvalidated();
 }

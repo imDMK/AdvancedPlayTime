@@ -1,28 +1,27 @@
 package com.github.imdmk.playtime.platform.gui.view;
 
-import com.github.imdmk.playtime.platform.gui.IdentifiableGui;
+import com.github.imdmk.playtime.platform.scheduler.TaskScheduler;
 import dev.triumphteam.gui.guis.BaseGui;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Represents a simple GUI that does not require a parameter to be created or populated.
- * Defines a standard lifecycle for opening such GUIs.
- */
-public interface SimpleGui extends IdentifiableGui {
+public interface SimpleGui extends OpenableGui<Void> {
 
-    /**
-     * Creates a new instance of the GUI.
-     *
-     * @return the initialized {@link BaseGui} instance
-     */
-    BaseGui createGui();
+    @Override
+    default void open(
+            @NotNull Player viewer,
+            @NotNull TaskScheduler scheduler,
+            Void unused
+    ) {
+        final BaseGui gui = createGui(viewer);
+        prepareItems(gui, viewer);
+        scheduler.runSync(() -> gui.open(viewer));
+    }
 
-    /**
-     * Prepares and populates the GUI with its core content.
-     *
-     * @param gui    the GUI to populate
-     * @param viewer the player viewing the GUI
-     */
-    void prepareItems(@NotNull BaseGui gui, @NotNull Player viewer);
+    BaseGui createGui(@NotNull Player viewer);
+
+    void prepareItems(
+            @NotNull BaseGui gui,
+            @NotNull Player viewer
+    );
 }

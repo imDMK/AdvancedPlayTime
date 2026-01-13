@@ -9,10 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-/**
- * Renders and places {@link ItemGui} into {@link BaseGui} instances.
- * Invoke only on the Bukkit main thread.
- */
 public interface GuiRenderer {
 
     @Contract(mutates = "param1")
@@ -26,10 +22,6 @@ public interface GuiRenderer {
         setItem(gui, slot, item, context, options, onClick, b -> {});
     }
 
-    /**
-     * Sets the item in a specific slot (overwrites existing content).
-     * Supports per-slot customization via {@code builderEditor}.
-     */
     @Contract(mutates = "param1")
     void setItem(@NotNull BaseGui gui,
                  int slot,
@@ -81,10 +73,6 @@ public interface GuiRenderer {
         addItem(gui, item, context, options, onClick, b -> {});
     }
 
-    /**
-     * Adds the item to the next free slot.
-     * Supports per-slot customization via {@code builderEditor}.
-     */
     @Contract(mutates = "param1")
     void addItem(@NotNull BaseGui gui,
                  @NotNull ItemGui item,

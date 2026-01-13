@@ -24,22 +24,22 @@ public final class ItemGuiSerializer implements ObjectSerializer<ItemGui> {
         data.add("name", item.name(), Component.class);
         data.addCollection("lore", item.lore(), Component.class);
 
-        var slot = item.slot();
+        final var slot = item.slot();
         if (slot != null) {
             data.add("slot", slot, Integer.class);
         }
 
-        var enchantments = item.enchantments();
+        final var enchantments = item.enchantments();
         if (enchantments != null && !enchantments.isEmpty()) {
             data.addAsMap("enchantments", item.enchantments(), Enchantment.class, Integer.class);
         }
 
-        var flags = item.flags();
+        final var flags = item.flags();
         if (flags != null && !flags.isEmpty()) {
             data.addCollection("flags", flags, ItemFlag.class);
         }
 
-        var permission = item.requiredPermission();
+        final var permission = item.requiredPermission();
         if (permission != null && !permission.isBlank()) {
             data.add("permission", permission, String.class);
         }
@@ -47,14 +47,14 @@ public final class ItemGuiSerializer implements ObjectSerializer<ItemGui> {
 
     @Override
     public ItemGui deserialize(@NotNull DeserializationData data, @NotNull GenericsDeclaration generics) {
-        var material = data.get("material", Material.class);
-        var name = data.get("name", Component.class);
-        var lore = data.getAsList("lore", Component.class);
+        final var material = data.get("material", Material.class);
+        final var name = data.get("name", Component.class);
+        final var lore = data.getAsList("lore", Component.class);
 
-        var slot = data.get("slot", Integer.class);
-        var enchantments = data.getAsMap("enchantments", Enchantment.class, Integer.class);
-        var flags = data.getAsList("flags", ItemFlag.class);
-        var permission = data.get("permission", String.class);
+        final var slot = data.get("slot", Integer.class);
+        final var enchantments = data.getAsMap("enchantments", Enchantment.class, Integer.class);
+        final var flags = data.getAsList("flags", ItemFlag.class);
+        final var permission = data.get("permission", String.class);
 
         return new ItemGui(
                 material,

@@ -1,17 +1,9 @@
 package com.github.imdmk.playtime.config;
 
-import com.github.imdmk.playtime.platform.logger.PluginLogger;
-import com.github.imdmk.playtime.shared.validate.Validator;
 import eu.okaeri.configs.exception.OkaeriException;
 import org.jetbrains.annotations.NotNull;
 
 final class ConfigLifecycle {
-
-    private final PluginLogger logger;
-
-    ConfigLifecycle(@NotNull PluginLogger logger) {
-        this.logger = Validator.notNull(logger, "logger");
-    }
 
     void initialize(@NotNull ConfigSection config) {
         config.saveDefaults();
@@ -22,17 +14,15 @@ final class ConfigLifecycle {
         try {
             config.load(true);
         } catch (OkaeriException e) {
-            logger.error(e, "Failed to load config %s", config.getClass().getSimpleName());
-            throw new ConfigAccessException(e);
+            throw new ConfigAccessException("Failed to load config: " + config.getClass().getSimpleName(), e);
         }
     }
 
     void save(@NotNull ConfigSection config) {
         try {
             config.save();
-        } catch (Exception e) {
-            logger.error(e, "Failed to save config %s", config.getClass().getSimpleName());
-            throw new ConfigAccessException(e);
+        } catch (OkaeriException e) {
+            throw new ConfigAccessException("Failed to save config: " + config.getClass().getSimpleName(), e);
         }
     }
 }

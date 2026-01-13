@@ -6,12 +6,6 @@ import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 import org.bukkit.Material;
 
-/**
- * Configuration for navigation items used in paginated GUIs.
- * <p>
- * Defines visual representation and behavior for navigation controls:
- * next, previous, and exit buttons displayed in inventory-based interfaces.
- */
 public final class NavigationBarConfig extends OkaeriConfig {
 
     @Comment({
@@ -100,4 +94,5 @@ public final class NavigationBarConfig extends OkaeriConfig {
                     " "
             ))
             .build();
+
 }
