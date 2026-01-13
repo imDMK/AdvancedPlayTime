@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.feature.playtime.gui;
+package com.github.imdmk.playtime.feature.playtime.top.gui;
 
 import com.github.imdmk.playtime.feature.playtime.PlayTimeUser;
 import com.github.imdmk.playtime.injector.annotations.Gui;

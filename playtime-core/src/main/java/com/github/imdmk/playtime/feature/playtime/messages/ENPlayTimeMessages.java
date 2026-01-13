@@ -29,7 +29,7 @@ public final class ENPlayTimeMessages
             "#"
     })
     Notice playerPlayTimeTarget = Notice.chat(
-            "<dark_gray>• <gray>Target player <gray>has spent <red>{PLAYER_PLAYTIME} <gray>on this server.<dark_gray>"
+            "<dark_gray>• <gray>Player <red>{PLAYER_NAME} <gray>has spent <red>{PLAYER_PLAYTIME} <gray>on this server.<dark_gray>"
     );
 
     @Comment({

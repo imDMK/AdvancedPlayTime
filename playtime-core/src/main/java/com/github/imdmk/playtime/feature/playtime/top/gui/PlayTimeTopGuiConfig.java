@@ -1,19 +1,25 @@
-package com.github.imdmk.playtime.feature.playtime.gui;
+package com.github.imdmk.playtime.feature.playtime.top.gui;
 
+import com.github.imdmk.playtime.config.ConfigSection;
+import com.github.imdmk.playtime.injector.annotations.ConfigFile;
+import com.github.imdmk.playtime.platform.adventure.AdventureComponentSerializer;
 import com.github.imdmk.playtime.platform.adventure.AdventureComponents;
 import com.github.imdmk.playtime.platform.gui.GuiType;
 import com.github.imdmk.playtime.platform.gui.config.ConfigurableGui;
 import com.github.imdmk.playtime.platform.gui.item.ItemGui;
-import eu.okaeri.configs.OkaeriConfig;
+import com.github.imdmk.playtime.platform.gui.item.ItemGuiSerializer;
+import com.github.imdmk.playtime.platform.serdes.EnchantmentSerializer;
+import com.github.imdmk.playtime.platform.serdes.SoundSerializer;
 import eu.okaeri.configs.annotation.Comment;
+import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 
 import java.util.Collections;
 
-public final class PlayTimeTopGuiConfig
-        extends OkaeriConfig
+@ConfigFile
+public final class PlayTimeTopGuiConfig extends ConfigSection
         implements ConfigurableGui {
 
     @Comment({
@@ -97,4 +103,18 @@ public final class PlayTimeTopGuiConfig
         return rows;
     }
 
+    @Override
+    public OkaeriSerdesPack serdesPack() {
+        return registry -> {
+            registry.register(new AdventureComponentSerializer());
+            registry.register(new ItemGuiSerializer());
+            registry.register(new EnchantmentSerializer());
+            registry.register(new SoundSerializer());
+        };
+    }
+
+    @Override
+    public String fileName() {
+        return "topGuiConfig.yml";
+    }
 }

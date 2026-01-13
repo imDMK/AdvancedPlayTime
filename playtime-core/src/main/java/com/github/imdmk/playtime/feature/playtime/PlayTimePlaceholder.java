@@ -1,5 +1,6 @@
 package com.github.imdmk.playtime.feature.playtime;
 
+import com.github.imdmk.playtime.PlayTime;
 import com.github.imdmk.playtime.injector.annotations.placeholderapi.Placeholder;
 import com.github.imdmk.playtime.platform.placeholder.PluginPlaceholder;
 import com.github.imdmk.playtime.shared.time.Durations;
@@ -12,11 +13,11 @@ final class PlayTimePlaceholder implements PluginPlaceholder {
 
     private static final String IDENTIFIER = "playtime";
 
-    private final PlayTimeUserService userService;
+    private final PlayTimeUserCache cache;
 
     @Inject
-    PlayTimePlaceholder(@NotNull PlayTimeUserService userService) {
-        this.userService = userService;
+    PlayTimePlaceholder(@NotNull PlayTimeUserCache cache) {
+        this.cache = cache;
     }
 
     @Override
@@ -26,8 +27,10 @@ final class PlayTimePlaceholder implements PluginPlaceholder {
 
     @Override
     public String request(@NotNull Player player, @NotNull String params) {
-        return Durations.format(
-                userService.getPlayTime(player.getUniqueId()).toDuration()
-        );
+        final PlayTime cachedPlayTime = cache.get(player.getUniqueId())
+                .map(PlayTimeUser::getPlayTime)
+                .orElse(PlayTime.ZERO);
+
+        return Durations.format(cachedPlayTime.toDuration());
     }
 }

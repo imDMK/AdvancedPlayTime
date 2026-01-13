@@ -50,6 +50,29 @@ final class PlayTimeUserRepositoryOrmLite
     }
 
     @Override
+    public CompletableFuture<List<PlayTimeUser>> findTopByPlayTime(int limit) {
+        if (limit <= 0) {
+            return CompletableFuture.completedFuture(List.of());
+        }
+
+        return execute(() -> {
+            try {
+                return dao.queryBuilder()
+                        .orderBy(PlayTimeUserEntityMeta.Col.PLAYTIME_MILLIS, false)
+                        .limit((long) limit)
+                        .query()
+                        .stream()
+                        .map(mapper::toDomain)
+                        .toList();
+            } catch (SQLException e) {
+                logger.error(e, "Failed to query top playtime users (limit=%d)", limit);
+                throw new IllegalStateException("Database failure", e);
+            }
+        });
+    }
+
+
+    @Override
     public CompletableFuture<List<PlayTimeUser>> findAll() {
         return execute(() -> {
             try {
@@ -78,7 +101,7 @@ final class PlayTimeUserRepositoryOrmLite
 
     @Override
     public CompletableFuture<Void> save(@NotNull PlayTimeUser user) {
-        execute(() -> {
+        return execute(() -> {
             try {
                 dao.createOrUpdate(mapper.toEntity(user));
                 return null;

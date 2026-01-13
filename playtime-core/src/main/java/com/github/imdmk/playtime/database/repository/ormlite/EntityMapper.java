@@ -3,7 +3,6 @@ package com.github.imdmk.playtime.database.repository.ormlite;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public interface EntityMapper<E, D> {
 

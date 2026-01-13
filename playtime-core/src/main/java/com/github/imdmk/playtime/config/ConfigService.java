@@ -75,7 +75,7 @@ public final class ConfigService {
     }
 
     @Subscribe(event = PlayTimeShutdownEvent.class)
-    public void shutdown() {
+    private void shutdown() {
         configs.clear();
         byType.clear();
     }

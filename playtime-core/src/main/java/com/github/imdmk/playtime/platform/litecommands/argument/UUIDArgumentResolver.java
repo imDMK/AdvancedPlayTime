@@ -7,6 +7,8 @@ import dev.rollczi.litecommands.argument.Argument;
 import dev.rollczi.litecommands.argument.parser.ParseResult;
 import dev.rollczi.litecommands.argument.resolver.ArgumentResolver;
 import dev.rollczi.litecommands.invocation.Invocation;
+import dev.rollczi.litecommands.suggestion.SuggestionContext;
+import dev.rollczi.litecommands.suggestion.SuggestionResult;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
@@ -20,7 +22,7 @@ class UUIDArgumentResolver extends ArgumentResolver<CommandSender, UUID> {
     private final MessageConfig messageConfig;
 
     @Inject
-    UUIDArgumentResolver(IdentityCache cache, @NotNull MessageConfig messageConfig) {
+    UUIDArgumentResolver(@NotNull IdentityCache cache, @NotNull MessageConfig messageConfig) {
         this.cache = cache;
         this.messageConfig = messageConfig;
     }
@@ -30,5 +32,10 @@ class UUIDArgumentResolver extends ArgumentResolver<CommandSender, UUID> {
         return cache.getUuidByName(argument)
                 .map(ParseResult::success)
                 .orElse(ParseResult.failure(messageConfig.playerNotFound));
+    }
+
+    @Override
+    public SuggestionResult suggest(Invocation<CommandSender> invocation, Argument<UUID> argument, SuggestionContext context) {
+        return SuggestionResult.of(cache.getPlayerNames());
     }
 }

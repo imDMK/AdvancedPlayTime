@@ -56,7 +56,7 @@ public final class GuiRegistry {
     }
 
     @Subscribe(event = PlayTimeShutdownEvent.class)
-    public void unregisterAll() {
+    private void shutdown() {
         byId.clear();
         byClass.clear();
     }

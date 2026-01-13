@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
 @Service
-class BMetricsService {
+final class BMetricsService {
 
     private static final int METRICS_ID = 19362;
     private final Metrics metrics;
@@ -20,7 +20,7 @@ class BMetricsService {
     }
 
     @Subscribe(event = PlayTimeShutdownEvent.class)
-    void shutdown() {
+    private void shutdown() {
         metrics.shutdown();
     }
 }

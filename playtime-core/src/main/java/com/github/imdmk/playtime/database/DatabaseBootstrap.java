@@ -58,7 +58,7 @@ public final class DatabaseBootstrap {
     }
 
     @Subscribe(event = PlayTimeShutdownEvent.class)
-    public void shutdown() {
+    private void shutdown() {
         dataConnector.close();
     }
 }

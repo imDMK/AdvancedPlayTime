@@ -9,12 +9,14 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-class PlayTimeUserService {
+final class PlayTimeUserService {
 
+    private final PlayTimeUserCache cache;
     private final PlayTimeUserRepository repository;
 
     @Inject
-    PlayTimeUserService(@NotNull PlayTimeUserRepository repository) {
+    PlayTimeUserService(@NotNull PlayTimeUserCache cache, @NotNull PlayTimeUserRepository repository) {
+        this.cache = cache;
         this.repository = repository;
     }
 
@@ -22,16 +24,19 @@ class PlayTimeUserService {
             @NotNull UUID uuid,
             @NotNull PlayTime initialPlayTime
     ) {
-        return repository.findByUuid(uuid)
+        return cache.get(uuid)
+                .map(CompletableFuture::completedFuture)
+                .orElseGet(() -> repository.findByUuid(uuid)
                 .thenCompose(optional -> {
                     if (optional.isPresent()) {
                         return CompletableFuture.completedFuture(optional.get());
                     }
 
-                    PlayTimeUser user = new PlayTimeUser(uuid, initialPlayTime);
+                    final PlayTimeUser user = new PlayTimeUser(uuid, initialPlayTime);
                     return repository.save(user)
                             .thenApply(v -> user);
-                });
+                }));
+
     }
 
     CompletableFuture<PlayTimeUser> getOrCreate(@NotNull UUID uuid) {

@@ -4,6 +4,7 @@ import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
 import com.github.imdmk.playtime.injector.subscriber.Subscribe;
 import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeInitializeEvent;
+import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.LiteCommandsBuilder;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
@@ -37,8 +38,13 @@ public final class LiteCommandsConfigurer {
     }
 
     @Subscribe(event = PlayTimeInitializeEvent.class)
-    private void onInitialize() {
+    private void initialize() {
         this.liteCommands = builder.build();
+    }
+
+    @Subscribe(event = PlayTimeShutdownEvent.class)
+    private void shutdown() {
+        liteCommands.unregister();
     }
 }
 

@@ -1,14 +1,13 @@
 package com.github.imdmk.playtime.user.repository;
 
+import com.github.imdmk.playtime.PlayTime;
 import com.github.imdmk.playtime.feature.playtime.PlayTimeUserEntity;
 import com.github.imdmk.playtime.feature.playtime.repository.UserEntityMapper;
 import com.github.imdmk.playtime.user.User;
-import com.github.imdmk.playtime.PlayTime;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PlayTimePlayTimeUserEntityMapperTest {

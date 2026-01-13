@@ -1,11 +1,10 @@
 package com.github.imdmk.playtime.platform.adventure;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class AdventureFormatter {
@@ -29,15 +28,14 @@ public final class AdventureFormatter {
             return input;
         }
 
-        // Sort keys by descending length to avoid substring overlap
-        final List<Map.Entry<String, Component>> ordered = placeholders.asMap().entrySet().stream()
-                .sorted(Comparator.<Map.Entry<String, Component>>comparingInt(e -> e.getKey().length()).reversed())
-                .toList();
+        final MiniMessage miniMessage = AdventureComponents.miniMessage();
 
-        return input.replaceText(builder -> {
-            for (var entry : ordered) {
-                builder.matchLiteral(entry.getKey()).replacement(entry.getValue());
-            }
-        });
+        String raw = miniMessage.serialize(input);
+        for (final var entry : placeholders.asMap().entrySet()) {
+            raw = raw.replace(entry.getKey(), miniMessage.serialize(entry.getValue()));
+        }
+
+        return miniMessage.deserialize(raw);
     }
+
 }

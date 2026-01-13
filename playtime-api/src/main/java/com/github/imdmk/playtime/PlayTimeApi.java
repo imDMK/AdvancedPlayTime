@@ -10,6 +10,7 @@ public interface PlayTimeApi {
     CompletableFuture<PlayTime> getTime(@NotNull UUID uuid);
 
     CompletableFuture<Void> setTime(@NotNull UUID uuid, @NotNull PlayTime time);
+    CompletableFuture<Void> addTime(@NotNull UUID uuid, @NotNull PlayTime delta);
 
     CompletableFuture<Void> resetTime(@NotNull UUID uuid);
 

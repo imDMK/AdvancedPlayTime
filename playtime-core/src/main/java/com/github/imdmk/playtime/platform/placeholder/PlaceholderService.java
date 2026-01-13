@@ -30,7 +30,7 @@ public final class PlaceholderService {
     }
 
     @Subscribe(event = PlayTimeShutdownEvent.class)
-    public void unregisterAll() {
+    private void shutdown() {
         registry.unregisterAll();
     }
 }

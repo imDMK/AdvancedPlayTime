@@ -28,6 +28,11 @@ public class PlayTimeApiAdapter implements PlayTimeApi {
     }
 
     @Override
+    public CompletableFuture<Void> addTime(@NotNull UUID uuid, @NotNull PlayTime delta) {
+        return userService.addPlayTime(uuid, delta);
+    }
+
+    @Override
     public CompletableFuture<Void> resetTime(@NotNull UUID uuid) {
         return userService.setPlayTime(uuid, PlayTime.ZERO);
     }

@@ -2,6 +2,8 @@ package com.github.imdmk.playtime.platform.scheduler;
 
 import com.github.imdmk.playtime.injector.ComponentPriority;
 import com.github.imdmk.playtime.injector.annotations.Service;
+import com.github.imdmk.playtime.injector.subscriber.Subscribe;
+import com.github.imdmk.playtime.injector.subscriber.event.PlayTimeShutdownEvent;
 import com.github.imdmk.playtime.shared.time.Durations;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -75,5 +77,10 @@ final class BukkitTaskScheduler implements TaskScheduler {
     @Override
     public void cancelAllTasks() {
         scheduler.cancelTasks(plugin);
+    }
+
+    @Subscribe(event = PlayTimeShutdownEvent.class)
+    private void shutdown() {
+        cancelAllTasks();
     }
 }

@@ -2,6 +2,7 @@ package com.github.imdmk.playtime.feature.playtime;
 
 import com.github.imdmk.playtime.PlayTime;
 import com.github.imdmk.playtime.injector.annotations.lite.LiteCommand;
+import com.github.imdmk.playtime.platform.identity.IdentityService;
 import com.github.imdmk.playtime.shared.message.MessageService;
 import com.github.imdmk.playtime.shared.time.Durations;
 import dev.rollczi.litecommands.annotations.argument.Arg;
@@ -21,17 +22,26 @@ import java.util.UUID;
 final class PlayTimeCommand {
 
     private final MessageService messageService;
+    private final IdentityService identityService;
     private final PlayTimeUserService userService;
+    private final PlayTimeQueryService playTimeQueryService;
 
     @Inject
-    PlayTimeCommand(@NotNull MessageService messageService, @NotNull PlayTimeUserService userService) {
+    PlayTimeCommand(
+            @NotNull MessageService messageService,
+            @NotNull IdentityService identityService,
+            @NotNull PlayTimeUserService userService,
+            @NotNull PlayTimeQueryService playTimeQueryService
+    ) {
         this.messageService = messageService;
+        this.identityService = identityService;
         this.userService = userService;
+        this.playTimeQueryService = playTimeQueryService;
     }
 
     @Execute
     void playTime(@Context Player player) {
-        userService.getPlayTime(player.getUniqueId())
+        playTimeQueryService.getCurrentPlayTime(player.getUniqueId())
                 .thenAccept(playTime -> messageService.create()
                         .viewer(player)
                         .notice(n -> n.playtimeMessages.playerPlayTimeSelf())
@@ -45,10 +55,11 @@ final class PlayTimeCommand {
 
     @Execute
     void playTimeOther(@Context CommandSender sender, @Arg UUID playerId) {
-        userService.getPlayTime(playerId)
+        playTimeQueryService.getCurrentPlayTime(playerId)
                 .thenAccept(playTime -> messageService.create()
                         .viewer(sender)
                         .notice(n -> n.playtimeMessages.playerPlayTimeTarget())
+                        .placeholder("{PLAYER_NAME}", identityService.resolvePlayerName(playerId))
                         .placeholder("{PLAYER_PLAYTIME}", Durations.format(playTime.toDuration()))
                         .send())
                 .exceptionally(e -> {
@@ -58,14 +69,14 @@ final class PlayTimeCommand {
     }
 
     @Execute
-    void setPlayTime(@Context CommandSender sender, @Arg UUID playerId, @Arg Duration duration) {
-        final PlayTime playtime = PlayTime.of(duration);
+    void setPlayTime(@Context CommandSender sender, @Arg UUID playerId, @Arg Duration time) {
+        final PlayTime playTime = PlayTime.of(time);
 
-        userService.setPlayTime(playerId, playtime)
+        userService.setPlayTime(playerId, playTime)
                 .thenAccept(v -> messageService.create()
                         .viewer(sender)
                         .notice(n -> n.playtimeMessages.playerPlayTimeUpdated())
-                        .placeholder("{PLAYER_PLAYTIME}", Durations.format(duration))
+                        .placeholder("{PLAYER_PLAYTIME}", Durations.format(time))
                         .send())
                 .exceptionally(e -> {
                     messageService.send(sender, notice -> notice.actionExecutionError);
