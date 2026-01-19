@@ -35,7 +35,7 @@ dependencies {
     implementation("dev.rollczi:litecommands-bukkit:3.10.6")
     implementation("dev.rollczi:litecommands-annotations:3.10.6")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:6.0.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.0.2")
     testImplementation("org.assertj:assertj-core:3.27.6")
     testImplementation("org.mockito:mockito-core:5.20.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.20.0")
