@@ -2,9 +2,11 @@ package com.github.imdmk.playtime;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 public final class PlayTimeApiProvider {
 
-    private static volatile PlayTimeApi API; // visibility across threads
+    private static final AtomicReference<PlayTimeApi> API = new AtomicReference<>();
 
     private PlayTimeApiProvider() {
         throw new UnsupportedOperationException("This class cannot be instantiated.");
@@ -12,7 +14,7 @@ public final class PlayTimeApiProvider {
 
     @NotNull
     public static PlayTimeApi get() {
-        final PlayTimeApi api = API;
+        final PlayTimeApi api = API.get();
         if (api == null) {
             throw new IllegalStateException("PlayTimeAPI is not registered.");
         }
@@ -20,20 +22,18 @@ public final class PlayTimeApiProvider {
     }
 
     public static boolean isRegistered() {
-        return API != null;
+        return API.get() != null;
     }
 
-    static synchronized void register(@NotNull PlayTimeApi api) {
-        if (API != null) {
+    static void register(@NotNull PlayTimeApi api) {
+        if (!API.compareAndSet(null, api)) {
             throw new IllegalStateException("PlayTimeAPI is already registered.");
         }
-        API = api;
     }
 
-    static synchronized void unregister() {
-        if (API == null) {
+    static void unregister() {
+        if (API.getAndSet(null) == null) {
             throw new IllegalStateException("PlayTimeAPI is not registered.");
         }
-        API = null;
     }
 }
