@@ -32,7 +32,7 @@ public final class PlayTimeApiProvider {
     }
 
     static void unregister() {
-        if (!API.compareAndSet(API.get(), null)) {
+        if (API.getAndSet(null) == null) {
             throw new IllegalStateException("PlayTimeAPI is not registered.");
         }
     }
