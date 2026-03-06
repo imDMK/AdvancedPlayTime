@@ -11,9 +11,14 @@ dependencies {
     api(project(":playtime-core"))
 }
 
+tasks.build {
+    dependsOn(tasks.test)
+    dependsOn(tasks.shadowJar)
+}
+
 playTimeShadow {
     pluginYml {
-        name = "AdvancedPlayTime"
+        name = project.name
         version = project.version.toString()
         apiVersion = "1.21"
         softDepend = listOf("PlaceholderAPI")
@@ -24,7 +29,9 @@ playTimeShadow {
     }
 
     shadowJar {
-        archiveFileName.set("AdvancedPlayTime v${project.version} (MC 1.21.x).jar")
+        archiveFileName.set("${project.name} v${project.version} (MC 1.21.x).jar")
+
+        mergeServiceFiles()
 
         exclude(
             "META-INF/*.SF",
