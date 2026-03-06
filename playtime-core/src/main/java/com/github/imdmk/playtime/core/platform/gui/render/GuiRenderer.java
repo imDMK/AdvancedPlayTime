@@ -1,0 +1,82 @@
+package com.github.imdmk.playtime.core.platform.gui.render;
+
+import com.github.imdmk.playtime.core.platform.gui.item.ItemGui;
+import dev.triumphteam.gui.builder.item.BaseItemBuilder;
+import dev.triumphteam.gui.guis.BaseGui;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jetbrains.annotations.Contract;
+
+import java.util.function.Consumer;
+
+public interface GuiRenderer {
+
+    @Contract(mutates = "param1")
+    default void setItem(BaseGui gui,
+                         int slot,
+                         ItemGui item,
+                         RenderContext context,
+                         RenderOptions options,
+                         Consumer<InventoryClickEvent> onClick
+    ) {
+        setItem(gui, slot, item, context, options, onClick, b -> {});
+    }
+
+    @Contract(mutates = "param1")
+    void setItem(BaseGui gui,
+                 int slot,
+                 ItemGui item,
+                 RenderContext context,
+                 RenderOptions options,
+                 Consumer<InventoryClickEvent> onClick,
+                 Consumer<BaseItemBuilder<?>> builderEditor
+    );
+
+    @Contract(mutates = "param1")
+    default void setItem(BaseGui gui,
+                         ItemGui item,
+                         RenderContext context,
+                         RenderOptions options,
+                         Consumer<InventoryClickEvent> onClick
+    ) {
+        var slot = item.slot();
+        if (slot == null) {
+            throw new IllegalArgumentException("Item slot is null (use add(...) for non-slotted items)");
+        }
+
+        setItem(gui, slot, item, context, options, onClick, b -> {});
+    }
+
+    @Contract(mutates = "param1")
+    default void setItem(BaseGui gui,
+                         ItemGui item,
+                         RenderContext context,
+                         RenderOptions options,
+                         Consumer<InventoryClickEvent> onClick,
+                         Consumer<BaseItemBuilder<?>> builderEditor
+    ) {
+        var slot = item.slot();
+        if (slot == null) {
+            throw new IllegalArgumentException("Item slot is null (use add(...) for non-slotted items)");
+        }
+
+        setItem(gui, slot, item, context, options, onClick, builderEditor);
+    }
+
+    @Contract(mutates = "param1")
+    default void addItem(BaseGui gui,
+                         ItemGui item,
+                         RenderContext context,
+                         RenderOptions options,
+                         Consumer<InventoryClickEvent> onClick
+    ) {
+        addItem(gui, item, context, options, onClick, b -> {});
+    }
+
+    @Contract(mutates = "param1")
+    void addItem(BaseGui gui,
+                 ItemGui item,
+                 RenderContext context,
+                 RenderOptions options,
+                 Consumer<InventoryClickEvent> onClick,
+                 Consumer<BaseItemBuilder<?>> builderEditor);
+}

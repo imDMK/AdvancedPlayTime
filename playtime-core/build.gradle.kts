@@ -1,44 +1,41 @@
+plugins {
+    `playtime-java`
+    `playtime-java-test`
+    `playtime-repositories`
+    `playtime-runtime-libraries`
+}
+
 dependencies {
-    compileOnly("me.clip:placeholderapi:2.11.7")
+    api(project(":playtime-api"))
 
-    api(project(":playtime-bukkit-api"))
+    compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
 
-    // DI
-    implementation("org.panda-lang.utilities:di:1.8.0")
+    implementation("org.panda-lang.utilities:di:${Versions.PANDA_DI}")
+    implementation("io.github.classgraph:classgraph:${Versions.CLASSGRAPH}")
 
-    // Adventure
-    implementation("net.kyori:adventure-platform-bukkit:4.4.1")
-    implementation("net.kyori:adventure-text-minimessage:4.21.0")
+    implementation("net.kyori:adventure-platform-bukkit:${Versions.KYORI_PLATFORM_BUKKIT}")
+    implementation("net.kyori:adventure-text-minimessage:${Versions.KYORI_TEXT_MINIMESSAGE}")
 
-    // Dynamic dependency loader
-    implementation("com.alessiodp.libby:libby-bukkit:2.0.0-SNAPSHOT")
+    implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION_BUKKIT}")
+    implementation("com.eternalcode:multification-okaeri:${Versions.MULTIFICATION_OKAERI}")
 
-    // Reflections
-    implementation("io.github.classgraph:classgraph:4.8.184")
+    implementation("com.github.ben-manes.caffeine:caffeine:${Versions.CAFFEINE}")
+    implementation("com.zaxxer:HikariCP:${Versions.HIKARI_CP}")
+    implementation("com.j256.ormlite:ormlite-jdbc:${Versions.ORMLITE}")
 
-    // Multification
-    implementation("com.eternalcode:multification-bukkit:1.2.3")
-    implementation("com.eternalcode:multification-okaeri:1.2.3")
+    implementation("eu.okaeri:okaeri-configs-yaml-snakeyaml:${Versions.OKAERI_SNAKEYAML}")
+    implementation("eu.okaeri:okaeri-configs-serdes-commons:${Versions.OKAERI_SERDES_COMMONS}")
 
-    // Cache / DB layer
-    implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
-    implementation("com.zaxxer:HikariCP:7.0.2")
-    implementation("com.j256.ormlite:ormlite-jdbc:6.1")
+    implementation("dev.triumphteam:triumph-gui:${Versions.TRIUMPH_GUI}")
+    implementation("org.bstats:bstats-bukkit:${Versions.BSTATS_BUKKIT}")
 
-    // Okaeri configs
-    api("eu.okaeri:okaeri-configs-yaml-snakeyaml:5.0.9")
-    implementation("eu.okaeri:okaeri-configs-serdes-commons:5.0.5")
+    implementation("dev.rollczi:litecommands-bukkit:${Versions.LITECOMMANDS}")
+    implementation("dev.rollczi:litecommands-annotations:${Versions.LITECOMMANDS}")
 
-    // GUI, metrics, commands
-    implementation("dev.triumphteam:triumph-gui:3.1.13")
-    implementation("org.bstats:bstats-bukkit:3.1.0")
-    implementation("dev.rollczi:litecommands-bukkit:3.10.9")
-    implementation("dev.rollczi:litecommands-annotations:3.10.9")
-
-    testImplementation("org.junit.jupiter:junit-jupiter:6.0.2")
-    testImplementation("org.assertj:assertj-core:3.27.6")
-    testImplementation("org.mockito:mockito-core:5.21.0")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.21.0")
-    testImplementation("org.mockito:mockito-inline:5.2.0")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    playTimeLibraryDownload("com.mysql:mysql-connector-j:${Versions.MYSQL_CONNECTOR_J}")
+    playTimeLibraryDownload("org.mariadb.jdbc:mariadb-java-client:${Versions.MARIADB_CONNECTOR_J}")
+    playTimeLibraryDownload("org.xerial:sqlite-jdbc:${Versions.SQLITE_JDBC}")
+    playTimeLibraryDownload("org.postgresql:postgresql:${Versions.POSTGRESQL_JDBC}")
+    playTimeLibraryDownload("com.h2database:h2:${Versions.H2_JDBC}")
+    playTimeLibraryDownload("com.microsoft.sqlserver:mssql-jdbc:${Versions.MSSQL_JDBC}")
 }
