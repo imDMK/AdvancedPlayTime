@@ -1,7 +1,9 @@
 package com.github.imdmk.playtime.core.feature.playtime;
 
 import com.github.imdmk.playtime.api.PlayTime;
+import com.github.imdmk.playtime.api.event.PlayTimeChangedEvent;
 import com.github.imdmk.playtime.core.injector.annotations.Service;
+import com.github.imdmk.playtime.core.platform.event.EventCaller;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
 import java.util.UUID;
@@ -12,11 +14,17 @@ final class PlayTimeUserService {
 
     private final PlayTimeUserCache cache;
     private final PlayTimeUserRepository repository;
+    private final EventCaller eventCaller;
 
     @Inject
-    PlayTimeUserService(PlayTimeUserCache cache, PlayTimeUserRepository repository) {
+    PlayTimeUserService(
+            PlayTimeUserCache cache,
+            PlayTimeUserRepository repository,
+            EventCaller eventCaller
+    ) {
         this.cache = cache;
         this.repository = repository;
+        this.eventCaller = eventCaller;
     }
 
     CompletableFuture<PlayTimeUser> getOrCreate(
@@ -49,11 +57,14 @@ final class PlayTimeUserService {
 
     CompletableFuture<Void> setPlayTime(
             UUID uuid,
-            PlayTime playTime
+            PlayTime newPlayTime
     ) {
         return getOrCreate(uuid)
                 .thenCompose(user -> {
-                    user.setPlayTime(playTime);
+                    PlayTime oldPlayTime = user.getPlayTime();
+
+                    user.setPlayTime(newPlayTime);
+                    eventCaller.callEvent(new PlayTimeChangedEvent(uuid, oldPlayTime, newPlayTime));
                     return repository.save(user);
                 });
     }
