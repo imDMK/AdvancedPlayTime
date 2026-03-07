@@ -23,8 +23,8 @@ public final class PlayTimeChangedEvent extends Event {
     ) {
         super(ASYNC);
         this.playerId = playerId;
-        this.oldTime = oldTime;
         this.newTime = newTime;
+        this.oldTime = oldTime;
     }
 
     @NotNull

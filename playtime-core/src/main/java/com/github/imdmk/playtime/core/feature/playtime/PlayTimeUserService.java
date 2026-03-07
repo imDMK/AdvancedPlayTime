@@ -64,7 +64,7 @@ final class PlayTimeUserService {
                     PlayTime oldPlayTime = user.getPlayTime();
 
                     user.setPlayTime(newPlayTime);
-                    eventCaller.callEvent(new PlayTimeChangedEvent(uuid, oldPlayTime, newPlayTime));
+                    eventCaller.callEvent(new PlayTimeChangedEvent(uuid, newPlayTime, oldPlayTime));
                     return repository.save(user);
                 });
     }
