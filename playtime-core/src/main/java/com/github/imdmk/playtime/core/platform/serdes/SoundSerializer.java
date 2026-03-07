@@ -7,6 +7,7 @@ import eu.okaeri.configs.serdes.SerializationData;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 
 public final class SoundSerializer implements ObjectSerializer<Sound> {
 
@@ -17,16 +18,23 @@ public final class SoundSerializer implements ObjectSerializer<Sound> {
 
     @Override
     public void serialize(Sound sound, SerializationData data, GenericsDeclaration generics) {
-//        NamespacedKey key = Registry.SOUNDS.getKey(sound);
-//        if (key == null) {
-//            return;
-//        }
-//
-//        data.setValue(key.getKey(), String.class);
+        data.setValue(sound.getKeyOrThrow().toString(), String.class);
     }
 
     @Override
     public Sound deserialize(DeserializationData data, GenericsDeclaration generics) {
-        return Registry.SOUNDS.get(NamespacedKey.minecraft(data.getValue(String.class)));
+        String value = data.getValue(String.class);
+
+        NamespacedKey key = NamespacedKey.fromString(value);
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid sound key: " + value);
+        }
+
+        Sound sound = Registry.SOUNDS.get(key);
+        if (sound == null) {
+            throw new IllegalArgumentException("Unknown sound: " + value);
+        }
+
+        return sound;
     }
 }
