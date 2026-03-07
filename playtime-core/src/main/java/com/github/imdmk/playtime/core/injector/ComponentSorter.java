@@ -9,6 +9,7 @@ final class ComponentSorter {
         components.sort(Comparator
                 .comparing((Component<?> c) -> c.priority())
                 .thenComparingInt(Component::order)
+                .thenComparing(c -> c.getClass().getName())
         );
     }
 }
