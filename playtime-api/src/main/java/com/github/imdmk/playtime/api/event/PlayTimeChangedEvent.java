@@ -10,7 +10,7 @@ import java.util.UUID;
 public final class PlayTimeChangedEvent extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
-    private static final boolean ASYNC = true;
+    private static final boolean ASYNC = false;
 
     private final UUID playerId;
     private final PlayTime newTime;
