@@ -69,7 +69,7 @@ final class PlayTimeCommand {
 
     @Execute
     void setPlayTime(@Context CommandSender sender, @Arg UUID playerId, @Arg Duration time) {
-         PlayTime playTime = PlayTime.of(time);
+        PlayTime playTime = PlayTime.of(time);
 
         userService.setPlayTime(playerId, playTime)
                 .thenAccept(v -> messageService.create()

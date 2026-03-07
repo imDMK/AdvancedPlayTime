@@ -34,8 +34,8 @@ final class PlayTimeSaveListener implements Listener {
     @EventHandler
     void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        final UUID uuid = player.getUniqueId();
-        final PlayTime playTime = playTimeAdapter.read(player);
+        UUID uuid = player.getUniqueId();
+        PlayTime playTime = playTimeAdapter.read(player);
 
         userService.getOrCreate(uuid, playTime)
                 .thenAccept(user -> playTimeAdapter.write(player, user.getPlayTime()))
@@ -47,9 +47,9 @@ final class PlayTimeSaveListener implements Listener {
 
     @EventHandler
     void onPlayerQuit(PlayerQuitEvent event) {
-        final Player player = event.getPlayer();
-        final UUID uuid = player.getUniqueId();
-        final PlayTime playTime = playTimeAdapter.read(player);
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        PlayTime playTime = playTimeAdapter.read(player);
 
         userService.setPlayTime(uuid, playTime)
                 .exceptionally(e -> {
