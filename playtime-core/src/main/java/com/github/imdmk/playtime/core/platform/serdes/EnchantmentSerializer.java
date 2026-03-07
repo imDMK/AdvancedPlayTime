@@ -5,6 +5,7 @@ import eu.okaeri.configs.serdes.DeserializationData;
 import eu.okaeri.configs.serdes.ObjectSerializer;
 import eu.okaeri.configs.serdes.SerializationData;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.enchantments.Enchantment;
 
 public final class EnchantmentSerializer implements ObjectSerializer<Enchantment> {
@@ -16,14 +17,23 @@ public final class EnchantmentSerializer implements ObjectSerializer<Enchantment
 
     @Override
     public void serialize(Enchantment enchantment, SerializationData data, GenericsDeclaration generics) {
-        data.setValue(enchantment.getKey().getKey(), String.class);
+        data.setValue(enchantment.getKeyOrThrow().toString(), String.class);
     }
 
     @Override
     public Enchantment deserialize(DeserializationData data, GenericsDeclaration generics) {
-        //return RegistryAccess.registryAccess()
-         //       .getRegistry(RegistryKey.ENCHANTMENT)
-        //        .get(NamespacedKey.minecraft(data.getValue(String.class)));
-        return null;
+        String value = data.getValue(String.class);
+
+        NamespacedKey key = NamespacedKey.fromString(value);
+        if (key == null) {
+            throw new IllegalArgumentException("Invalid enchantment key: " + value);
+        }
+
+        Enchantment enchantment = Registry.ENCHANTMENT.get(key);
+        if (enchantment == null) {
+            throw new IllegalArgumentException("Unknown enchantment: " + value);
+        }
+
+        return enchantment;
     }
 }
