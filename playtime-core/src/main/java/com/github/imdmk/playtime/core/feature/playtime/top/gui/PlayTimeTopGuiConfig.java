@@ -77,10 +77,10 @@ public final class PlayTimeTopGuiConfig extends ConfigSection
     })
     public ItemGui playerEntryItem = ItemGui.builder()
             .material(Material.PLAYER_HEAD)
-            .name(AdventureComponents.withoutItalics(
+            .name(AdventureComponents.notItalic(
                     "<dark_gray>• <yellow>#{PLAYER_POSITION} <gray>- <red>{PLAYER_NAME}"
             ))
-            .lore(AdventureComponents.withoutItalics(
+            .lore(AdventureComponents.notItalic(
                     " ",
                     "<dark_gray>▸ <gray>PlayTime: <red>{PLAYER_PLAYTIME}",
                     " "

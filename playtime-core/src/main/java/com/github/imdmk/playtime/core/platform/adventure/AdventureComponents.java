@@ -39,22 +39,22 @@ public final class AdventureComponents {
         return List.copyOf(out);
     }
 
-    public static Component withoutItalics(Component component) {
+    public static Component notItalic(Component component) {
         return component.decoration(TextDecoration.ITALIC, false);
     }
 
-    public static Component withoutItalics(CharSequence text) {
-        return withoutItalics(text(text));
+    public static Component notItalic(CharSequence text) {
+        return notItalic(text(text));
     }
 
-    public static Component withoutItalics(ComponentLike like) {
+    public static Component notItalic(ComponentLike like) {
         return like.asComponent().decoration(TextDecoration.ITALIC, false);
     }
 
-    public static List<Component> withoutItalics(String... strings) {
+    public static List<Component> notItalic(String... strings) {
         List<Component> out = new ArrayList<>();
         for (String string : strings) {
-            out.add(withoutItalics(string));
+            out.add(notItalic(string));
         }
 
         return List.copyOf(out);
