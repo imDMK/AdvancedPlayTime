@@ -7,7 +7,6 @@ import eu.okaeri.configs.serdes.SerializationData;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 
 public final class SoundSerializer implements ObjectSerializer<Sound> {
 
