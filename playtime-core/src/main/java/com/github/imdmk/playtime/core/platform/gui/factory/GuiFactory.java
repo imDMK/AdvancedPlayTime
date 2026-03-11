@@ -18,7 +18,7 @@ public final class GuiFactory {
     }
 
     public static BaseGui build(ConfigurableGui config, Consumer<BaseGui> editConsumer) {
-        final BaseGui gui = build(config);
+        BaseGui gui = build(config);
         editConsumer.accept(gui);
         return gui;
     }

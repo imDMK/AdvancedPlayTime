@@ -16,7 +16,7 @@ public final class ComponentManager {
     private final ComponentSorter sorter;
 
     // annotation -> processor container
-    private final Map<Class<? extends Annotation>, ProcessorContainer<?>> processors = new HashMap<>();
+    private final Map<Class<? extends Annotation>, ProcessorContainer<?>> processors = new LinkedHashMap<>();
     private final List<ComponentPostProcessor> postProcessors = new ArrayList<>();
     private final List<Component<?>> components = new ArrayList<>();
 
@@ -54,12 +54,17 @@ public final class ComponentManager {
         return this;
     }
 
+    public ComponentManager addPostProcessors(Collection<ComponentPostProcessor> postProcessors) {
+        postProcessors.forEach(this::addPostProcessor);
+        return this;
+    }
+
     public void scanAll() {
         if (scanned) {
             throw new IllegalStateException("scanAll() already called");
         }
 
-        for (final ProcessorContainer<?> container : processors.values()) {
+        for (ProcessorContainer<?> container : processors.values()) {
             components.addAll(scanner.scan(container.annotationType()));
         }
 

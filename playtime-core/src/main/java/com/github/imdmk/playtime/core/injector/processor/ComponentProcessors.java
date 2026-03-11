@@ -7,6 +7,7 @@ import com.github.imdmk.playtime.core.database.repository.ormlite.OrmLiteReposit
 import com.github.imdmk.playtime.core.injector.annotations.*;
 import com.github.imdmk.playtime.core.injector.annotations.lite.LiteArgument;
 import com.github.imdmk.playtime.core.injector.annotations.lite.LiteCommand;
+import com.github.imdmk.playtime.core.injector.annotations.lite.LiteContext;
 import com.github.imdmk.playtime.core.injector.annotations.lite.LiteHandler;
 import com.github.imdmk.playtime.core.injector.annotations.placeholderapi.Placeholder;
 import com.github.imdmk.playtime.core.platform.gui.GuiRegistry;
@@ -17,6 +18,7 @@ import com.github.imdmk.playtime.core.platform.placeholder.PluginPlaceholder;
 import dev.rollczi.litecommands.LiteCommandsBuilder;
 import dev.rollczi.litecommands.argument.ArgumentKey;
 import dev.rollczi.litecommands.argument.resolver.ArgumentResolver;
+import dev.rollczi.litecommands.context.ContextProvider;
 import dev.rollczi.litecommands.handler.result.ResultHandler;
 import dev.rollczi.litecommands.invalidusage.InvalidUsageHandler;
 import dev.rollczi.litecommands.permission.MissingPermissionsHandler;
@@ -87,25 +89,34 @@ public final class ComponentProcessors {
                         .build(),
 
                 ProcessorBuilder.forAnnotation(Gui.class)
-                        .handle((instance, annotation, ctx) -> ctx.injector().newInstance(GuiProcessor.class).process(instance, annotation, ctx))
+                        .handle((instance, annotation, ctx) ->
+                                ctx.injector().newInstance(GuiProcessor.class).process(instance, annotation, ctx))
                         .build(),
 
                 ProcessorBuilder.forAnnotation(Placeholder.class)
-                        .handle((instance, annotation, ctx) -> ctx.injector().newInstance(PlaceholderProcessor.class).process(instance, annotation, ctx))
+                        .handle((instance, annotation, ctx) ->
+                                ctx.injector().newInstance(PlaceholderProcessor.class).process(instance, annotation, ctx))
                         .build(),
 
                 ProcessorBuilder.forAnnotation(LiteCommand.class)
-                        .handle((instance, annotation, ctx) -> ctx.injector().newInstance(LiteCommandProcessor.class).process(instance, annotation, ctx))
+                        .handle((instance, annotation, ctx) ->
+                                ctx.injector().newInstance(LiteCommandProcessor.class).process(instance, annotation, ctx))
                         .build(),
 
                 ProcessorBuilder.forAnnotation(LiteHandler.class)
-                        .handle((instance, annotation, ctx) -> ctx.injector().newInstance(LiteHandlerProcessor.class).process(instance, annotation, ctx))
+                        .handle((instance, annotation, ctx) ->
+                                ctx.injector().newInstance(LiteHandlerProcessor.class).process(instance, annotation, ctx))
                         .build(),
 
                 ProcessorBuilder.forAnnotation(LiteArgument.class)
-                        .handle((instance, annotation, ctx) -> ctx.injector().newInstance(LiteArgumentProcessor.class).process(instance, annotation, ctx))
-                        .build()
+                        .handle((instance, annotation, ctx) ->
+                                ctx.injector().newInstance(LiteArgumentProcessor.class).process(instance, annotation, ctx))
+                        .build(),
 
+                ProcessorBuilder.forAnnotation(LiteContext.class)
+                        .handle((instance, annotation, ctx) ->
+                                ctx.injector().newInstance(LiteContextProcessor.class).process(instance, annotation, ctx))
+                        .build()
         );
     }
 
@@ -278,4 +289,25 @@ public final class ComponentProcessors {
         }
     }
 
+    @Inject
+    private record LiteContextProcessor(LiteCommandsConfigurer liteCommandsConfigurer)
+            implements ComponentProcessor<LiteContext> {
+
+
+        @Override
+        public Class<LiteContext> annotation() {
+            return LiteContext.class;
+        }
+
+        @Override
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        public void process(Object instance, LiteContext annotation, ComponentProcessorContext context) {
+            ContextProvider contextProvider = requireInstance(instance, ContextProvider.class, LiteContext.class);
+
+            LiteCommandsBuilder<?, ?, ?> builder = liteCommandsConfigurer.builder();
+            Class<?> contextClass = annotation.type();
+
+            builder.context(contextClass, contextProvider);
+        }
+    }
 }

@@ -15,16 +15,16 @@ public final class DataSourceConfigurerFactory {
             DatabaseMode.SQL,        new SQLConfigurer()
     );
 
+    private DataSourceConfigurerFactory() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated.");
+    }
+
     public static DataSourceConfigurer getFor(DatabaseMode mode) {
-        final DataSourceConfigurer configurer = CONFIGURER_BY_MODE.get(mode);
+        DataSourceConfigurer configurer = CONFIGURER_BY_MODE.get(mode);
         if (configurer == null) {
             throw new IllegalArgumentException("Unsupported database mode: " + mode);
         }
 
         return configurer;
-    }
-
-    private DataSourceConfigurerFactory() {
-        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated.");
     }
 }

@@ -7,32 +7,29 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class PlayTimeApiAdapter implements PlayTimeApi {
+public final class PlayTimeApiAdapter implements PlayTimeApi {
 
+    private final PlayTimeService playTimeService;
     private final PlayTimeUserService userService;
 
     @Inject
-    PlayTimeApiAdapter(PlayTimeUserService userService) {
+    PlayTimeApiAdapter(
+            PlayTimeService playTimeService,
+            PlayTimeUserService userService
+    ) {
+        this.playTimeService = playTimeService;
         this.userService = userService;
     }
 
     @Override
     public CompletableFuture<PlayTime> getTime(UUID uuid) {
-        return userService.getPlayTime(uuid);
+        return userService.getOrLoadUser(uuid)
+                .thenApply(PlayTimeUser::getPlayTime);
     }
 
     @Override
     public CompletableFuture<Void> setTime(UUID uuid, PlayTime time) {
-        return userService.setPlayTime(uuid, time);
-    }
-
-    @Override
-    public CompletableFuture<Void> addTime(UUID uuid, PlayTime delta) {
-        return userService.addPlayTime(uuid, delta);
-    }
-
-    @Override
-    public CompletableFuture<Void> resetTime(UUID uuid) {
-        return userService.setPlayTime(uuid, PlayTime.ZERO);
+        return userService.getOrLoadUser(uuid)
+                .thenAccept(user -> playTimeService.setPlayTime(user, time));
     }
 }

@@ -34,14 +34,9 @@ afterEvaluate {
     }
 
     tasks.withType<ShadowJar>().configureEach {
-
-        archiveClassifier.set("")
-
         tasks.findByName("generatePluginLibrariesJson")?.let {
             dependsOn(it)
         }
-
-        mergeServiceFiles()
 
         ext.shadowAction?.execute(this)
     }

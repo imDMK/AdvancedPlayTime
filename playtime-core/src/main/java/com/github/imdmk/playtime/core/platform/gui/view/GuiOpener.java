@@ -25,7 +25,7 @@ public final class GuiOpener {
             Class<? extends OpenableGui<Void>> type,
             Player viewer
     ) {
-        final OpenableGui<Void> gui = require(type);
+        OpenableGui<Void> gui = require(type);
         gui.open(viewer, scheduler, null);
     }
 
@@ -34,12 +34,12 @@ public final class GuiOpener {
             Player viewer,
             T parameter
     ) {
-        final OpenableGui<T> gui = require(type);
+        OpenableGui<T> gui = require(type);
         gui.open(viewer, scheduler, parameter);
     }
 
     private <P> OpenableGui<P> require(Class<? extends OpenableGui<P>> type) {
-        final OpenableGui<P> gui = registry.getByClass(type);
+        OpenableGui<P> gui = registry.getByClass(type);
         if (gui == null) {
             throw new IllegalArgumentException(
                     "No GUI registered for class '" + type.getName() + "'"

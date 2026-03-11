@@ -3,6 +3,7 @@ package com.github.imdmk.playtime.core.platform.placeholder;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -19,12 +20,12 @@ final class PapiPlaceholderRegistry implements PlaceholderRegistry {
 
     @Override
     public void register(PluginPlaceholder placeholder) {
-        final String id = normalizeId(placeholder.identifier());
+        String id = normalizeId(placeholder.identifier());
         if (expansions.containsKey(id)) {
             throw new IllegalStateException("Placeholder with id " + id + " is already registered!");
         }
 
-        final PlaceholderExpansion expansion = new PlaceholderExpansionAdapter(plugin, placeholder);
+        PlaceholderExpansion expansion = new PlaceholderExpansionAdapter(plugin, placeholder);
         if (expansion.register()) {
             expansions.put(id, expansion);
         }
@@ -32,9 +33,9 @@ final class PapiPlaceholderRegistry implements PlaceholderRegistry {
 
     @Override
     public void unregister(PluginPlaceholder placeholder) {
-        final String id = normalizeId(placeholder.identifier());
+        String id = normalizeId(placeholder.identifier());
 
-        final PlaceholderExpansion expansion = expansions.remove(id);
+        PlaceholderExpansion expansion = expansions.remove(id);
         if (expansion != null) {
             expansion.unregister();
         }
@@ -42,7 +43,7 @@ final class PapiPlaceholderRegistry implements PlaceholderRegistry {
 
     @Override
     public void unregisterAll() {
-        for (final PlaceholderExpansion expansion : expansions.values()) {
+        for (PlaceholderExpansion expansion : expansions.values()) {
             expansion.unregister();
         }
 
@@ -50,7 +51,7 @@ final class PapiPlaceholderRegistry implements PlaceholderRegistry {
     }
 
     private String normalizeId(String rawId) {
-        final String id = rawId.trim().toLowerCase(Locale.ROOT);
+        String id = rawId.trim().toLowerCase(Locale.ROOT);
         if (id.isEmpty()) {
             throw new IllegalArgumentException("Placeholder identifier cannot be empty");
         }
@@ -69,25 +70,25 @@ final class PapiPlaceholderRegistry implements PlaceholderRegistry {
         }
 
         @Override
-
+        @NotNull
         public String getIdentifier() {
             return delegate.identifier();
         }
 
         @Override
-
+        @NotNull
         public String getAuthor() {
             return String.join(", ", plugin.getDescription().getAuthors());
         }
 
         @Override
-
+        @NotNull
         public String getVersion() {
             return plugin.getDescription().getVersion();
         }
 
         @Override
-        public String onPlaceholderRequest(Player player, String params) {
+        public String onPlaceholderRequest(Player player, @NotNull String params) {
             if (player == null) {
                 return null;
             }

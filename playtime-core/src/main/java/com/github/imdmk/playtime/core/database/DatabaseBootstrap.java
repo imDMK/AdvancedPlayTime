@@ -7,7 +7,6 @@ import com.github.imdmk.playtime.core.injector.subscriber.Subscribe;
 import com.github.imdmk.playtime.core.injector.subscriber.event.PlayTimeShutdownEvent;
 import com.github.imdmk.playtime.core.platform.logger.PluginLogger;
 import com.j256.ormlite.support.ConnectionSource;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
