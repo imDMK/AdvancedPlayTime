@@ -4,7 +4,6 @@ import com.github.imdmk.playtime.core.platform.scheduler.TaskScheduler;
 import dev.triumphteam.gui.guis.BaseGui;
 import org.bukkit.entity.Player;
 
-
 public interface SimpleGui extends OpenableGui<Void> {
 
     @Override
@@ -13,7 +12,7 @@ public interface SimpleGui extends OpenableGui<Void> {
             TaskScheduler scheduler,
             Void unused
     ) {
-        final BaseGui gui = createGui(viewer);
+        BaseGui gui = createGui(viewer);
         prepareItems(gui, viewer);
         scheduler.runSync(() -> gui.open(viewer));
     }

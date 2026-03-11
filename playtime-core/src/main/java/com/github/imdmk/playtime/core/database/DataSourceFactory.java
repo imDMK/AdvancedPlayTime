@@ -1,7 +1,6 @@
 package com.github.imdmk.playtime.core.database;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 

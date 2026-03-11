@@ -11,10 +11,10 @@ final class ComponentFactory {
             Class<?> type,
             Class<A> annotationType
     ) {
-        final A annotation = type.getAnnotation(annotationType);
+        A annotation = type.getAnnotation(annotationType);
 
-        final ComponentPriority priority = extractPriority(annotation);
-        final int order = extractOrder(annotation);
+        ComponentPriority priority = extractPriority(annotation);
+        int order = extractOrder(annotation);
 
         return new Component<>(type, annotation, priority, order);
     }

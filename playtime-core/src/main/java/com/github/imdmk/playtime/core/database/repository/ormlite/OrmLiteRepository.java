@@ -56,7 +56,7 @@ public abstract class OrmLiteRepository<T, ID>
             throw new IllegalStateException("DatabaseBootstrap not started before repository initialization");
         }
 
-        for (final Class<?> subClass : entitySubClasses()) {
+        for (Class<?> subClass : entitySubClasses()) {
             try {
                 TableUtils.createTableIfNotExists(connection, subClass);
             } catch (SQLException e) {
