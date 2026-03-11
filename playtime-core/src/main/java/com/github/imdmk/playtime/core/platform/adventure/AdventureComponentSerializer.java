@@ -5,21 +5,22 @@ import eu.okaeri.configs.serdes.DeserializationData;
 import eu.okaeri.configs.serdes.ObjectSerializer;
 import eu.okaeri.configs.serdes.SerializationData;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 
 public final class AdventureComponentSerializer implements ObjectSerializer<Component> {
 
     @Override
-    public boolean supports(Class<? super Component> type) {
+    public boolean supports(@NotNull Class<? super Component> type) {
         return Component.class.isAssignableFrom(type);
     }
 
     @Override
-    public void serialize(Component component, SerializationData data, GenericsDeclaration generics) {
+    public void serialize(@NotNull Component component, SerializationData data, GenericsDeclaration generics) {
         data.setValue(AdventureComponents.serialize(component));
     }
 
     @Override
-    public Component deserialize(DeserializationData data, GenericsDeclaration generics) {
+    public Component deserialize(DeserializationData data, @NotNull GenericsDeclaration generics) {
         return AdventureComponents.text(data.getValue(String.class));
     }
 }

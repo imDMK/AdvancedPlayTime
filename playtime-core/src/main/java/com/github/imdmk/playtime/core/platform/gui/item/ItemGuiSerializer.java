@@ -8,37 +8,41 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Map;
 
 public final class ItemGuiSerializer implements ObjectSerializer<ItemGui> {
 
     @Override
-    public boolean supports(Class<? super ItemGui> type) {
+    public boolean supports(@NotNull Class<? super ItemGui> type) {
         return ItemGui.class.isAssignableFrom(type);
     }
 
     @Override
-    public void serialize(ItemGui item, SerializationData data, GenericsDeclaration generics) {
+    public void serialize(ItemGui item, SerializationData data, @NotNull GenericsDeclaration generics) {
         data.add("material", item.material(), Material.class);
 
         data.add("name", item.name(), Component.class);
         data.addCollection("lore", item.lore(), Component.class);
 
-        final var slot = item.slot();
+        Integer slot = item.slot();
         if (slot != null) {
             data.add("slot", slot, Integer.class);
         }
 
-        final var enchantments = item.enchantments();
+        Map<Enchantment, Integer> enchantments = item.enchantments();
         if (enchantments != null && !enchantments.isEmpty()) {
             data.addAsMap("enchantments", item.enchantments(), Enchantment.class, Integer.class);
         }
 
-        final var flags = item.flags();
+        List<ItemFlag> flags = item.flags();
         if (flags != null && !flags.isEmpty()) {
             data.addCollection("flags", flags, ItemFlag.class);
         }
 
-        final var permission = item.requiredPermission();
+        String permission = item.requiredPermission();
         if (permission != null && !permission.isBlank()) {
             data.add("permission", permission, String.class);
         }
@@ -46,14 +50,14 @@ public final class ItemGuiSerializer implements ObjectSerializer<ItemGui> {
 
     @Override
     public ItemGui deserialize(DeserializationData data, GenericsDeclaration generics) {
-        final var material = data.get("material", Material.class);
-        final var name = data.get("name", Component.class);
-        final var lore = data.getAsList("lore", Component.class);
+        Material material = data.get("material", Material.class);
+        Component name = data.get("name", Component.class);
+        List<Component> lore = data.getAsList("lore", Component.class);
 
-        final var slot = data.get("slot", Integer.class);
-        final var enchantments = data.getAsMap("enchantments", Enchantment.class, Integer.class);
-        final var flags = data.getAsList("flags", ItemFlag.class);
-        final var permission = data.get("permission", String.class);
+        Integer slot = data.get("slot", Integer.class);
+        Map<Enchantment, Integer> enchantments = data.getAsMap("enchantments", Enchantment.class, Integer.class);
+        List<ItemFlag> flags = data.getAsList("flags", ItemFlag.class);
+        String permission = data.get("permission", String.class);
 
         return new ItemGui(
                 material,

@@ -1,7 +1,5 @@
 package com.github.imdmk.playtime.api;
 
-
-
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 

@@ -23,7 +23,7 @@ public final class GuiBuilderFactory {
     }
 
     public static BaseGuiBuilder<?, ?> forType(GuiType type, int rows, Consumer<BaseGuiBuilder<?, ?>> editConsumer) {
-        final BaseGuiBuilder<?, ?> builder = forType(type, rows);
+        BaseGuiBuilder<?, ?> builder = forType(type, rows);
         editConsumer.accept(builder);
         return builder;
     }

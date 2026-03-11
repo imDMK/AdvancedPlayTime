@@ -16,7 +16,7 @@ import com.github.imdmk.playtime.core.platform.gui.render.TriumphGuiRenderer;
 import com.github.imdmk.playtime.core.platform.gui.view.AbstractGui;
 import com.github.imdmk.playtime.core.platform.gui.view.ParameterizedGui;
 import com.github.imdmk.playtime.core.platform.scheduler.TaskScheduler;
-import com.github.imdmk.playtime.core.shared.time.Durations;
+import com.github.imdmk.playtime.core.time.DurationService;
 import dev.triumphteam.gui.builder.item.BaseItemBuilder;
 import dev.triumphteam.gui.builder.item.SkullBuilder;
 import dev.triumphteam.gui.guis.BaseGui;
@@ -42,17 +42,20 @@ public final class PlayTimeTopGui
 
     private final Server server;
     private final PlayTimeTopGuiConfig guiConfig;
+    private final DurationService durationService;
 
     @Inject
     PlayTimeTopGui(
             Server server,
             PlayTimeTopGuiConfig guiConfig,
             NavigationBarConfig config,
-            TaskScheduler taskScheduler
+            TaskScheduler taskScheduler,
+            DurationService durationService
     ) {
         super(config, taskScheduler, RENDERER, RENDER_OPTIONS);
         this.server = server;
         this.guiConfig = guiConfig;
+        this.durationService = durationService;
     }
 
     @Override
@@ -63,7 +66,7 @@ public final class PlayTimeTopGui
     @Override
     public void prepareItems(BaseGui gui, Player viewer, List<PlayTimeUser> topUsers) {
         if (guiConfig.fillBorder) {
-            final GuiItem borderItem = ItemGuiTransformer.toGuiItem(guiConfig.borderItem);
+            GuiItem borderItem = ItemGuiTransformer.toGuiItem(guiConfig.borderItem);
             gui.getFiller().fillBorder(borderItem);
         }
 
@@ -74,19 +77,19 @@ public final class PlayTimeTopGui
             placePrevious(gui, viewer);
         }
 
-        final RenderContext context = RenderContext.defaultContext(viewer);
-        final ItemGui item = guiConfig.playerEntryItem;
+        RenderContext context = RenderContext.defaultContext(viewer);
+        ItemGui item = guiConfig.playerEntryItem;
 
         for (int i = 0; i < topUsers.size(); i++) {
-            final int position = i + 1;
+            int position = i + 1;
 
-            final PlayTimeUser user = topUsers.get(i);
-            final OfflinePlayer player = server.getOfflinePlayer(user.getUuid());
+            PlayTimeUser user = topUsers.get(i);
+            OfflinePlayer player = server.getOfflinePlayer(user.getUuid());
 
-            final AdventurePlaceholders placeholders = createPlaceholders(player, user, position);
-            final Consumer<InventoryClickEvent> clickHandler = (event -> event.setCancelled(true));
+            AdventurePlaceholders placeholders = createPlaceholders(player, user, position);
+            Consumer<InventoryClickEvent> clickHandler = (event -> event.setCancelled(true));
 
-            final Consumer<BaseItemBuilder<?>> editor = (builder) -> {
+            Consumer<BaseItemBuilder<?>> editor = (builder) -> {
                 if (builder instanceof SkullBuilder skullBuilder) {
                     skullBuilder.owner(player);
                 }
@@ -103,7 +106,7 @@ public final class PlayTimeTopGui
         return AdventurePlaceholders.builder()
                 .with("{PLAYER_NAME}", offlinePlayer.getName() == null ? "Unknown" : offlinePlayer.getName())
                 .with("{PLAYER_POSITION}", position)
-                .with("{PLAYER_PLAYTIME}", Durations.format(user.getPlayTime().toDuration()))
+                .with("{PLAYER_PLAYTIME}", durationService.format(user.getPlayTime().toDuration()))
                 .build();
     }
 

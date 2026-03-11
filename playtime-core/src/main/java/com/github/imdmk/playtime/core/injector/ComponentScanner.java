@@ -10,7 +10,7 @@ import java.util.List;
 
 final class ComponentScanner {
 
-    private static final String SHADED_LIBS = "com.github.imdmk.playtime.libs";
+    private static final String SHADED_LIBS = "com.github.imdmk.playtime.lib";
 
     private final String basePackage;
     private final ComponentFactory componentFactory;
@@ -40,6 +40,5 @@ final class ComponentScanner {
         return !type.isInterface() && !Modifier.isAbstract(type.getModifiers());
     }
 }
-
 
 

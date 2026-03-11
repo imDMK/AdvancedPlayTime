@@ -7,21 +7,22 @@ import eu.okaeri.configs.serdes.SerializationData;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.Sound;
+import org.jetbrains.annotations.NotNull;
 
 public final class SoundSerializer implements ObjectSerializer<Sound> {
 
     @Override
-    public boolean supports(Class<? super Sound> type) {
+    public boolean supports(@NotNull Class<? super Sound> type) {
         return Sound.class.isAssignableFrom(type);
     }
 
     @Override
-    public void serialize(Sound sound, SerializationData data, GenericsDeclaration generics) {
+    public void serialize(Sound sound, SerializationData data, @NotNull GenericsDeclaration generics) {
         data.setValue(sound.getKeyOrThrow().toString(), String.class);
     }
 
     @Override
-    public Sound deserialize(DeserializationData data, GenericsDeclaration generics) {
+    public Sound deserialize(DeserializationData data, @NotNull GenericsDeclaration generics) {
         String value = data.getValue(String.class);
 
         NamespacedKey key = NamespacedKey.fromString(value);

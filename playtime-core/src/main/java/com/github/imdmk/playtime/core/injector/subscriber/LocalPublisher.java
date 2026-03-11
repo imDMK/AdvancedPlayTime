@@ -46,6 +46,7 @@ public final class LocalPublisher implements Publisher {
         for (SubscriberMethod subscriber : list) {
             Object instance = subscriber.instance();
             Method method = subscriber.method();
+
             injector.invokeMethod(method, instance, event);
         }
 

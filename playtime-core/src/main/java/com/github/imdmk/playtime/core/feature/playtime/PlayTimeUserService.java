@@ -1,87 +1,80 @@
 package com.github.imdmk.playtime.core.feature.playtime;
 
 import com.github.imdmk.playtime.api.PlayTime;
-import com.github.imdmk.playtime.api.event.PlayTimeChangedEvent;
+import com.github.imdmk.playtime.core.feature.playtime.repository.PlayTimeUserRepository;
 import com.github.imdmk.playtime.core.injector.annotations.Service;
-import com.github.imdmk.playtime.core.platform.event.EventCaller;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-final class PlayTimeUserService {
+public final class PlayTimeUserService {
 
     private final PlayTimeUserCache cache;
     private final PlayTimeUserRepository repository;
-    private final EventCaller eventCaller;
 
     @Inject
     PlayTimeUserService(
             PlayTimeUserCache cache,
-            PlayTimeUserRepository repository,
-            EventCaller eventCaller
+            PlayTimeUserRepository repository
     ) {
         this.cache = cache;
         this.repository = repository;
-        this.eventCaller = eventCaller;
     }
 
-    CompletableFuture<PlayTimeUser> getOrCreate(
-            UUID uuid,
-            PlayTime initialPlayTime
-    ) {
-        return cache.get(uuid)
-                .map(CompletableFuture::completedFuture)
-                .orElseGet(() -> repository.findByUuid(uuid)
-                .thenCompose(optional -> {
-                    if (optional.isPresent()) {
-                        return CompletableFuture.completedFuture(optional.get());
+    public Optional<PlayTimeUser> getUser(UUID uuid) {
+        return Optional.ofNullable(cache.getByUuid(uuid));
+    }
+
+    public Optional<PlayTimeUser> getUser(String name) {
+        return Optional.ofNullable(cache.getByName(name));
+    }
+
+    public CompletableFuture<PlayTimeUser> getOrLoadUser(UUID uuid) {
+        PlayTimeUser cached = cache.getByUuid(uuid);
+        if (cached != null) {
+            return CompletableFuture.completedFuture(cached);
+        }
+
+        return repository.findByUuid(uuid)
+                .thenApply(user -> {
+                    if (user != null) {
+                        cache.put(user);
                     }
-
-                     PlayTimeUser user = new PlayTimeUser(uuid, initialPlayTime);
-                    return repository.save(user)
-                            .thenApply(v -> user);
-                }));
-
-    }
-
-    CompletableFuture<PlayTimeUser> getOrCreate(UUID uuid) {
-        return getOrCreate(uuid, PlayTime.ZERO);
-    }
-
-    CompletableFuture<PlayTime> getPlayTime(UUID uuid) {
-        return getOrCreate(uuid)
-                .thenApply(PlayTimeUser::getPlayTime);
-    }
-
-    CompletableFuture<Void> setPlayTime(
-            UUID uuid,
-            PlayTime newPlayTime
-    ) {
-        return getOrCreate(uuid)
-                .thenCompose(user -> {
-                    PlayTime oldPlayTime = user.getPlayTime();
-
-                    user.setPlayTime(newPlayTime);
-                    eventCaller.callEvent(new PlayTimeChangedEvent(uuid, newPlayTime, oldPlayTime));
-                    return repository.save(user);
+                    return user;
                 });
     }
 
-    CompletableFuture<Void> addPlayTime(
-            UUID uuid,
-            PlayTime delta
-    ) {
-        return getOrCreate(uuid)
-                .thenCompose(user -> {
-                    user.setPlayTime(user.getPlayTime().plus(delta));
-                    return repository.save(user);
+    public CompletableFuture<PlayTimeUser> getOrLoadUser(String name) {
+        PlayTimeUser cached = cache.getByName(name);
+        if (cached != null) {
+            return CompletableFuture.completedFuture(cached);
+        }
+
+        return repository.findByName(name)
+                .thenApply(user -> {
+                    if (user != null) {
+                        cache.put(user);
+                    }
+                    return user;
                 });
     }
 
-    CompletableFuture<Boolean> delete(UUID uuid) {
-        return repository.deleteByUuid(uuid);
+    public CompletableFuture<PlayTimeUser> createUser(UUID uuid, String name, PlayTime playTime) {
+        PlayTimeUser user = new PlayTimeUser(uuid, name, playTime);
+        cache.put(user);
+        return repository.save(user);
+    }
+
+    public CompletableFuture<PlayTimeUser> saveUser(PlayTimeUser user) {
+        cache.put(user);
+        return repository.save(user);
+    }
+
+    public Collection<String> cachedNames() {
+        return cache.names();
     }
 }
-

@@ -17,11 +17,11 @@ public final class GuiRegistry {
     private final Map<Class<? extends IdentifiableGui>, IdentifiableGui> byClass = new ConcurrentHashMap<>();
 
     public void register(IdentifiableGui gui) {
-        final String id = normalizeId(gui.getId());
-        final IdentifiableGui previous = byId.put(id, gui);
+        String id = normalizeId(gui.getId());
+        IdentifiableGui previous = byId.put(id, gui);
 
         // maintain class index (assume single instance per class)
-        final Class<? extends IdentifiableGui> type = gui.getClass();
+        Class<? extends IdentifiableGui> type = gui.getClass();
         byClass.put(type, gui);
 
         // if replaced id that pointed to different class instance, clean old class index
@@ -31,8 +31,8 @@ public final class GuiRegistry {
     }
 
     public boolean registerIfAbsent(IdentifiableGui gui) {
-        final String id = normalizeId(gui.getId());
-        final IdentifiableGui existing = byId.putIfAbsent(id, gui);
+        String id = normalizeId(gui.getId());
+        IdentifiableGui existing = byId.putIfAbsent(id, gui);
         if (existing == null) {
             // we won the race; update class index
             byClass.put(gui.getClass(), gui);
@@ -46,8 +46,8 @@ public final class GuiRegistry {
     }
 
     public IdentifiableGui unregister(String id) {
-        final String key = normalizeId(id);
-        final IdentifiableGui removed = byId.remove(key);
+        String key = normalizeId(id);
+        IdentifiableGui removed = byId.remove(key);
         if (removed != null) {
             byClass.compute(removed.getClass(), (k, current) -> current == removed ? null : current);
         }

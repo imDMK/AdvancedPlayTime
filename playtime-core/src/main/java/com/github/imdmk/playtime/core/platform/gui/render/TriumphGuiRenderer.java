@@ -30,7 +30,13 @@ public final class TriumphGuiRenderer implements GuiRenderer {
             Consumer<InventoryClickEvent> onClick,
             Consumer<BaseItemBuilder<?>> builderEditor
     ) {
-        final GuiItem builtItem = buildGuiItem(item, context, options, onClick, builderEditor);
+        GuiItem builtItem = buildGuiItem(
+                item,
+                context,
+                options,
+                onClick,
+                builderEditor
+        );
         if (builtItem != null) {
             gui.setItem(slot, builtItem);
         }
@@ -46,7 +52,13 @@ public final class TriumphGuiRenderer implements GuiRenderer {
             Consumer<InventoryClickEvent> onClick,
             Consumer<BaseItemBuilder<?>> builderEditor
     ) {
-        final GuiItem builtItem = buildGuiItem(item, context, options, onClick, builderEditor);
+        final GuiItem builtItem = buildGuiItem(
+                item,
+                context,
+                options,
+                onClick,
+                builderEditor
+        );
         if (builtItem != null) {
             gui.addItem(builtItem);
         }
@@ -59,14 +71,14 @@ public final class TriumphGuiRenderer implements GuiRenderer {
             Consumer<InventoryClickEvent> onClick,
             Consumer<BaseItemBuilder<?>> builderEditor
     ) {
-        final String requiredPerm = item.requiredPermission();
+        String requiredPerm = item.requiredPermission();
 
-        final boolean allowedForViewerNow = hasPermission(requiredPerm, context, context.viewer());
+        boolean allowedForViewerNow = hasPermission(requiredPerm, context, context.viewer());
         if (!allowedForViewerNow && options.policy() == NoPermissionPolicy.HIDE) {
             return null;
         }
 
-        final GuiAction<InventoryClickEvent> clickHandler = event -> {
+        GuiAction<InventoryClickEvent> clickHandler = event -> {
             if (!hasPermission(requiredPerm, context, event.getWhoClicked())) {
                 event.setCancelled(true);
                 event.setResult(Event.Result.DENY);

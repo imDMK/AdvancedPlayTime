@@ -1,18 +1,17 @@
 package com.github.imdmk.playtime.core.feature.playtime.top;
 
 import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUser;
-import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUserRepository;
+import com.github.imdmk.playtime.core.feature.playtime.repository.PlayTimeUserRepository;
 import com.github.imdmk.playtime.core.injector.annotations.Service;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
-final class PlayTimeTopService {
+public final class PlayTimeTopService {
 
     private final PlayTimeTopCache cache;
     private final PlayTimeTopConfig config;
@@ -29,21 +28,21 @@ final class PlayTimeTopService {
         this.repository = repository;
     }
 
-    CompletableFuture<List<PlayTimeUser>> getTop() {
+    public CompletableFuture<List<PlayTimeUser>> getTop() {
         return getTopForDisplay(config.topUsersGuiLimit);
     }
 
-    CompletableFuture<List<PlayTimeUser>> getTopForDisplay(int displayLimit) {
+    public CompletableFuture<List<PlayTimeUser>> getTopForDisplay(int displayLimit) {
         if (displayLimit <= 0) {
             return CompletableFuture.completedFuture(List.of());
         }
 
-        final Instant now = Instant.now();
+        Instant now = Instant.now();
 
-        final Optional<CachedPlayTimeTop> cached = cache.get();
-        if (cached.isPresent() && !cached.get().isExpired(config.topUsersCacheExpireAfter, now)) {
+        PlayTimeTop cached = cache.get();
+        if (cached != null && !cached.isExpired(config.topUsersCacheExpireAfter, now)) {
             return CompletableFuture.completedFuture(
-                    slice(cached.get().users(), displayLimit)
+                    slice(cached.users(), displayLimit)
             );
         }
 
@@ -55,7 +54,7 @@ final class PlayTimeTopService {
                 });
     }
 
-    void invalidateCache() {
+    public void invalidateCache() {
         cache.invalidate();
     }
 

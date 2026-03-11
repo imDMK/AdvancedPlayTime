@@ -15,7 +15,7 @@ final class PlaceholderRegistryFactory {
             Plugin plugin,
             PluginLogger logger
     ) {
-        final Plugin papi = plugin.getServer()
+        Plugin papi = plugin.getServer()
                 .getPluginManager()
                 .getPlugin(PAPI_PLUGIN_NAME);
 

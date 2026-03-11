@@ -1,14 +1,13 @@
 package com.github.imdmk.playtime.core.platform.litecommands.handler;
 
 import com.github.imdmk.playtime.core.injector.annotations.lite.LiteHandler;
-import com.github.imdmk.playtime.core.shared.message.MessageService;
+import com.github.imdmk.playtime.core.message.MessageService;
 import dev.rollczi.litecommands.handler.result.ResultHandlerChain;
 import dev.rollczi.litecommands.invalidusage.InvalidUsage;
 import dev.rollczi.litecommands.invalidusage.InvalidUsageHandler;
 import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.schematic.Schematic;
 import org.bukkit.command.CommandSender;
-
 
 @LiteHandler(value = CommandSender.class)
 final class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSender> {
@@ -21,8 +20,8 @@ final class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSender
 
     @Override
     public void handle(Invocation<CommandSender> invocation, InvalidUsage<CommandSender> result, ResultHandlerChain<CommandSender> chain) {
-        final CommandSender sender = invocation.sender();
-        final Schematic schematic = result.getSchematic();
+        CommandSender sender = invocation.sender();
+        Schematic schematic = result.getSchematic();
 
         if (schematic.isOnlyFirst()) {
             messageService.create()
@@ -38,7 +37,7 @@ final class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSender
                 .notice(notice -> notice.commandUsageHeader)
                 .send();
 
-        for (final String scheme : schematic.all()) {
+        for (String scheme : schematic.all()) {
             messageService.create()
                     .viewer(sender)
                     .notice(notice -> notice.commandUsageEntry)

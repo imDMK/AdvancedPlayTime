@@ -2,26 +2,37 @@ package com.github.imdmk.playtime.core.feature.playtime;
 
 import com.github.imdmk.playtime.api.PlayTime;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public final class PlayTimeUser {
 
     private final UUID uuid;
+
+    private String name;
     private PlayTime playTime;
 
-    PlayTimeUser(UUID uuid) {
+    public PlayTimeUser(UUID uuid, String name) {
         this.uuid = uuid;
+        this.name = name;
         this.playTime = PlayTime.ZERO;
     }
 
-    PlayTimeUser(UUID uuid, PlayTime playTime) {
+    public PlayTimeUser(UUID uuid, String name, PlayTime playTime) {
         this.uuid = uuid;
+        this.name = name;
         this.playTime = playTime;
     }
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public PlayTime getPlayTime() {
@@ -38,7 +49,7 @@ public final class PlayTimeUser {
             return false;
         }
 
-        return Objects.equals(uuid, that.uuid);
+        return uuid.equals(that.uuid);
     }
 
     @Override
@@ -50,6 +61,7 @@ public final class PlayTimeUser {
     public String toString() {
         return "PlayTimeUser{" +
                 "uuid=" + uuid +
+                ", name='" + name +
                 ", playTime=" + playTime +
                 '}';
     }

@@ -4,7 +4,7 @@ import com.github.imdmk.playtime.core.injector.ComponentPriority;
 import com.github.imdmk.playtime.core.injector.annotations.Service;
 import com.github.imdmk.playtime.core.injector.subscriber.Subscribe;
 import com.github.imdmk.playtime.core.injector.subscriber.event.PlayTimeShutdownEvent;
-import com.github.imdmk.playtime.core.shared.time.Durations;
+import com.github.imdmk.playtime.core.time.DurationTicksConverter;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -39,7 +39,11 @@ final class BukkitTaskScheduler implements TaskScheduler {
             Runnable runnable,
             Duration delay
     ) {
-        return scheduler.runTaskLaterAsynchronously(plugin, runnable, Durations.convertToTicks(delay));
+        return scheduler.runTaskLaterAsynchronously(
+                plugin,
+                runnable,
+                DurationTicksConverter.toTicks(delay)
+        );
     }
 
     @Override
@@ -47,7 +51,11 @@ final class BukkitTaskScheduler implements TaskScheduler {
             Runnable runnable,
             Duration delay
     ) {
-        return scheduler.runTaskLater(plugin, runnable, Durations.convertToTicks(delay));
+        return scheduler.runTaskLater(
+                plugin,
+                runnable,
+                DurationTicksConverter.toTicks(delay)
+        );
     }
 
     @Override
@@ -56,7 +64,12 @@ final class BukkitTaskScheduler implements TaskScheduler {
             Duration delay,
             Duration period
     ) {
-        return scheduler.runTaskTimer(plugin, runnable, Durations.convertToTicks(delay), Durations.convertToTicks(period));
+        return scheduler.runTaskTimer(
+                plugin,
+                runnable,
+                DurationTicksConverter.toTicks(delay),
+                DurationTicksConverter.toTicks(period)
+        );
     }
 
     @Override
@@ -65,7 +78,12 @@ final class BukkitTaskScheduler implements TaskScheduler {
             Duration delay,
             Duration period
     ) {
-        return scheduler.runTaskTimerAsynchronously(plugin, runnable, Durations.convertToTicks(delay), Durations.convertToTicks(period));
+        return scheduler.runTaskTimerAsynchronously(
+                plugin,
+                runnable,
+                DurationTicksConverter.toTicks(delay),
+                DurationTicksConverter.toTicks(period)
+        );
     }
 
     @Override
