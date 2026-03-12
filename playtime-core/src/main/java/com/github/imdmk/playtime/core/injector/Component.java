@@ -1,5 +1,6 @@
 package com.github.imdmk.playtime.core.injector;
 
+import org.panda_lang.utilities.inject.DependencyInjectionException;
 import org.panda_lang.utilities.inject.Injector;
 
 import java.lang.annotation.Annotation;
@@ -45,13 +46,16 @@ public final class Component<A extends Annotation> {
         if (instance == null) {
             throw new IllegalStateException("Component instance is not created yet.");
         }
+
         return instance;
     }
 
-    public void createInstance(Injector injector) {
-        if (instance == null) {
-            instance = injector.newInstance(type);
+    public void createInstance(Injector injector) throws DependencyInjectionException {
+        if (instance != null) {
+            throw new IllegalStateException("Component instance already created.");
         }
+
+        instance = injector.newInstance(type);
     }
 }
 

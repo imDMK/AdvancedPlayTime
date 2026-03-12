@@ -4,6 +4,7 @@ import com.github.imdmk.playtime.core.injector.processor.ComponentPostProcessor;
 import com.github.imdmk.playtime.core.injector.processor.ComponentProcessor;
 import com.github.imdmk.playtime.core.injector.processor.ComponentProcessorContext;
 import com.github.imdmk.playtime.core.injector.processor.ProcessorContainer;
+import org.panda_lang.utilities.inject.DependencyInjectionException;
 import org.panda_lang.utilities.inject.Injector;
 
 import java.lang.annotation.Annotation;
@@ -90,19 +91,29 @@ public final class ComponentManager {
             Component<A> component,
             ComponentProcessorContext context
     ) {
-        component.createInstance(injector);
-
-        ProcessorContainer<?> raw = processors.get(component.annotation().annotationType());
-        if (raw != null) {
-            ProcessorContainer<A> container = (ProcessorContainer<A>) raw;
-            ComponentProcessor<A> processor = container.processor();
-
-            processor.process(
-                    component.instance(),
-                    component.annotation(),
-                    context
+        try {
+            component.createInstance(injector);
+        } catch (DependencyInjectionException e) {
+            throw new IllegalStateException(
+                    "Failed to create instance of " + component.type().getName(), e
             );
         }
+
+        ProcessorContainer<?> raw = processors.get(component.annotation().annotationType());
+        if (raw == null) {
+            throw new IllegalStateException(
+                    "No processor found for annotation type: " + component.annotation().annotationType().getName()
+            );
+        }
+
+        ProcessorContainer<A> container = (ProcessorContainer<A>) raw;
+        ComponentProcessor<A> processor = container.processor();
+
+        processor.process(
+                component.instance(),
+                component.annotation(),
+                context
+        );
 
         for (ComponentPostProcessor post : postProcessors) {
             post.postProcess(component.instance(), context);
