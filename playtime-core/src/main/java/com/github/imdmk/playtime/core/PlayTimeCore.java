@@ -45,7 +45,7 @@ final class PlayTimeCore {
 
         ComponentManager componentManager = new ComponentManager(injector, BASE_PACKAGE)
                 .addProcessors(ComponentProcessors.defaults(plugin))
-                .addPostProcessor(((instance, context) -> this.publisher.subscribe(instance)));
+                .addPostProcessor((instance, context) -> this.publisher.subscribe(instance));
 
         componentManager.scanAll();
         componentManager.processAll();
