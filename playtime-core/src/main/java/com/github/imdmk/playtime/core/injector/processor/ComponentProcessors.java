@@ -12,7 +12,7 @@ import com.github.imdmk.playtime.core.injector.annotations.lite.LiteHandler;
 import com.github.imdmk.playtime.core.injector.annotations.placeholderapi.Placeholder;
 import com.github.imdmk.playtime.core.platform.gui.GuiRegistry;
 import com.github.imdmk.playtime.core.platform.gui.IdentifiableGui;
-import com.github.imdmk.playtime.core.platform.litecommands.LiteCommandsConfigurer;
+import com.github.imdmk.playtime.core.platform.command.LiteCommandsConfigurer;
 import com.github.imdmk.playtime.core.platform.placeholder.PlaceholderService;
 import com.github.imdmk.playtime.core.platform.placeholder.PluginPlaceholder;
 import dev.rollczi.litecommands.LiteCommandsBuilder;
