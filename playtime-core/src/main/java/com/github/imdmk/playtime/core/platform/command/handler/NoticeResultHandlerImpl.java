@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.core.platform.litecommands.handler;
+package com.github.imdmk.playtime.core.platform.command.handler;
 
 import com.eternalcode.multification.notice.Notice;
 import com.github.imdmk.playtime.core.injector.annotations.lite.LiteHandler;
