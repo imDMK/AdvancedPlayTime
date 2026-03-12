@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.core.platform.litecommands;
+package com.github.imdmk.playtime.core.platform.command;
 
 import com.github.imdmk.playtime.core.injector.ComponentPriority;
 import com.github.imdmk.playtime.core.injector.annotations.Service;
