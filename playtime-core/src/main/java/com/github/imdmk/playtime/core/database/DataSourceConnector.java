@@ -1,6 +1,7 @@
 package com.github.imdmk.playtime.core.database;
 
 import com.github.imdmk.playtime.core.database.configurer.DataSourceConfigurer;
+import com.github.imdmk.playtime.core.database.configurer.DataSourceConfigurerFactory;
 import com.github.imdmk.playtime.core.platform.logger.PluginLogger;
 import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
@@ -23,11 +24,11 @@ final class DataSourceConnector {
     DataSourceConnector(
             PluginLogger logger,
             DataSourceFactory dataSourceFactory,
-            DataSourceConfigurer dataSourceConfigurer
+            DatabaseConfig config
     ) {
         this.logger = logger;
         this.dataSourceFactory = dataSourceFactory;
-        this.dataSourceConfigurer = dataSourceConfigurer;
+        this.dataSourceConfigurer = DataSourceConfigurerFactory.getFor(config.databaseMode);
     }
 
     synchronized void connect(DatabaseConfig config, File dataFolder) throws SQLException {

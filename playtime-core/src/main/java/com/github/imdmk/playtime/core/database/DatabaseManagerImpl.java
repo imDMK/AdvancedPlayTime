@@ -16,6 +16,8 @@ import java.sql.SQLException;
 @Database
 public final class DatabaseManagerImpl implements DatabaseManager {
 
+    private static final DataSourceFactory FACTORY = new DataSourceFactory();
+
     private final File dataFolder;
     private final DatabaseConfig config;
 
@@ -29,10 +31,7 @@ public final class DatabaseManagerImpl implements DatabaseManager {
     ) {
         this.dataFolder = dataFolder;
         this.config = config;
-
-        DataSourceConfigurer configurer = DataSourceConfigurerFactory.getFor(config.databaseMode);
-        DataSourceFactory factory = new DataSourceFactory();
-        this.dataConnector = new DataSourceConnector(logger, factory, configurer);
+        this.dataConnector = new DataSourceConnector(logger, FACTORY, config);
     }
 
     @Override
