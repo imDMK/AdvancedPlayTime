@@ -1,15 +1,13 @@
 package com.github.imdmk.playtime.core.feature.playtime;
 
 import com.github.imdmk.playtime.api.PlayTime;
-import com.github.imdmk.playtime.core.injector.annotations.Controller;
+import com.github.imdmk.playtime.core.injector.annotations.PluginListener;
 import com.github.imdmk.playtime.core.injector.subscriber.Subscribe;
 import com.github.imdmk.playtime.core.injector.subscriber.event.PlayTimeShutdownEvent;
 import com.github.imdmk.playtime.core.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.core.platform.playtime.PlayTimeAdapter;
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerLoadEvent;
@@ -18,8 +16,8 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-@Controller
-final class PlayTimeListener implements Listener {
+@PluginListener
+final class PlayTimeListener implements org.bukkit.event.Listener {
 
     private final Server server;
     private final PluginLogger logger;

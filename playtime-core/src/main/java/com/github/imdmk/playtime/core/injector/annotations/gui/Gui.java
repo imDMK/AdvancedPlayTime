@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.core.injector.annotations;
+package com.github.imdmk.playtime.core.injector.annotations.gui;
 
 import com.github.imdmk.playtime.core.injector.ComponentPriority;
 
@@ -9,9 +9,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Controller {
+public @interface Gui {
 
     ComponentPriority priority() default ComponentPriority.HIGHEST;
 
 }
-

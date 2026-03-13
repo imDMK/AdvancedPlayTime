@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.core.database.repository.ormlite;
 
-import com.github.imdmk.playtime.core.database.DatabaseBootstrap;
+import com.github.imdmk.playtime.core.database.DatabaseManager;
 import com.github.imdmk.playtime.core.database.repository.RepositoryBootstrap;
 import com.github.imdmk.playtime.core.database.repository.RepositoryInitializationException;
 import com.github.imdmk.playtime.core.platform.logger.PluginLogger;
@@ -29,17 +29,17 @@ public abstract class OrmLiteRepository<T, ID>
     protected final TaskScheduler scheduler;
     protected volatile Dao<T, ID> dao;
 
-    private final DatabaseBootstrap databaseBootstrap;
+    private final DatabaseManager databaseManager;
 
     @Inject
     protected OrmLiteRepository(
             PluginLogger logger,
             TaskScheduler scheduler,
-            DatabaseBootstrap databaseBootstrap
+            DatabaseManager databaseManager
     ) {
         this.logger = logger;
         this.scheduler = scheduler;
-        this.databaseBootstrap = databaseBootstrap;
+        this.databaseManager = databaseManager;
         configureOrmLiteLogger();
     }
 
@@ -51,7 +51,7 @@ public abstract class OrmLiteRepository<T, ID>
 
     @Override
     public void start() throws RepositoryInitializationException {
-        ConnectionSource connection = databaseBootstrap.getConnection();
+        ConnectionSource connection = databaseManager.getConnectionSource();
         if (connection == null) {
             throw new IllegalStateException("DatabaseBootstrap not started before repository initialization");
         }

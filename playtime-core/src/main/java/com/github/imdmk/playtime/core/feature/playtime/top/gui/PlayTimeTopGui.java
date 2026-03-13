@@ -1,7 +1,7 @@
 package com.github.imdmk.playtime.core.feature.playtime.top.gui;
 
 import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUser;
-import com.github.imdmk.playtime.core.injector.annotations.Gui;
+import com.github.imdmk.playtime.core.injector.annotations.gui.Gui;
 import com.github.imdmk.playtime.core.platform.adventure.AdventureFormatter;
 import com.github.imdmk.playtime.core.platform.adventure.AdventurePlaceholders;
 import com.github.imdmk.playtime.core.platform.gui.GuiType;
