@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.core.injector.annotations.placeholderapi;
+package com.github.imdmk.playtime.core.injector.annotations.placeholder;
 
 import com.github.imdmk.playtime.core.injector.ComponentPriority;
 

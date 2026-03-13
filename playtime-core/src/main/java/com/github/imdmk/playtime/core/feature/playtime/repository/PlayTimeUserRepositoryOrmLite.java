@@ -1,6 +1,6 @@
 package com.github.imdmk.playtime.core.feature.playtime.repository;
 
-import com.github.imdmk.playtime.core.database.DatabaseBootstrap;
+import com.github.imdmk.playtime.core.database.DatabaseManager;
 import com.github.imdmk.playtime.core.database.repository.ormlite.OrmLiteRepository;
 import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUser;
 import com.github.imdmk.playtime.core.injector.annotations.Repository;
@@ -24,9 +24,9 @@ final class PlayTimeUserRepositoryOrmLite
     PlayTimeUserRepositoryOrmLite(
             PluginLogger logger,
             TaskScheduler taskScheduler,
-            DatabaseBootstrap databaseBootstrap
+            DatabaseManager databaseManager
     ) {
-        super(logger, taskScheduler, databaseBootstrap);
+        super(logger, taskScheduler, databaseManager);
     }
 
     @Override

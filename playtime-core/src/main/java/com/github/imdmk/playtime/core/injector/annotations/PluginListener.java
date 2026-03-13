@@ -9,8 +9,9 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Gui {
+public @interface PluginListener {
 
     ComponentPriority priority() default ComponentPriority.HIGHEST;
 
 }
+

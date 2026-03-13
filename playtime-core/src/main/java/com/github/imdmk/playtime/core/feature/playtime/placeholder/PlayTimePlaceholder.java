@@ -2,7 +2,7 @@ package com.github.imdmk.playtime.core.feature.playtime.placeholder;
 
 import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUser;
 import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUserService;
-import com.github.imdmk.playtime.core.injector.annotations.placeholderapi.Placeholder;
+import com.github.imdmk.playtime.core.injector.annotations.placeholder.Placeholder;
 import com.github.imdmk.playtime.core.platform.placeholder.PluginPlaceholder;
 import com.github.imdmk.playtime.core.time.DurationService;
 import org.bukkit.entity.Player;

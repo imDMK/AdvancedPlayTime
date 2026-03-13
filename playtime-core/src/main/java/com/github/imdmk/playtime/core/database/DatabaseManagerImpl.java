@@ -14,7 +14,7 @@ import java.io.File;
 import java.sql.SQLException;
 
 @Database
-public final class DatabaseBootstrap {
+public final class DatabaseManagerImpl implements DatabaseManager {
 
     private final File dataFolder;
     private final DatabaseConfig config;
@@ -22,7 +22,7 @@ public final class DatabaseBootstrap {
     private final DataSourceConnector dataConnector;
 
     @Inject
-    public DatabaseBootstrap(
+    public DatabaseManagerImpl(
             File dataFolder,
             PluginLogger logger,
             DatabaseConfig config
@@ -35,16 +35,14 @@ public final class DatabaseBootstrap {
         this.dataConnector = new DataSourceConnector(logger, factory, configurer);
     }
 
-    public void start() {
-        try {
-            dataConnector.connect(config, dataFolder);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    public void start() throws SQLException {
+        dataConnector.connect(config, dataFolder);
     }
 
+    @Override
     @Nullable
-    public ConnectionSource getConnection() {
+    public ConnectionSource getConnectionSource() {
         return dataConnector.getConnectionSource();
     }
 
