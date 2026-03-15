@@ -14,16 +14,19 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import org.bukkit.command.CommandSender;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
+import java.time.Duration;
+
 @LiteCommand
-@Command(name = "playtime")
-final class PlayTimeCommand {
+@Command(name = "playtime set")
+@Permission(PlayTimeCommandPermissions.PLAYTIME_SET)
+public final class PlayTimeSetCommand {
 
     private final MessageService messageService;
     private final DurationService durationService;
     private final PlayTimeService playTimeService;
 
     @Inject
-    PlayTimeCommand(
+    public PlayTimeSetCommand(
             MessageService messageService,
             DurationService durationService,
             PlayTimeService playTimeService
@@ -34,25 +37,13 @@ final class PlayTimeCommand {
     }
 
     @Execute
-    @Permission(PlayTimeCommandPermissions.PLAYTIME)
-    void playTime(@Context PlayTimeUser user) {
-        PlayTime playTime = playTimeService.getCurrentPlayTime(user);
-        messageService.create()
-                .player(user.getUuid())
-                .notice(n -> n.playtimeMessages.playerPlayTimeSelf())
-                .placeholder("{PLAYER_PLAYTIME}", durationService.format(playTime.toDuration()))
-                .send();
-    }
-
-    @Execute
-    @Permission(PlayTimeCommandPermissions.PLAYTIME_TARGET)
-    void playTimeTarget(@Context CommandSender sender, @Arg PlayTimeUser target) {
-        PlayTime playTime = playTimeService.getCurrentPlayTime(target);
+    void setPlayTime(@Context CommandSender sender, @Arg PlayTimeUser target, @Arg Duration time) {
+        playTimeService.setPlayTime(target, PlayTime.of(time));
         messageService.create()
                 .viewer(sender)
-                .notice(n -> n.playtimeMessages.playerPlayTimeTarget())
+                .notice(n -> n.playtimeMessages.playerPlayTimeUpdated())
                 .placeholder("{PLAYER_NAME}", target.getName())
-                .placeholder("{PLAYER_PLAYTIME}", durationService.format(playTime.toDuration()))
+                .placeholder("{PLAYER_PLAYTIME}", durationService.format(time))
                 .send();
     }
 }

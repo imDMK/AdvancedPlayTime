@@ -47,6 +47,15 @@ public final class ENPlayTimeMessages
 
     @Comment({
             "#",
+            "# Sent to a command executor after resetting all players playtimes.",
+            "#",
+    })
+    Notice playersPlayTimeReset = Notice.chat(
+            "<dark_gray>• <gray>All players playtimes have been reset.<dark_gray>"
+    );
+
+    @Comment({
+            "#",
             "# Sent when the playtime top cache is invalidated.",
             "#",
     })
@@ -67,6 +76,11 @@ public final class ENPlayTimeMessages
     @Override
     public Notice playerPlayTimeUpdated() {
         return playerPlayTimeUpdated;
+    }
+
+    @Override
+    public Notice playersPlayTimeReset() {
+        return playersPlayTimeReset;
     }
 
     @Override

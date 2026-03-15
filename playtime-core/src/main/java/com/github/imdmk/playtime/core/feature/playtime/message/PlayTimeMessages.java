@@ -8,6 +8,8 @@ public interface PlayTimeMessages {
     Notice playerPlayTimeTarget();
     Notice playerPlayTimeUpdated();
 
+    Notice playersPlayTimeReset();
+
     Notice playTimeTopCacheInvalidated();
 
 }
