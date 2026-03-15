@@ -14,7 +14,8 @@ public interface PlayTimeUserRepository {
     CompletableFuture<List<PlayTimeUser>> findTopByPlayTime(int limit);
     CompletableFuture<List<PlayTimeUser>> findAll();
 
-    CompletableFuture<Boolean> deleteByUuid(UUID uuid);
+    CompletableFuture<Void> resetAllPlayTimes();
 
+    CompletableFuture<Boolean> deleteByUuid(UUID uuid);
     CompletableFuture<PlayTimeUser> save(PlayTimeUser user);
 }

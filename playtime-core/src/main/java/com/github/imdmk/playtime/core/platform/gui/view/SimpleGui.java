@@ -14,7 +14,7 @@ public interface SimpleGui extends OpenableGui<Void> {
     ) {
         BaseGui gui = createGui(viewer);
         prepareItems(gui, viewer);
-        scheduler.runSync(() -> gui.open(viewer));
+        scheduler.runSyncIfNeeded(() -> gui.open(viewer));
     }
 
     BaseGui createGui(Player viewer);

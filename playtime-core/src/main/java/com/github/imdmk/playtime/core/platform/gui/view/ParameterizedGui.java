@@ -14,7 +14,7 @@ public interface ParameterizedGui<T> extends OpenableGui<T> {
     ) {
         BaseGui gui = createGui(viewer, parameter);
         prepareItems(gui, viewer, parameter);
-        scheduler.runSync(() -> gui.open(viewer));
+        scheduler.runSyncIfNeeded(() -> gui.open(viewer));
     }
 
     BaseGui createGui(Player viewer, T parameter);

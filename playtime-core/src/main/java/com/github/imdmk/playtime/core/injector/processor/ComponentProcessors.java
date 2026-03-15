@@ -30,6 +30,7 @@ public final class ComponentProcessors {
                 ProcessorBuilder.of(Database.class, DatabaseProcessor.class).build(),
                 ProcessorBuilder.of(Repository.class, RepositoryProcessor.class).build(),
                 ProcessorBuilder.of(PluginListener.class, PluginListenerProcessor.class).build(),
+                ProcessorBuilder.of(Task.class, TaskProcessor.class).build(),
                 ProcessorBuilder.of(Gui.class, GuiProcessor.class).build(),
                 ProcessorBuilder.of(Placeholder.class, PlaceholderProcessor.class).build(),
                 ProcessorBuilder.of(LiteCommand.class, LiteCommandProcessor.class).build(),
