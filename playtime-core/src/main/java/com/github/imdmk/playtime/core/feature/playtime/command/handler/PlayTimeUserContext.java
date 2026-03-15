@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.core.feature.playtime.command;
+package com.github.imdmk.playtime.core.feature.playtime.command.handler;
 
 import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUser;
 import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUserService;
@@ -15,6 +15,8 @@ import org.panda_lang.utilities.inject.annotations.Inject;
 final class PlayTimeUserContext
         implements ContextProvider<CommandSender, PlayTimeUser> {
 
+    private static final String PLAYER_ONLY_ERROR = "Only player can use this command!";
+
     private final MessageConfig messageConfig;
     private final PlayTimeUserService userService;
 
@@ -30,7 +32,7 @@ final class PlayTimeUserContext
     @Override
     public ContextResult<PlayTimeUser> provide(Invocation<CommandSender> invocation) {
         if (!(invocation.sender() instanceof Player player)) {
-            return ContextResult.error("Only player can use this command!");
+            return ContextResult.error(PLAYER_ONLY_ERROR);
         }
 
         return ContextResult.completableFuture(

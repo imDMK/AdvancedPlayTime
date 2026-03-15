@@ -10,10 +10,9 @@ import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import org.bukkit.command.CommandSender;
 import org.panda_lang.utilities.inject.annotations.Inject;
-
-import java.time.Duration;
 
 @LiteCommand
 @Command(name = "playtime")
@@ -35,9 +34,9 @@ final class PlayTimeCommand {
     }
 
     @Execute
+    @Permission(PlayTimeCommandPermissions.PLAYTIME)
     void playTime(@Context PlayTimeUser user) {
         PlayTime playTime = playTimeService.getCurrentPlayTime(user);
-
         messageService.create()
                 .player(user.getUuid())
                 .notice(n -> n.playtimeMessages.playerPlayTimeSelf())
@@ -46,25 +45,14 @@ final class PlayTimeCommand {
     }
 
     @Execute
-    void playTimeOther(@Context CommandSender sender, @Arg PlayTimeUser target) {
+    @Permission(PlayTimeCommandPermissions.PLAYTIME_TARGET)
+    void playTimeTarget(@Context CommandSender sender, @Arg PlayTimeUser target) {
         PlayTime playTime = playTimeService.getCurrentPlayTime(target);
-
         messageService.create()
                 .viewer(sender)
                 .notice(n -> n.playtimeMessages.playerPlayTimeTarget())
                 .placeholder("{PLAYER_NAME}", target.getName())
                 .placeholder("{PLAYER_PLAYTIME}", durationService.format(playTime.toDuration()))
-                .send();
-    }
-
-    @Execute(name = "set")
-    void setPlayTime(@Context CommandSender sender, @Arg PlayTimeUser target, @Arg Duration time) {
-        playTimeService.setPlayTime(target, PlayTime.of(time));
-        messageService.create()
-                .viewer(sender)
-                .notice(n -> n.playtimeMessages.playerPlayTimeUpdated())
-                .placeholder("{PLAYER_NAME}", target.getName())
-                .placeholder("{PLAYER_PLAYTIME}", durationService.format(time))
                 .send();
     }
 }

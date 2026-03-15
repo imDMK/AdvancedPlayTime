@@ -1,4 +1,4 @@
-package com.github.imdmk.playtime.core.feature.playtime.command;
+package com.github.imdmk.playtime.core.feature.playtime.command.handler;
 
 import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUser;
 import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUserService;
@@ -53,12 +53,20 @@ final class PlayTimeUserArgument
     }
 
     @Override
-    protected boolean match(Invocation<CommandSender> invocation, Argument<PlayTimeUser> context, String argument) {
+    protected boolean match(
+            Invocation<CommandSender> invocation,
+            Argument<PlayTimeUser> context,
+            String argument
+    ) {
         return VALID_USER_PATTERN.matcher(argument).matches();
     }
 
     @Override
-    public SuggestionResult suggest(Invocation<CommandSender> invocation, Argument<PlayTimeUser> argument, SuggestionContext context) {
+    public SuggestionResult suggest(
+            Invocation<CommandSender> invocation,
+            Argument<PlayTimeUser> argument,
+            SuggestionContext context
+    ) {
         return SuggestionResult.of(userService.cachedNames());
     }
 }
