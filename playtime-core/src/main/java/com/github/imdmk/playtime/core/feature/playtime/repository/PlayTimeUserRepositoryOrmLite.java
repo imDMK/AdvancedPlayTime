@@ -110,6 +110,21 @@ final class PlayTimeUserRepositoryOrmLite
     }
 
     @Override
+    public CompletableFuture<Void> resetAllPlayTimes() {
+        return execute(() -> {
+            try {
+                dao.updateBuilder()
+                        .updateColumnValue(PlayTimeUserEntityMeta.Col.PLAYTIME_MILLIS, 0L)
+                        .update();
+                return null;
+            } catch (SQLException e) {
+                logger.error(e, "Failed to reset all playtimes");
+                throw new IllegalStateException("Database failure", e);
+            }
+        });
+    }
+
+    @Override
     public CompletableFuture<Boolean> deleteByUuid(UUID uuid) {
         return execute(() -> {
             try {

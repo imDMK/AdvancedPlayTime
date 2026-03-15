@@ -7,6 +7,8 @@ import java.time.Duration;
 public interface TaskScheduler {
 
     BukkitTask runSync(Runnable runnable);
+    BukkitTask runSyncIfNeeded(Runnable runnable);
+
     BukkitTask runAsync(Runnable runnable);
 
     BukkitTask runLaterAsync(Runnable runnable, Duration delay);

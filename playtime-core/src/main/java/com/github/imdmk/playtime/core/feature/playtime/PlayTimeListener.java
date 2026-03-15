@@ -8,6 +8,7 @@ import com.github.imdmk.playtime.core.platform.logger.PluginLogger;
 import com.github.imdmk.playtime.core.platform.playtime.PlayTimeAdapter;
 import org.bukkit.Server;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerLoadEvent;
@@ -17,7 +18,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @PluginListener
-final class PlayTimeListener implements org.bukkit.event.Listener {
+final class PlayTimeListener implements Listener {
 
     private final Server server;
     private final PluginLogger logger;
