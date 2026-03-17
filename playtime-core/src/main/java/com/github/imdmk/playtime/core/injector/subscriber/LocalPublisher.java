@@ -13,7 +13,8 @@ public final class LocalPublisher implements Publisher {
 
     private final Injector injector;
 
-    private final Map<Class<? extends SubscribeEvent>, List<SubscriberMethod>> subscribers = new HashMap<>();
+    private final Map<Class<? extends SubscribeEvent>, List<SubscriberMethod>>
+            subscribers = new HashMap<>();
 
     public LocalPublisher(Injector injector) {
         this.injector = injector;
@@ -27,11 +28,10 @@ public final class LocalPublisher implements Publisher {
                 continue;
             }
 
-            Class<? extends SubscribeEvent> eventType = subscribe.event();
             method.setAccessible(true);
 
             subscribers
-                    .computeIfAbsent(eventType, k -> new ArrayList<>())
+                    .computeIfAbsent(subscribe.event(), k -> new ArrayList<>())
                     .add(new SubscriberMethod(instance, method));
         }
     }
@@ -53,6 +53,7 @@ public final class LocalPublisher implements Publisher {
         return event;
     }
 
-    private record SubscriberMethod(Object instance, Method method) { }
+    private record SubscriberMethod(Object instance, Method method) {
+    }
 }
 
