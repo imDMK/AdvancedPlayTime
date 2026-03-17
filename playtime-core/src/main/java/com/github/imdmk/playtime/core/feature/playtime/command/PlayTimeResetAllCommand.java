@@ -52,6 +52,7 @@ public final class PlayTimeResetAllCommand {
                 })
                 .exceptionally(e -> {
                     logger.error(e, "Failed to reset all playtimes");
+                    messageService.send(sender, n -> n.actionExecutionError);
                     return null;
                 });
     }
