@@ -65,8 +65,7 @@ public final class PlayTimeUserService {
 
     public CompletableFuture<PlayTimeUser> createUser(UUID uuid, String name, PlayTime playTime) {
         PlayTimeUser user = new PlayTimeUser(uuid, name, playTime);
-        cache.put(user);
-        return repository.save(user);
+        return saveUser(user);
     }
 
     public CompletableFuture<PlayTimeUser> saveUser(PlayTimeUser user) {
