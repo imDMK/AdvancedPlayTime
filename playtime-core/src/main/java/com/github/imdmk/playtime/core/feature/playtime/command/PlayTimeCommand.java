@@ -37,6 +37,7 @@ final class PlayTimeCommand {
     @Permission(PlayTimeCommandPermissions.PLAYTIME)
     void playTime(@Context PlayTimeUser user) {
         PlayTime playTime = playTimeService.getCurrentPlayTime(user);
+
         messageService.create()
                 .player(user.getUuid())
                 .notice(n -> n.playtimeMessages.playerPlayTimeSelf())
@@ -48,6 +49,7 @@ final class PlayTimeCommand {
     @Permission(PlayTimeCommandPermissions.PLAYTIME_TARGET)
     void playTimeTarget(@Context CommandSender sender, @Arg PlayTimeUser target) {
         PlayTime playTime = playTimeService.getCurrentPlayTime(target);
+
         messageService.create()
                 .viewer(sender)
                 .notice(n -> n.playtimeMessages.playerPlayTimeTarget())
