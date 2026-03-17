@@ -39,6 +39,7 @@ public final class PlayTimeSetCommand {
     @Execute
     void setPlayTime(@Context CommandSender sender, @Arg PlayTimeUser target, @Arg Duration time) {
         playTimeService.setPlayTime(target, PlayTime.of(time));
+
         messageService.create()
                 .viewer(sender)
                 .notice(n -> n.playtimeMessages.playerPlayTimeUpdated())
