@@ -41,6 +41,11 @@ final class PlayTimeUserCache {
     }
 
     @Unmodifiable
+    Collection<UUID> uuids() {
+        return Collections.unmodifiableCollection(usersByUuid.keySet());
+    }
+
+    @Unmodifiable
     Collection<String> names() {
         return Collections.unmodifiableCollection(uuidByName.keySet());
     }
