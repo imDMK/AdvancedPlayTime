@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/imDMK/AdvancedPlayTime/actions/workflows/gradle.yml/badge.svg)](https://github.com/imDMK/AdvancedPlayTime/actions/workflows/gradle.yml)
 ![JDK](https://img.shields.io/badge/JDK-1.21-blue.svg)
-![Supported versions](https://img.shields.io/badge/Minecraft-1.21--1.21.10-green.svg)
+![Supported versions](https://img.shields.io/badge/Minecraft-1.21--1.21.11-green.svg)
 [![SpigotMC](https://img.shields.io/badge/SpigotMC-yellow.svg)](https://www.spigotmc.org/resources/%E2%8F%B0%EF%B8%8F-advancedplaytime-1-21-1-21-10.130458/)
 [![Modrinth](https://img.shields.io/badge/Modrinth-1bd96a.svg)](https://modrinth.com/plugin/advancedplaytime)
 [![bStats](https://img.shields.io/badge/bStats-00695c)](https://bstats.org/plugin/bukkit/PlayTime/19362)
@@ -22,7 +22,7 @@
 - 🔁 **Reset & edit support** – Adjust playtimes or wipe all data easily.
 - 💬 **Flexible notifications** – Chat, ActionBar, Title or Subtitle? Your choice.
 - 🧩 **Multiple GUI types** – Paginated, scrolling horizontal/vertical, and more.
-- 💾 **Supports SQLite & MySQL** – Your data, your way.
+- 💾 **Supports many databases** – Your data, your way.
 
 ---
 
@@ -48,8 +48,7 @@
 | `/playtime top`             | `command.playtime.top`            |         
 | `/playtime top invalidate` | `command.playtime.top.invalidate`  |
 | `/playtime set`             | `command.playtime.set`            |
-| `/playtime reset`           | `command.playtime.reset`          |
-| `/playtime reset-all`       | `command.playtime.reset.all`      |
+| `/playtime reset-all`           | `command.playtime.reset`          |
 | `/playtime reload`          | `command.playtime.reload`         |
 
 ---
@@ -65,22 +64,19 @@
 
 ---
 
-### 🔔 Notification Types
-
-- `CHAT`  
-- `ACTIONBAR`  
-- `TITLE`  
-- `SUBTITLE`  
+### 🔔 How to configure notifications?
+Use [EternalCodeTeam generator](https://eternalcode.pl/notification-generator)
 
 ---
 
 ### 🗃️ Supported Databases
 
-- `SQLITE`  
-- `MYSQL`  
 - `H2`
+- `MariaDB`
+- `MySQL`
+- `PostGreSQL`
 - `SQL`
-- `Postgresql`
+- `SQLite`
 
 ---
 
@@ -88,13 +84,7 @@
 
 | Placeholder          | Description                                                             |
 |----------------------|-------------------------------------------------------------------------|
-| `%advancedplaytime%` | Displays player's playtime in default readable format (e.g., `10h 35m`) |
-
----
-
-### ❓ Why isn’t my time updated instantly?
-
-To maximize performance, time is updated on player join/leave and periodically via a background task.
+| `%playtime%` | Displays player's playtime in default readable format (e.g., `10h 35m`) |
 
 ---
 
