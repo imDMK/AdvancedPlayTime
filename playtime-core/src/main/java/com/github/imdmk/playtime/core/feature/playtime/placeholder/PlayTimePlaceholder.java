@@ -1,14 +1,12 @@
 package com.github.imdmk.playtime.core.feature.playtime.placeholder;
 
-import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUser;
-import com.github.imdmk.playtime.core.feature.playtime.PlayTimeUserService;
+import com.github.imdmk.playtime.api.PlayTime;
 import com.github.imdmk.playtime.core.injector.annotations.placeholder.Placeholder;
 import com.github.imdmk.playtime.core.platform.placeholder.PluginPlaceholder;
+import com.github.imdmk.playtime.core.platform.playtime.PlayTimeAdapter;
 import com.github.imdmk.playtime.core.time.DurationService;
 import org.bukkit.entity.Player;
 import org.panda_lang.utilities.inject.annotations.Inject;
-
-import java.util.UUID;
 
 @Placeholder
 final class PlayTimePlaceholder implements PluginPlaceholder {
@@ -16,15 +14,15 @@ final class PlayTimePlaceholder implements PluginPlaceholder {
     private static final String IDENTIFIER = "playtime";
 
     private final DurationService durationService;
-    private final PlayTimeUserService userService;
+    private final PlayTimeAdapter playTimeAdapter;
 
     @Inject
     PlayTimePlaceholder(
             DurationService durationService,
-            PlayTimeUserService userService
+            PlayTimeAdapter playTimeAdapter
     ) {
         this.durationService = durationService;
-        this.userService = userService;
+        this.playTimeAdapter = playTimeAdapter;
     }
 
     @Override
@@ -34,11 +32,7 @@ final class PlayTimePlaceholder implements PluginPlaceholder {
 
     @Override
     public String request(Player player, String params) {
-        UUID playerId = player.getUniqueId();
-
-        return userService.getUser(playerId)
-                .map(PlayTimeUser::getPlayTime)
-                .map(time -> durationService.format(time.toDuration()))
-                .orElse(null);
+        PlayTime playTime = playTimeAdapter.read(player);
+        return durationService.format(playTime.toDuration());
     }
 }
