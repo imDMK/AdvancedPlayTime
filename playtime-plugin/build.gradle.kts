@@ -18,7 +18,7 @@ tasks.build {
 
 playTimeShadow {
     pluginYml {
-        name = project.name
+        name = "AdvancedPlayTime"
         version = project.version.toString()
         apiVersion = "1.21"
         softDepend = listOf("PlaceholderAPI")
@@ -29,7 +29,7 @@ playTimeShadow {
     }
 
     shadowJar {
-        archiveFileName.set("${project.name} v${project.version} (MC 1.21.x).jar")
+        archiveFileName.set("AdvancedPlayTime v${project.version} (MC 1.21.x).jar")
 
         mergeServiceFiles()
 
