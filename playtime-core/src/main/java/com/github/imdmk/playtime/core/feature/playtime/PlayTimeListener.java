@@ -66,7 +66,9 @@ final class PlayTimeListener implements Listener {
                         return userService.createUser(uuid, name, time);
                     }
 
+                    user.setName(name);
                     adapter.write(uuid, user.getPlayTime());
+
                     return CompletableFuture.completedFuture(user);
                 })
                 .exceptionally(e -> {
