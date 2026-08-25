@@ -15,5 +15,14 @@ final class ConfigFactory {
             );
         }
     }
-}
 
+    <T extends ConfigSection> T initialize(T config) {
+        try {
+            return ConfigManager.initialize(config);
+        } catch (OkaeriException e) {
+            throw new ConfigCreateException(
+                    "Failed to initialize config: " + config.getClass().getName(), e
+            );
+        }
+    }
+}
