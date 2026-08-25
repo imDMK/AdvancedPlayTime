@@ -3,7 +3,7 @@ plugins {
     `playtime-repositories`
     `playtime-shadow`
 
-    id("xyz.jpenilla.run-paper") version "3.0.2"
+    id("xyz.jpenilla.run-paper") version "3.1.0"
 }
 
 dependencies {
@@ -53,6 +53,6 @@ playTimeShadow {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.11")
+        minecraftVersion("26.2")
     }
 }
