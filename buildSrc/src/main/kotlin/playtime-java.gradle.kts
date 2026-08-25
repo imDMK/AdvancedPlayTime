@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.github.imdmk"
-version = "3.0.1"
+version = "3.0.2"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
