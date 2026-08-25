@@ -5,6 +5,7 @@ import com.github.imdmk.playtime.core.config.ConfigService;
 import com.github.imdmk.playtime.core.injector.annotations.ConfigFile;
 import com.github.imdmk.playtime.core.injector.processor.ComponentProcessor;
 import com.github.imdmk.playtime.core.injector.processor.ComponentProcessorContext;
+import eu.okaeri.configs.OkaeriConfig;
 import org.panda_lang.utilities.inject.Resources;
 
 import java.lang.reflect.Field;
@@ -35,11 +36,22 @@ public final class ConfigFileProcessor implements ComponentProcessor<ConfigFile>
                 ConfigFile.class
         );
 
-        configService.create(config.getClass());
-        resources.on(config.getClass())
-                .assignInstance(instance);
+        // The very same instance must be loaded and bound, otherwise every component
+        // injecting this config would receive an unloaded copy holding only the defaults.
+        configService.adopt(config);
 
+        resources.on(config.getClass())
+                .assignInstance(config);
+
+        bindSections(config, resources);
+    }
+
+    private void bindSections(ConfigSection config, Resources resources) {
         for (Field field : config.getClass().getFields()) {
+            if (!OkaeriConfig.class.isAssignableFrom(field.getType())) {
+                continue;
+            }
+
             try {
                 Object value = field.get(config);
                 if (value != null) {
