@@ -35,13 +35,25 @@ public final class ConfigService {
     }
 
     public <C extends ConfigSection> C create(Class<C> type) {
-        C config = factory.instantiate(type);
+        return adopt(factory.instantiate(type));
+    }
+
+    /**
+     * Binds an already existing config instance to its file, loads it and registers it.
+     * <p>
+     * This must be used for instances that are shared with other components (e.g. created
+     * by the dependency injector), otherwise those components would keep an unloaded
+     * instance holding only the hardcoded defaults.
+     */
+    public <C extends ConfigSection> C adopt(C config) {
+        factory.initialize(config);
+
         File file = new File(dataFolder, config.fileName());
 
         configurer.configure(config, file, config.serdesPack());
         lifecycle.initialize(config);
 
-        register(type, config);
+        register(config.getClass(), config);
         return config;
     }
 
