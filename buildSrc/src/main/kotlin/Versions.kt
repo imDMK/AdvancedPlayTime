@@ -1,6 +1,16 @@
 object Versions {
 
+    /** Java release the plugin is compiled for and requires at runtime. */
+    const val JAVA = 25
+
+    /** Spigot API the plugin is compiled against (newest supported server). */
     const val SPIGOT_API = "26.2-R0.1-SNAPSHOT"
+
+    /** Oldest supported Spigot API, verified by the `compileJavaSpigotMin` task. */
+    const val SPIGOT_API_MIN = "1.21-R0.1-SNAPSHOT"
+
+    /** Value of `api-version` in plugin.yml. */
+    const val SPIGOT_API_VERSION = "1.21"
 
     const val PLACEHOLDER_API = "2.12.3"
 
