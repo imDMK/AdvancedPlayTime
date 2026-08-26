@@ -30,7 +30,7 @@ playTimeShadow {
     }
 
     shadowJar {
-        archiveFileName.set("AdvancedPlayTime v${project.version} (MC 1.21-26.2, Java ${Versions.JAVA}).jar")
+        archiveFileName.set("AdvancedPlayTime v${project.version} (MC 1.21-26.2, Java ${Versions.JAVA_RELEASE}).jar")
 
         mergeServiceFiles()
 
