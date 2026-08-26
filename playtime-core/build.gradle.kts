@@ -3,6 +3,7 @@ plugins {
     `playtime-java-test`
     `playtime-repositories`
     `playtime-runtime-libraries`
+    `playtime-spigot-compat`
 }
 
 dependencies {

@@ -6,11 +6,11 @@ group = "com.github.imdmk"
 version = "3.0.2"
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(Versions.JAVA))
 }
 
-tasks.compileJava {
+tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs = listOf("-Xlint:deprecation", "-parameters")
     options.encoding = "UTF-8"
-    options.release = 21
+    options.release.set(Versions.JAVA)
 }

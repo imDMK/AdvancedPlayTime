@@ -8,7 +8,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTakeLecternBookEvent;
 import org.jetbrains.annotations.Nullable;
 import org.panda_lang.utilities.inject.annotations.Inject;
 
