@@ -2,6 +2,7 @@ plugins {
     `playtime-java`
     `playtime-repositories`
     `playtime-shadow`
+    `playtime-spigot-compat`
 
     id("xyz.jpenilla.run-paper") version "3.1.0"
 }
@@ -20,7 +21,7 @@ playTimeShadow {
     pluginYml {
         name = "AdvancedPlayTime"
         version = project.version.toString()
-        apiVersion = "1.21"
+        apiVersion = Versions.SPIGOT_API_VERSION
         softDepend = listOf("PlaceholderAPI")
         main = "com.github.imdmk.playtime.plugin.PlayTimePlugin"
         author = "imDMK (dominiks8318@gmail.com)"
@@ -29,7 +30,7 @@ playTimeShadow {
     }
 
     shadowJar {
-        archiveFileName.set("AdvancedPlayTime v${project.version} (MC 1.21.x).jar")
+        archiveFileName.set("AdvancedPlayTime v${project.version} (MC 1.21-26.2, Java ${Versions.JAVA}).jar")
 
         mergeServiceFiles()
 

@@ -1,8 +1,8 @@
 # ⏳ Advanced PlayTime Plugin
 
 [![Build Status](https://github.com/imDMK/AdvancedPlayTime/actions/workflows/gradle.yml/badge.svg)](https://github.com/imDMK/AdvancedPlayTime/actions/workflows/gradle.yml)
-![JDK](https://img.shields.io/badge/JDK-1.21-blue.svg)
-![Supported versions](https://img.shields.io/badge/Minecraft-1.21--1.21.11-green.svg)
+![JDK](https://img.shields.io/badge/JDK-25-blue.svg)
+![Supported versions](https://img.shields.io/badge/Minecraft-1.21--26.2-green.svg)
 [![SpigotMC](https://img.shields.io/badge/SpigotMC-yellow.svg)](https://www.spigotmc.org/resources/%E2%8F%B0%EF%B8%8F-advancedplaytime-1-21-1-21-10.130458/)
 [![Modrinth](https://img.shields.io/badge/Modrinth-1bd96a.svg)](https://modrinth.com/plugin/advancedplaytime)
 [![bStats](https://img.shields.io/badge/bStats-00695c)](https://bstats.org/plugin/bukkit/PlayTime/19362)
@@ -12,6 +12,10 @@
 > AdvancedPlayTime is a powerful and ultra-efficient plugin that allows players to check their playtime and compare it with others — all in a stunning, fully customizable GUI.
 
 ---
+
+### 📦 Requirements
+- **Java 25** or newer on the server.
+- **Spigot / Paper 1.21 – 26.2**.
 
 ### ✨ Key Features
 - 🧠 **Highly optimized** – Zero-lag performance, even on large servers.

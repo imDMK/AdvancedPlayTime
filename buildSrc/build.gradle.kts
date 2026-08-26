@@ -9,6 +9,7 @@ repositories {
 dependencies {
     implementation("com.gradleup.shadow:shadow-gradle-plugin:9.6.1")
     implementation("net.minecrell:plugin-yml:0.6.0")
+    implementation("org.ow2.asm:asm:9.10.1")
 }
 
 sourceSets {

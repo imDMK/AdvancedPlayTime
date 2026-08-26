@@ -18,7 +18,7 @@ public final class SoundSerializer implements ObjectSerializer<Sound> {
 
     @Override
     public void serialize(Sound sound, SerializationData data, @NotNull GenericsDeclaration generics) {
-        data.setValue(sound.getKeyOrThrow().toString(), String.class);
+        data.setValue(RegistryKeys.keyOf(sound).toString(), String.class);
     }
 
     @Override
