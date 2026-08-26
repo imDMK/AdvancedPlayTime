@@ -1,7 +1,14 @@
 object Versions {
 
-    /** Java release the plugin is compiled for and requires at runtime. */
-    const val JAVA = 25
+    /** JDK the project is built with. */
+    const val JAVA_TOOLCHAIN = 25
+
+    /**
+     * Bytecode level of the shipped plugin, and therefore the oldest JVM a server may
+     * run it on. Kept at 21 because that is what Minecraft 1.21 itself requires — a
+     * higher target would lock the plugin out of the low end of the supported range.
+     */
+    const val JAVA_RELEASE = 21
 
     /** Spigot API the plugin is compiled against (newest supported server). */
     const val SPIGOT_API = "26.2-R0.1-SNAPSHOT"
